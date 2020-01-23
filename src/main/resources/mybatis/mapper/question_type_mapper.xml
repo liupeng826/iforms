@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.microastudio.iforms.mapper.QuestionTypeMapper">
+
+    <resultMap id="BaseResultMap" type="com.microastudio.iforms.entity.QuestionType">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="is_active" property="isActive" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <select id="selectQuestionType" resultMap="BaseResultMap">
+      select * from question_type
+    </select>
+
+</mapper>
