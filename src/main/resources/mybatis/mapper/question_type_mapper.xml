@@ -9,7 +9,7 @@
     </resultMap>
 
     <select id="selectQuestionType" resultMap="BaseResultMap">
-      select * from question_type
+        select * from question_type
     </select>
 
 </mapper>
