@@ -3,14 +3,11 @@
 #  hystrix:
 #    enabled: false
 spring:
-  jpa:
-    show-sql: false
-    #spring-cloud 配置无效
   session:
     store-type: redis
   redis:
     host: localhost
-    port: 9736
+    port: 6379
     password:
     database: 0
   datasource:
@@ -42,7 +39,7 @@ spring:
 
 mybatis:
   mapper-locations: classpath*:mybatis/mapper/*.xml
-  type-aliases-package: com.wxpb.*.entity
+  type-aliases-package: com.microastudio.*.entity
 
 #redis password
 redis:
@@ -51,15 +48,16 @@ redis:
   password_error_log:
     expire: 10800
     max_number: 5
+#是否开启 swagger-ui
+swagger:
+  enabled: true
 #sql 日志打印  root（项目）日志打印级别
 logging:
   level:
     #    root: warn
     com:
-      wxpb:
-        user:
-          mapper: debug
-        duty:
+      microastudio:
+        iforms:
           mapper: debug
   config:
     classpath: logback-spring.xml

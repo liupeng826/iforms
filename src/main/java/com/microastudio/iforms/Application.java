@@ -19,6 +19,7 @@ public class Application {
 
     /**
      * 访问首页提示
+     *
      * @return /
      */
     @GetMapping("/")
