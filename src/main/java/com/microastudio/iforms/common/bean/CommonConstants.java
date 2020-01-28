@@ -32,5 +32,6 @@ public class CommonConstants {
 
 
     public static final String QUESTION_TYPE_KEY = "QUESTION_TYPE_KEY";
+    public static final String LANGUAGE_KEY = "LANGUAGE_KEY";
 
 }

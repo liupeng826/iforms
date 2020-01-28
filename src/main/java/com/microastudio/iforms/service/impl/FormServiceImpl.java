@@ -1,8 +1,9 @@
 package com.microastudio.iforms.service.impl;
 
 import com.microastudio.iforms.common.bean.CommonConstants;
+import com.microastudio.iforms.entity.Language;
 import com.microastudio.iforms.entity.QuestionType;
-import com.microastudio.iforms.mapper.QuestionTypeMapper;
+import com.microastudio.iforms.mapper.FormMapper;
 import com.microastudio.iforms.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class FormServiceImpl implements FormService {
 
     @Autowired
-    private QuestionTypeMapper questionTypeMapper;
+    private FormMapper formMapper;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -26,13 +27,25 @@ public class FormServiceImpl implements FormService {
     @Override
     public List<QuestionType> getQuestionType() {
         // 先查缓存，缓存没有在查库
-        List<QuestionType> questionType = (List<QuestionType>) redisTemplate.opsForValue().get(CommonConstants.QUESTION_TYPE_KEY);
-        if (questionType == null) {
-            questionType = questionTypeMapper.selectQuestionType();
+        List<QuestionType> questionTypes = (List<QuestionType>) redisTemplate.opsForValue().get(CommonConstants.QUESTION_TYPE_KEY);
+        if (questionTypes == null) {
+            questionTypes = formMapper.selectQuestionType();
             // 信息记录到缓存
-            redisTemplate.opsForValue().set(CommonConstants.QUESTION_TYPE_KEY, questionType, 30, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(CommonConstants.QUESTION_TYPE_KEY, questionTypes, 30, TimeUnit.MINUTES);
         }
-        return questionType;
+        return questionTypes;
+    }
+
+    @Override
+    public List<Language> getLanguage() {
+        // 先查缓存，缓存没有在查库
+        List<Language> languages = (List<Language>) redisTemplate.opsForValue().get(CommonConstants.QUESTION_TYPE_KEY);
+        if (languages == null) {
+            languages = formMapper.selectLanguage();
+            // 信息记录到缓存
+            redisTemplate.opsForValue().set(CommonConstants.QUESTION_TYPE_KEY, languages, 30, TimeUnit.MINUTES);
+        }
+        return languages;
     }
 
 }

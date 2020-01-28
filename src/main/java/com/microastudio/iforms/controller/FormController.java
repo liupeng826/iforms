@@ -2,6 +2,7 @@ package com.microastudio.iforms.controller;
 
 import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.bean.ResultResponse;
+import com.microastudio.iforms.entity.Language;
 import com.microastudio.iforms.entity.QuestionType;
 import com.microastudio.iforms.service.FormService;
 import org.slf4j.Logger;
@@ -34,6 +35,21 @@ public class FormController {
             return ResultResponse.success(questionType);
         } catch (Exception e) {
             logger.error("getQuestionType异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+        return resultResponse;
+    }
+
+    @GetMapping("/language")
+    public ResultResponse getLanguage() {
+        logger.info("getLanguage");
+        ResultResponse resultResponse = new ResultResponse();
+        try {
+            List<Language> languages = formService.getLanguage();
+            return ResultResponse.success(languages);
+        } catch (Exception e) {
+            logger.error("getLanguage异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
         }

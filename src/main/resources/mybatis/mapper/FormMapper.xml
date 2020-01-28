@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.microastudio.iforms.mapper.FormMapper">
+
+    <resultMap id="QuestionTypeResultMap" type="com.microastudio.iforms.entity.QuestionType">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="is_active" property="isActive" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <resultMap id="LanguageResultMap" type="com.microastudio.iforms.entity.Language">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="is_active" property="isActive" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <select id="selectQuestionType" resultMap="QuestionTypeResultMap">
+        select * from question_type where is_active = 1
+    </select>
+
+    <select id="selectLanguage" resultMap="LanguageResultMap">
+        select * from language where is_active = 1
+    </select>
+
+</mapper>
