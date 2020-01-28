@@ -1,16 +1,16 @@
 package com.microastudio.iforms.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.bean.ResultResponse;
+import com.microastudio.iforms.dto.FormDto;
 import com.microastudio.iforms.entity.Language;
 import com.microastudio.iforms.entity.QuestionType;
 import com.microastudio.iforms.service.FormService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -50,6 +50,26 @@ public class FormController {
             return ResultResponse.success(languages);
         } catch (Exception e) {
             logger.error("getLanguage异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+        return resultResponse;
+    }
+
+    @PostMapping("/form")
+    public ResultResponse generateForm(@RequestBody FormDto formParam) {
+        logger.info("generateForm");
+        ResultResponse resultResponse = new ResultResponse();
+        try {
+            if(formParam == null) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+            }
+            logger.info("generateForm入参："+ JSONObject.toJSONString(formParam));
+
+            List<Language> languages = formService.getLanguage();
+            return ResultResponse.success(languages);
+        } catch (Exception e) {
+            logger.error("generateForm异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
         }
