@@ -1,7 +1,7 @@
 package com.microastudio.iforms.mapper;
 
-import com.microastudio.iforms.entity.Language;
-import com.microastudio.iforms.entity.QuestionType;
+import com.microastudio.iforms.domain.Language;
+import com.microastudio.iforms.domain.QuestionType;
 
 import java.util.List;
 

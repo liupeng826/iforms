@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.microastudio.iforms.mapper.FormMapper">
 
-    <resultMap id="QuestionTypeResultMap" type="com.microastudio.iforms.entity.QuestionType">
+    <resultMap id="QuestionTypeResultMap" type="com.microastudio.iforms.domain.QuestionType">
         <result column="id" property="id" jdbcType="BIGINT"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="is_active" property="isActive" jdbcType="TINYINT"/>
     </resultMap>
 
-    <resultMap id="LanguageResultMap" type="com.microastudio.iforms.entity.Language">
+    <resultMap id="LanguageResultMap" type="com.microastudio.iforms.domain.Language">
         <result column="id" property="id" jdbcType="BIGINT"/>
         <result column="code" property="code" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>

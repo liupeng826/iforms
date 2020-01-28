@@ -4,12 +4,14 @@ import com.microastudio.iforms.annotation.AnonymousAccess;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
 @SpringBootApplication
+@EnableTransactionManagement
 @MapperScan("com.microastudio.iforms.mapper")
 public class Application {
 

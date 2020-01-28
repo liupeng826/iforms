@@ -1,4 +1,6 @@
-package com.microastudio.iforms.entity;
+package com.microastudio.iforms.domain;
+
+import lombok.Data;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -7,6 +9,7 @@ import java.util.List;
 /**
  * @author peng
  */
+@Data
 public class Question implements Serializable {
 
     private static final long serialVersionUID = -6756265354805158478L;

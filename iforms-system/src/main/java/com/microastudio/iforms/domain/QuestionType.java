@@ -1,4 +1,4 @@
-package com.microastudio.iforms.entity;
+package com.microastudio.iforms.domain;
 
 import lombok.Data;
 

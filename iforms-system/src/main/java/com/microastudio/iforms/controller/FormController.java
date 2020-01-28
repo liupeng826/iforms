@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.bean.ResultResponse;
 import com.microastudio.iforms.dto.FormDto;
-import com.microastudio.iforms.entity.Language;
-import com.microastudio.iforms.entity.QuestionType;
+import com.microastudio.iforms.domain.Language;
+import com.microastudio.iforms.domain.QuestionType;
 import com.microastudio.iforms.service.FormService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,8 +66,8 @@ public class FormController {
             }
             logger.info("generateForm入参："+ JSONObject.toJSONString(formParam));
 
-            List<Language> languages = formService.getLanguage();
-            return ResultResponse.success(languages);
+            String supperId = formService.generateForm();
+            return ResultResponse.success(supperId);
         } catch (Exception e) {
             logger.error("generateForm异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);

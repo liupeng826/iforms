@@ -1,6 +1,7 @@
 package com.microastudio.iforms.dto;
 
-import com.microastudio.iforms.entity.Question;
+import com.microastudio.iforms.domain.Question;
+import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 /**
  * @author peng
  */
+@Data
 public class FormDto {
 
     private Long id;
@@ -28,6 +30,5 @@ public class FormDto {
     private String modifiedBy;
     private Timestamp modifiedDate;
     private String language;
-
     List<Question> questions;
 }

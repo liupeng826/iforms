@@ -1,13 +1,14 @@
 package com.microastudio.iforms.service.impl;
 
 import com.microastudio.iforms.common.bean.CommonConstants;
-import com.microastudio.iforms.entity.Language;
-import com.microastudio.iforms.entity.QuestionType;
+import com.microastudio.iforms.domain.Language;
+import com.microastudio.iforms.domain.QuestionType;
 import com.microastudio.iforms.mapper.FormMapper;
 import com.microastudio.iforms.service.FormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +47,12 @@ public class FormServiceImpl implements FormService {
             redisTemplate.opsForValue().set(CommonConstants.QUESTION_TYPE_KEY, languages, 30, TimeUnit.MINUTES);
         }
         return languages;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String generateForm() {
+        return null;
     }
 
 }
