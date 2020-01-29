@@ -2,6 +2,7 @@ package com.microastudio.iforms.service;
 
 import com.microastudio.iforms.domain.Language;
 import com.microastudio.iforms.domain.QuestionType;
+import com.microastudio.iforms.dto.FormDto;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ public interface FormService {
      */
     List<QuestionType> getQuestionType();
     List<Language> getLanguage();
-    String generateForm();
+    String generateForm(FormDto formDto);
 }

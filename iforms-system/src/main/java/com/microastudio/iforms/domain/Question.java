@@ -24,6 +24,8 @@ public class Question implements Serializable {
     private String modifiedBy;
     private Timestamp modifiedDate;
     private String language;
+    private byte mandatory;
+    private int sequence;
 
     List<QuestionOption> questionOptions;
 }

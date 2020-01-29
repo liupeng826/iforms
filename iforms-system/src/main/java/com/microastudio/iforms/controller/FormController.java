@@ -66,7 +66,7 @@ public class FormController {
             }
             logger.info("generateForm入参："+ JSONObject.toJSONString(formParam));
 
-            String supperId = formService.generateForm();
+            String supperId = formService.generateForm(formParam);
             return ResultResponse.success(supperId);
         } catch (Exception e) {
             logger.error("generateForm异常：" + e.getMessage(), e);

@@ -15,9 +15,7 @@ public class FormQuestionMapping implements Serializable {
     private String supperId;
     private Long id;
     private Long formId;
+    private Long sectionId;
     private Long questionId;
-    private byte isMandatory;
-    private int sequence;
-    private byte isActive;
     private String language;
 }

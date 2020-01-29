@@ -23,4 +23,105 @@
         select * from language where is_active = 1
     </select>
 
+    <insert id="insertQuestion" parameterType="com.microastudio.iforms.domain.Question" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO `question`
+        (`title`,
+        `subtitle`,
+        `question_type_id`,
+        `created_by`,
+        `created_date`,
+        `modified_by`,
+        `modified_date`,
+        `language`,
+        `mandatory`,
+        `sequence`)
+        VALUES
+        (#{title},
+        #{subtitle},
+        #{questionTypeId},
+        #{createdBy},
+        now(),
+        #{modifiedBy},
+        now(),
+        #{language},
+        #{mandatory},
+        #{sequence})
+    </insert>
+
+    <insert id="insertQuestionOption" parameterType="com.microastudio.iforms.domain.QuestionOption"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO `question_option`
+        (`question_id`,
+        `description`,
+        `sequence`,
+        `total_value`,
+        `language`)
+        VALUES
+        (#{questionId},
+        #{description},
+        #{sequence},
+        #{totalValue},
+        #{language})
+    </insert>
+
+    <insert id="insertSection" parameterType="com.microastudio.iforms.domain.Section">
+        INSERT INTO `section`
+        (`id`,
+        `description`,
+        `sequence`)
+        VALUES
+        (#{id},
+        #{description},
+        #{sequence})
+    </insert>
+
+    <insert id="insertForm" parameterType="com.microastudio.iforms.domain.Form"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO `form`
+        (`title`,
+        `description`,
+        `level`,
+        `market_id`,
+        `dealer_id`,
+        `system_token`,
+        `send_email`,
+        `type`,
+        `created_by`,
+        `created_date`,
+        `modified_by`,
+        `modified_date`,
+        `language`)
+        VALUES
+        (#{title},
+        #{description},
+        #{level},
+        #{marketId},
+        #{dealerId},
+        #{systemToken},
+        #{sendEmail},
+        #{type},
+        #{createdBy},
+        now(),
+        #{modifiedBy},
+        now(),
+        #{language})
+    </insert>
+
+    <insert id="insertFormQuestionMapping" parameterType="com.microastudio.iforms.domain.FormQuestionMapping" >
+        INSERT INTO `form_question`
+        (`form_id`,
+        `section_id`,
+        `question_id`,
+        `language`,
+        `supper_id`)
+        VALUES
+        (#{formId},
+        #{sectionId},
+        #{questionId},
+        #{language},
+        #{supperId})
+    </insert>
 </mapper>
