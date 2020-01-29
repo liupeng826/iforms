@@ -76,7 +76,7 @@ public class FormServiceImpl implements FormService {
             return null;
         }
         Long formId = form.getId();
-        
+
         for (SectionDto sectionDto : formDto.getSections()) {
             Long sectionId = null;
 
@@ -124,6 +124,11 @@ public class FormServiceImpl implements FormService {
         }
 
         return formId.toString();
+    }
+
+    @Override
+    public String getSystemToken(String key) {
+        return formMapper.selectSystemToken(key);
     }
 
 }

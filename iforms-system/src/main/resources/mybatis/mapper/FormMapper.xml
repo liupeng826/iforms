@@ -23,6 +23,11 @@
         select * from language where is_active = 1
     </select>
 
+    <select id="selectSystemToken" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT `token` FROM `system_token` where `description` = #{key} limit 1
+    </select>
+
+
     <insert id="insertQuestion" parameterType="com.microastudio.iforms.domain.Question" useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `question`
@@ -110,7 +115,7 @@
         #{language})
     </insert>
 
-    <insert id="insertFormQuestionMapping" parameterType="com.microastudio.iforms.domain.FormQuestionMapping" >
+    <insert id="insertFormQuestionMapping" parameterType="com.microastudio.iforms.domain.FormQuestionMapping">
         INSERT INTO `form_question`
         (`form_id`,
         `section_id`,

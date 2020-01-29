@@ -18,4 +18,6 @@ public interface FormMapper {
     int insertSection(Section section);
     int insertForm(Form form);
     int insertFormQuestionMapping(FormQuestionMapping formQuestionMapping);
+
+    String selectSystemToken(String key);
 }

@@ -3,10 +3,12 @@ package com.microastudio.iforms.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.bean.ResultResponse;
-import com.microastudio.iforms.dto.FormDto;
 import com.microastudio.iforms.domain.Language;
 import com.microastudio.iforms.domain.QuestionType;
+import com.microastudio.iforms.domain.SystemToken;
+import com.microastudio.iforms.dto.FormDto;
 import com.microastudio.iforms.service.FormService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,15 +58,66 @@ public class FormController {
         return resultResponse;
     }
 
-    @PostMapping("/form")
+    @GetMapping("/validateToken")
+    public ResultResponse getToken(@RequestParam(value = "key") String key
+            , @RequestParam(value = "systemToken") String systemToken) {
+        logger.info("getToken");
+        ResultResponse resultResponse = new ResultResponse();
+        try {
+            if (StringUtils.isEmpty(key) || StringUtils.isEmpty(systemToken)) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+            }
+
+            logger.info("getToken入参：" + key + "," + systemToken);
+
+            String token = formService.getSystemToken(key);
+            if (!systemToken.equals(token)) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_AUTH_TOKEN, CommonConstants.ERRORS_MSG_AUTH_TOKEN);
+            }
+
+            return ResultResponse.success("");
+        } catch (Exception e) {
+            logger.error("getToken异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+        return resultResponse;
+    }
+
+    @PostMapping("/getForm")
+    public ResultResponse getForm(@RequestBody SystemToken systemToken) {
+        logger.info("getForm");
+        ResultResponse resultResponse = new ResultResponse();
+        try {
+            if (systemToken == null || StringUtils.isEmpty(systemToken.getToken()) || StringUtils.isEmpty(systemToken.getDescription())) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+            }
+
+            logger.info("getForm入参：" + JSONObject.toJSONString(systemToken));
+
+            String token = formService.getSystemToken(systemToken.getDescription());
+            if (!systemToken.getToken().equals(token)) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+            }
+
+            return ResultResponse.success(token);
+        } catch (Exception e) {
+            logger.error("getForm异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+        return resultResponse;
+    }
+
+    @PostMapping("/generateForm")
     public ResultResponse generateForm(@RequestBody FormDto formParam) {
         logger.info("generateForm");
         ResultResponse resultResponse = new ResultResponse();
         try {
-            if(formParam == null) {
+            if (formParam == null || StringUtils.isEmpty(formParam.getSystemToken())) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
-            logger.info("generateForm入参："+ JSONObject.toJSONString(formParam));
+            logger.info("generateForm入参：" + JSONObject.toJSONString(formParam));
 
             String supperId = formService.generateForm(formParam);
             return ResultResponse.success(supperId);
