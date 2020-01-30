@@ -27,6 +27,10 @@
         SELECT `token` FROM `system_token` where `description` = #{key} limit 1
     </select>
 
+    <select id="selectForm" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT `token` FROM `system_token` where `description` = #{key} limit 1
+    </select>
+
 
     <insert id="insertQuestion" parameterType="com.microastudio.iforms.domain.Question" useGeneratedKeys="true"
             keyProperty="id">
@@ -62,22 +66,30 @@
         `description`,
         `sequence`,
         `total_value`,
+        `net_promoter_from`,
+        `net_promoter_to`,
         `language`)
         VALUES
         (#{questionId},
         #{description},
         #{sequence},
         #{totalValue},
+        #{netPromoterFrom},
+        #{netPromoterTo},
         #{language})
     </insert>
 
-    <insert id="insertSection" parameterType="com.microastudio.iforms.domain.Section">
+    <insert id="insertSection" parameterType="com.microastudio.iforms.domain.Section"
+            useGeneratedKeys="true"
+            keyProperty="id">
         INSERT INTO `section`
         (`id`,
+        `title`,
         `description`,
         `sequence`)
         VALUES
         (#{id},
+        #{title},
         #{description},
         #{sequence})
     </insert>

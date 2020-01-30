@@ -59,8 +59,12 @@ public class FormController {
     }
 
     @GetMapping("/validateToken")
-    public ResultResponse getToken(@RequestParam(value = "key") String key
+    public ResultResponse validateToken(@RequestParam(value = "key") String key
             , @RequestParam(value = "systemToken") String systemToken) {
+        return getToken(key, systemToken);
+    }
+
+    private ResultResponse getToken(String key, String systemToken) {
         logger.info("getToken");
         ResultResponse resultResponse = new ResultResponse();
         try {
@@ -89,11 +93,20 @@ public class FormController {
         logger.info("getForm");
         ResultResponse resultResponse = new ResultResponse();
         try {
-            if (systemToken == null || StringUtils.isEmpty(systemToken.getToken()) || StringUtils.isEmpty(systemToken.getDescription())) {
+            if (systemToken == null) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
 
             logger.info("getForm入参：" + JSONObject.toJSONString(systemToken));
+
+            // validateToken
+            resultResponse = getToken(systemToken.getDescription(), systemToken.getToken());
+            if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+                return resultResponse;
+            }
+
+            // get form
+
 
             String token = formService.getSystemToken(systemToken.getDescription());
             if (!systemToken.getToken().equals(token)) {
@@ -114,12 +127,21 @@ public class FormController {
         logger.info("generateForm");
         ResultResponse resultResponse = new ResultResponse();
         try {
-            if (formParam == null || StringUtils.isEmpty(formParam.getSystemToken())) {
+            if (formParam == null || formParam.getSections() == null
+                    || formParam.getSections().get(0).getQuestions() == null
+                    || StringUtils.isEmpty(formParam.getSystemToken().getToken())) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
             logger.info("generateForm入参：" + JSONObject.toJSONString(formParam));
 
             String supperId = formService.generateForm(formParam);
+
+            if (supperId == null) {
+                logger.error("generateForm异常：supperId is null");
+                resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+                resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+            }
+
             return ResultResponse.success(supperId);
         } catch (Exception e) {
             logger.error("generateForm异常：" + e.getMessage(), e);

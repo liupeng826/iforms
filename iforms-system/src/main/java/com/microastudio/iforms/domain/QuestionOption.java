@@ -16,7 +16,9 @@ public class QuestionOption implements Serializable {
     private Long questionId;
     private String description;
     private int sequence;
-    private String totalValue;
-    private byte isActive;
+    private int totalValue;
+    private String netPromoterFrom;
+    private String netPromoterTo;
     private String language;
+    private byte isActive;
 }

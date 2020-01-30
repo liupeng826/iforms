@@ -2,6 +2,7 @@ package com.microastudio.iforms.dto;
 
 import com.microastudio.iforms.domain.Question;
 import com.microastudio.iforms.domain.Section;
+import com.microastudio.iforms.domain.SystemToken;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -24,10 +25,10 @@ public class FormDto implements Serializable {
 //    private String customerName;
 //    private String customerEmail;
 //    private String contactNo;
-    private String systemToken;
+    private SystemToken systemToken;
     private byte sendEmail;
     private String type;
-    private String isActive;
+    private byte isActive;
     private String createdBy;
     private Timestamp createdDate;
     private String modifiedBy;

@@ -1,0 +1,189 @@
+{
+  "title": "Survey",
+  "dealerId": "",
+  "description": "test survey",
+  "includeSection": 1,
+  "language": "en-us",
+  "level": "market",
+  "marketId": "10001",
+  "createdBy": "peng",
+  "modifiedBy": "peng",
+  "sections": [
+    {
+      "title": "section1",
+      "description": "test section1",
+      "sequence": 1,
+      "questions": [
+        {
+          "questionTypeId": 1,
+          "sequence": 1,
+          "subtitle": "test question1",
+          "title": "question1",
+          "mandatory": 1,
+          "questionOptions": [
+            {
+              "description": "questionOptions1",
+              "sequence": 1,
+              "totalValue": ""
+            },
+            {
+                "description": "questionOptions2",
+                "sequence": 2,
+                "totalValue": ""
+              }
+          ]
+        },
+        {
+            "questionTypeId": 2,
+            "sequence": 2,
+            "subtitle": "test question2",
+            "title": "question2",
+            "mandatory": 0,
+            "questionOptions": [
+              {
+                "description": "questionOptions21",
+                "sequence": 1,
+                "totalValue": ""
+              },
+              {
+                  "description": "questionOptions22",
+                  "sequence": 2,
+                  "totalValue": ""
+                }
+            ]
+          },
+          {
+              "questionTypeId": 3,
+              "sequence": 3,
+              "subtitle": "test question3",
+              "title": "question3",
+              "mandatory": 1
+            },
+            {
+                "questionTypeId": 4,
+                "sequence": 4,
+                "subtitle": "test question4",
+                "title": "question4",
+                "mandatory": 1,
+                "questionOptions": [
+                  {
+                    "totalValue": 5
+                  }
+                ]
+              },
+              {
+                  "questionTypeId": 5,
+                  "sequence": 5,
+                  "subtitle": "test question5",
+                  "title": "question5",
+                  "mandatory": 1
+                },
+                {
+                    "questionTypeId": 6,
+                    "sequence": 6,
+                    "subtitle": "test question6",
+                    "title": "question6",
+                    "mandatory": 1,
+                    "questionOptions": [
+                      {
+                        "netPromoterFrom": "Not at all likely",
+                        "netPromoterTo": "Extremely likely",
+                        "totalValue": 10
+                      }
+                    ]
+                  }
+      ]
+    },
+    {
+        "title": "section2",
+        "description": "test section2",
+        "sequence": 2,
+        "questions": [
+          {
+            "questionTypeId": 1,
+            "sequence": 1,
+            "subtitle": "test question1",
+            "title": "question1",
+            "mandatory": 1,
+            "questionOptions": [
+              {
+                "description": "questionOptions1",
+                "sequence": 1,
+                "totalValue": ""
+              },
+              {
+                  "description": "questionOptions2",
+                  "sequence": 2,
+                  "totalValue": ""
+                }
+            ]
+          },
+          {
+              "questionTypeId": 2,
+              "sequence": 2,
+              "subtitle": "test question2",
+              "title": "question2",
+              "mandatory": 0,
+              "questionOptions": [
+                {
+                  "description": "questionOptions21",
+                  "sequence": 1,
+                  "totalValue": ""
+                },
+                {
+                    "description": "questionOptions22",
+                    "sequence": 2,
+                    "totalValue": ""
+                  }
+              ]
+            },
+            {
+                "questionTypeId": 3,
+                "sequence": 3,
+                "subtitle": "test question3",
+                "title": "question3",
+                "mandatory": 1
+              },
+              {
+                  "questionTypeId": 4,
+                  "sequence": 4,
+                  "subtitle": "test question4",
+                  "title": "question4",
+                  "mandatory": 1,
+                  "questionOptions": [
+                    {
+                      "totalValue": 5
+                    }
+                  ]
+                },
+                {
+                    "questionTypeId": 5,
+                    "sequence": 5,
+                    "subtitle": "test question5",
+                    "title": "question5",
+                    "mandatory": 1
+                  },
+                  {
+                      "questionTypeId": 6,
+                      "sequence": 6,
+                      "subtitle": "test question6",
+                      "title": "question6",
+                      "mandatory": 1,
+                      "questionOptions": [
+                        {
+                          "netPromoterFrom": "Not at all likely",
+                          "netPromoterTo": "Extremely likely",
+                          "totalValue": 10
+                        }
+                      ]
+                    }
+        ]
+      }
+  ],
+  "sendEmail": 1,
+  "systemToken": {
+    "description": "iForms_web",
+    "token": "YWVzLTI1Ni1nY206Y0c5UGMwMXFRWGxOUXpCM1RWTXdlVTlUTUhoT1VWZFJZMUA1Mi4zOS45MC4yNjo1MjIxOQNv6RRuGEVvmGjB+jimI/gw=="
+  },
+  "type": "volvo GTA"
+}

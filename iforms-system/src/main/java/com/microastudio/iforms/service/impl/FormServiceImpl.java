@@ -63,7 +63,7 @@ public class FormServiceImpl implements FormService {
         form.setLevel(formDto.getLevel());
         form.setMarketId(formDto.getMarketId());
         form.setDealerId(formDto.getDealerId());
-        form.setSystemToken(formDto.getSystemToken());
+        form.setSystemToken(formDto.getSystemToken().getToken());
         form.setSendEmail(formDto.getSendEmail());
         form.setType(formDto.getType());
         form.setCreatedBy(formDto.getCreatedBy());
@@ -71,11 +71,12 @@ public class FormServiceImpl implements FormService {
         form.setLanguage(formDto.getLanguage());
 
         // insert form
-        formMapper.insertForm(form);
+        rows = formMapper.insertForm(form);
         if (rows == 0) {
             return null;
         }
         Long formId = form.getId();
+        String supperId = StringUtil.getUuid();
 
         for (SectionDto sectionDto : formDto.getSections()) {
             Long sectionId = null;
@@ -83,8 +84,9 @@ public class FormServiceImpl implements FormService {
             // insert section
             if (formDto.getIncludeSection() == 1) {
                 Section section = new Section();
-                section.setSequence(sectionDto.getSequence());
+                section.setTitle(sectionDto.getTitle());
                 section.setDescription(sectionDto.getDescription());
+                section.setSequence(sectionDto.getSequence());
 
                 rows = formMapper.insertSection(section);
                 if (rows == 0) {
@@ -95,6 +97,10 @@ public class FormServiceImpl implements FormService {
 
             // insert Question
             for (Question q : sectionDto.getQuestions()) {
+                q.setLanguage(formDto.getLanguage());
+                q.setCreatedBy(formDto.getCreatedBy());
+                q.setModifiedBy(formDto.getModifiedBy());
+
                 rows = formMapper.insertQuestion(q);
                 if (rows == 0) {
                     return null;
@@ -108,7 +114,7 @@ public class FormServiceImpl implements FormService {
                 fm.setSectionId(sectionId);
                 fm.setQuestionId(questionId);
                 fm.setLanguage(q.getLanguage());
-                fm.setSupperId(StringUtil.getUuid());
+                fm.setSupperId(supperId);
 
                 rows = formMapper.insertFormQuestionMapping(fm);
                 if (rows == 0) {
@@ -116,19 +122,29 @@ public class FormServiceImpl implements FormService {
                 }
 
                 // insert QuestionOption
-                for (QuestionOption qo : q.getQuestionOptions()) {
-                    qo.setQuestionId(questionId);
-                    formMapper.insertQuestionOption(qo);
+                if(q.getQuestionOptions() != null) {
+                    for (QuestionOption qo : q.getQuestionOptions()) {
+                        qo.setQuestionId(questionId);
+                        qo.setLanguage(formDto.getLanguage());
+
+                        formMapper.insertQuestionOption(qo);
+                    }
                 }
             }
         }
 
-        return formId.toString();
+        return supperId;
     }
 
     @Override
     public String getSystemToken(String key) {
         return formMapper.selectSystemToken(key);
     }
+
+    @Override
+    public List<FormDto> getForm(String key) {
+        return null;
+    }
+
 
 }

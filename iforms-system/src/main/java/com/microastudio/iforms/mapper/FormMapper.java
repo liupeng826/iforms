@@ -20,4 +20,5 @@ public interface FormMapper {
     int insertFormQuestionMapping(FormQuestionMapping formQuestionMapping);
 
     String selectSystemToken(String key);
+    List<Form> selectForm(String key);
 }
