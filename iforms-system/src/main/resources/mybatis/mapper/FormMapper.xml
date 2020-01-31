@@ -15,6 +15,50 @@
         <result column="is_active" property="isActive" jdbcType="TINYINT"/>
     </resultMap>
 
+    <resultMap id="FormResultMap" type="com.microastudio.iforms.dto.FormDto">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="level" property="level" jdbcType="VARCHAR"/>
+        <result column="market_id" property="marketId" jdbcType="VARCHAR"/>
+        <result column="dealer_id" property="dealerId" jdbcType="VARCHAR"/>
+        <result column="language" property="language" jdbcType="VARCHAR"/>
+        <result column="send_email" property="sendEmail" jdbcType="TINYINT"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="is_active" property="isActive" jdbcType="TINYINT"/>
+        <result column="include_section" property="includeSection" jdbcType="TINYINT"/>
+        <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+        <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+        <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+        <result column="modified_by" property="modifiedBy" jdbcType="VARCHAR" />
+        <collection property="sections" ofType="com.microastudio.iforms.dto.SectionDto">
+            <id column="section.id" property="id"/>
+            <result column="section.form_id" property="formId"/>
+            <result column="section.title" property="title"/>
+            <result column="section.description" property="description"/>
+            <result column="section.sequence" property="sequence"/>
+            <collection property="questions" ofType="com.microastudio.iforms.domain.Question">
+                <id column="question.id" property="id"/>
+                <result column="question.section_id" property="sectionId"/>
+                <result column="question.title" property="title"/>
+                <result column="question.subtitle" property="subtitle"/>
+                <result column="question.question_type_id" property="questionTypeId"/>
+                <result column="question.mandatory" property="mandatory"/>
+                <result column="question.sequence" property="sequence"/>
+                <collection property="questionOptions" ofType="com.microastudio.iforms.domain.QuestionOption">
+                    <id column="question_option.id" property="id"/>
+                    <result column="question_option.question_id" property="questionId"/>
+                    <result column="question_option.description" property="description"/>
+                    <result column="question_option.sequence" property="sequence"/>
+                    <result column="question_option.total_value" property="totalValue"/>
+                    <result column="question_option.net_promoter_from" property="netPromoterFrom"/>
+                    <result column="question_option.net_promoter_to" property="netPromoterTo"/>
+                    <result column="question_option.is_active" property="isActive"/>
+                </collection>
+            </collection>
+        </collection>
+    </resultMap>
+
     <select id="selectQuestionType" resultMap="QuestionTypeResultMap">
         select * from question_type where is_active = 1
     </select>
@@ -24,18 +68,50 @@
     </select>
 
     <select id="selectSystemToken" parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT `token` FROM `system_token` where `description` = #{key} limit 1
+        SELECT `token` FROM `system_token` WHERE `description` = #{key} AND is_active = 1 limit 1
     </select>
 
-    <select id="selectForm" parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT `token` FROM `system_token` where `description` = #{key} limit 1
+    <select id="selectAllFormsByKey" parameterType="java.lang.String" resultMap="FormResultMap">
+        SELECT form.*,
+        `section`.`id` as `section.id`,
+        `section`.`form_id` as `section.form_id`,
+        `section`.`title` as `section.title`,
+        `section`.`description` as `section.description`,
+        `section`.`sequence` as `section.sequence`,
+        `section`.`is_active` as `section.is_active`,
+        `question`.`id` as `question.id`,
+        `question`.`section_id` as `question.section_id`,
+        `question`.`title` as `question.title`,
+        `question`.`subtitle` as `question.subtitle`,
+        `question`.`question_type_id` as `question.question_type_id`,
+        `question`.`is_active` as `question.is_active`,
+        `question`.`mandatory` as `question.mandatory`,
+        `question`.`sequence` as `question.sequence`,
+        `question_option`.`id` as `question_option.id`,
+        `question_option`.`question_id` as `question_option.question_id`,
+        `question_option`.`description` as `question_option.description`,
+        `question_option`.`sequence` as `question_option.sequence`,
+        `question_option`.`total_value` as `question_option.total_value`,
+        `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
+        `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
+        `question_option`.`is_active` as `question_option.is_active`
+        FROM form, section, question
+        LEFT JOIN question_option
+        ON (question.id = question_option.question_id
+        AND question_option.is_active = 1)
+        WHERE section.form_id = form.id
+        AND question.section_id = section.id
+        AND form.system_token = #{key}
+        AND form.is_active = 1
+        AND section.is_active = 1
+        AND question.is_active = 1
     </select>
-
 
     <insert id="insertQuestion" parameterType="com.microastudio.iforms.domain.Question" useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `question`
-        (`title`,
+        (`section_id`,
+        `title`,
         `subtitle`,
         `question_type_id`,
         `created_by`,
@@ -46,7 +122,8 @@
         `mandatory`,
         `sequence`)
         VALUES
-        (#{title},
+        (#{sectionId},
+        #{title},
         #{subtitle},
         #{questionTypeId},
         #{createdBy},
@@ -83,12 +160,12 @@
             useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `section`
-        (`id`,
+        (`form_id`,
         `title`,
         `description`,
         `sequence`)
         VALUES
-        (#{id},
+        (#{formId},
         #{title},
         #{description},
         #{sequence})
@@ -110,7 +187,8 @@
         `created_date`,
         `modified_by`,
         `modified_date`,
-        `language`)
+        `language`,
+        `include_section`)
         VALUES
         (#{title},
         #{description},
@@ -124,21 +202,22 @@
         now(),
         #{modifiedBy},
         now(),
-        #{language})
+        #{language},
+        #{includeSection})
     </insert>
 
-    <insert id="insertFormQuestionMapping" parameterType="com.microastudio.iforms.domain.FormQuestionMapping">
-        INSERT INTO `form_question`
-        (`form_id`,
-        `section_id`,
-        `question_id`,
-        `language`,
-        `supper_id`)
-        VALUES
-        (#{formId},
-        #{sectionId},
-        #{questionId},
-        #{language},
-        #{supperId})
-    </insert>
+    <!--    <insert id="insertFormQuestionMapping" parameterType="com.microastudio.iforms.domain.FormQuestionMapping">-->
+    <!--        INSERT INTO `form_question`-->
+    <!--        (`form_id`,-->
+    <!--        `section_id`,-->
+    <!--        `question_id`,-->
+    <!--        `language`,-->
+    <!--        `supper_id`)-->
+    <!--        VALUES-->
+    <!--        (#{formId},-->
+    <!--        #{sectionId},-->
+    <!--        #{questionId},-->
+    <!--        #{language},-->
+    <!--        #{supperId})-->
+    <!--    </insert>-->
 </mapper>

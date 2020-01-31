@@ -1,7 +1,6 @@
 package com.microastudio.iforms.service.impl;
 
 import com.microastudio.iforms.common.bean.CommonConstants;
-import com.microastudio.iforms.common.utils.StringUtil;
 import com.microastudio.iforms.domain.*;
 import com.microastudio.iforms.dto.FormDto;
 import com.microastudio.iforms.dto.SectionDto;
@@ -69,6 +68,7 @@ public class FormServiceImpl implements FormService {
         form.setCreatedBy(formDto.getCreatedBy());
         form.setModifiedBy(formDto.getModifiedBy());
         form.setLanguage(formDto.getLanguage());
+        form.setIncludeSection(formDto.getIncludeSection());
 
         // insert form
         rows = formMapper.insertForm(form);
@@ -76,27 +76,31 @@ public class FormServiceImpl implements FormService {
             return null;
         }
         Long formId = form.getId();
-        String supperId = StringUtil.getUuid();
+//        String supperId = StringUtil.getUuid();
 
         for (SectionDto sectionDto : formDto.getSections()) {
             Long sectionId = null;
 
             // insert section
+            Section section = new Section();
+            section.setFormId(formId);
+            section.setTitle(sectionDto.getTitle());
+            section.setDescription(sectionDto.getDescription());
             if (formDto.getIncludeSection() == 1) {
-                Section section = new Section();
-                section.setTitle(sectionDto.getTitle());
-                section.setDescription(sectionDto.getDescription());
+                section.setSequence(0);
+            } else {
                 section.setSequence(sectionDto.getSequence());
-
-                rows = formMapper.insertSection(section);
-                if (rows == 0) {
-                    return null;
-                }
-                sectionId = section.getId();
             }
+
+            rows = formMapper.insertSection(section);
+            if (rows == 0) {
+                return null;
+            }
+            sectionId = section.getId();
 
             // insert Question
             for (Question q : sectionDto.getQuestions()) {
+                q.setSectionId(sectionId);
                 q.setLanguage(formDto.getLanguage());
                 q.setCreatedBy(formDto.getCreatedBy());
                 q.setModifiedBy(formDto.getModifiedBy());
@@ -108,21 +112,21 @@ public class FormServiceImpl implements FormService {
 
                 Long questionId = q.getId();
 
-                // insert FormQuestionMapping
-                FormQuestionMapping fm = new FormQuestionMapping();
-                fm.setFormId(formId);
-                fm.setSectionId(sectionId);
-                fm.setQuestionId(questionId);
-                fm.setLanguage(q.getLanguage());
-                fm.setSupperId(supperId);
-
-                rows = formMapper.insertFormQuestionMapping(fm);
-                if (rows == 0) {
-                    return null;
-                }
+//                // insert FormQuestionMapping
+//                FormQuestionMapping fm = new FormQuestionMapping();
+//                fm.setFormId(formId);
+//                fm.setSectionId(sectionId);
+//                fm.setQuestionId(questionId);
+//                fm.setLanguage(q.getLanguage());
+//                fm.setSupperId(supperId);
+//
+//                rows = formMapper.insertFormQuestionMapping(fm);
+//                if (rows == 0) {
+//                    return null;
+//                }
 
                 // insert QuestionOption
-                if(q.getQuestionOptions() != null) {
+                if (q.getQuestionOptions() != null) {
                     for (QuestionOption qo : q.getQuestionOptions()) {
                         qo.setQuestionId(questionId);
                         qo.setLanguage(formDto.getLanguage());
@@ -133,7 +137,7 @@ public class FormServiceImpl implements FormService {
             }
         }
 
-        return supperId;
+        return formId.toString();
     }
 
     @Override
@@ -142,8 +146,8 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<FormDto> getForm(String key) {
-        return null;
+    public List<FormDto> getAllForms(String key) {
+        return formMapper.selectAllFormsByKey(key);
     }
 
 

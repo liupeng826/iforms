@@ -15,4 +15,5 @@ public class SystemToken implements Serializable {
     private Long id;
     private String description;
     private String token;
+    private byte isActive;
 }

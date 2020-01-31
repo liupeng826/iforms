@@ -15,6 +15,7 @@ public class Question implements Serializable {
     private static final long serialVersionUID = -6756265354805158478L;
 
     private Long id;
+    private Long sectionId;
     private String title;
     private String subtitle;
     private Long questionTypeId;

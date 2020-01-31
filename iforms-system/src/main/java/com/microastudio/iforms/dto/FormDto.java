@@ -17,6 +17,7 @@ public class FormDto implements Serializable {
 
     private static final long serialVersionUID = -6764362501696187002L;
 
+    private Long id;
     private String title;
     private String description;
     private String level;

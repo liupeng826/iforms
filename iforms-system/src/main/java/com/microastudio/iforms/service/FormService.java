@@ -17,5 +17,5 @@ public interface FormService {
     List<Language> getLanguage();
     String generateForm(FormDto formDto);
     String getSystemToken(String key);
-    List<FormDto> getForm(String key);
+    List<FormDto> getAllForms(String key);
 }

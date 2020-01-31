@@ -1,6 +1,7 @@
 package com.microastudio.iforms.mapper;
 
 import com.microastudio.iforms.domain.*;
+import com.microastudio.iforms.dto.FormDto;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ public interface FormMapper {
     int insertQuestionOption(QuestionOption questionOption);
     int insertSection(Section section);
     int insertForm(Form form);
-    int insertFormQuestionMapping(FormQuestionMapping formQuestionMapping);
+//    int insertFormQuestionMapping(FormQuestionMapping formQuestionMapping);
 
     String selectSystemToken(String key);
-    List<Form> selectForm(String key);
+    List<FormDto> selectAllFormsByKey(String key);
 }

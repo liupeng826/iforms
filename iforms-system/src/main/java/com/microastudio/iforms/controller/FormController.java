@@ -88,16 +88,16 @@ public class FormController {
         return resultResponse;
     }
 
-    @PostMapping("/getForm")
-    public ResultResponse getForm(@RequestBody SystemToken systemToken) {
-        logger.info("getForm");
+    @PostMapping("/getAllForms")
+    public ResultResponse getAllForms(@RequestBody SystemToken systemToken) {
+        logger.info("getAllForms");
         ResultResponse resultResponse = new ResultResponse();
         try {
             if (systemToken == null) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
 
-            logger.info("getForm入参：" + JSONObject.toJSONString(systemToken));
+            logger.info("getAllForms入参：" + JSONObject.toJSONString(systemToken));
 
             // validateToken
             resultResponse = getToken(systemToken.getDescription(), systemToken.getToken());
@@ -106,16 +106,11 @@ public class FormController {
             }
 
             // get form
+            List<FormDto> forms = formService.getAllForms(systemToken.getToken());
 
-
-            String token = formService.getSystemToken(systemToken.getDescription());
-            if (!systemToken.getToken().equals(token)) {
-                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
-            }
-
-            return ResultResponse.success(token);
+            return ResultResponse.success(forms);
         } catch (Exception e) {
-            logger.error("getForm异常：" + e.getMessage(), e);
+            logger.error("getAllForms异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
         }
@@ -129,11 +124,18 @@ public class FormController {
         try {
             if (formParam == null || formParam.getSections() == null
                     || formParam.getSections().get(0).getQuestions() == null
-                    || StringUtils.isEmpty(formParam.getSystemToken().getToken())) {
+                    || formParam.getSystemToken() == null) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
             logger.info("generateForm入参：" + JSONObject.toJSONString(formParam));
 
+            // validateToken
+            resultResponse = getToken(formParam.getSystemToken().getDescription(), formParam.getSystemToken().getToken());
+            if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+                return resultResponse;
+            }
+
+            // generate form
             String supperId = formService.generateForm(formParam);
 
             if (supperId == null) {
