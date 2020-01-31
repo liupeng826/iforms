@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.25)
 # Database: iForms
-# Generation Time: 2020-01-27 04:21:51 +0000
+# Generation Time: 2020-01-31 05:06:40 +0000
 # ************************************************************
 
 
@@ -37,38 +37,16 @@ CREATE TABLE `form` (
   `customer_name` varchar(100) DEFAULT NULL,
   `customer_email` varchar(100) DEFAULT NULL,
   `contact_no` varchar(100) DEFAULT NULL,
-  `system_token` varchar(100) DEFAULT NULL,
+  `system_token` varchar(500) NOT NULL DEFAULT '',
   `send_email` tinyint(1) NOT NULL DEFAULT '0',
   `type` varchar(100) DEFAULT NULL,
-  `created_by` varchar(50) DEFAULT '',
+  `created_by` varchar(50) NOT NULL DEFAULT '',
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modified_by` varchar(50) DEFAULT NULL,
   `modified_date` timestamp NULL DEFAULT NULL,
   `language` varchar(10) NOT NULL DEFAULT '',
+  `include_section` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-
-# Dump of table form_question
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `form_question`;
-
-CREATE TABLE `form_question` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `form_id` int(11) NOT NULL,
-  `question_id` bigint(20) NOT NULL,
-  `is_mandatory` varchar(100) NOT NULL DEFAULT '0',
-  `sequence` int(11) NOT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `language` varchar(10) NOT NULL DEFAULT '',
-  `supper_id` varchar(20) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
-  KEY `fk_idx` (`question_id`),
-  KEY `fk_idx2` (`form_id`),
-  CONSTRAINT `fk_form_id` FOREIGN KEY (`form_id`) REFERENCES `form` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_question_id` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -134,6 +112,7 @@ DROP TABLE IF EXISTS `question`;
 
 CREATE TABLE `question` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `section_id` int(11) NOT NULL,
   `title` varchar(200) NOT NULL DEFAULT '',
   `subtitle` varchar(200) DEFAULT NULL,
   `question_type_id` int(11) NOT NULL,
@@ -143,6 +122,8 @@ CREATE TABLE `question` (
   `modified_by` varchar(50) DEFAULT NULL,
   `modified_date` timestamp NULL DEFAULT NULL,
   `language` varchar(10) NOT NULL DEFAULT '',
+  `mandatory` tinyint(1) NOT NULL DEFAULT '1',
+  `sequence` int(6) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_question_type_1_idx` (`question_type_id`),
   CONSTRAINT `fk_question_type_1_idx` FOREIGN KEY (`question_type_id`) REFERENCES `question_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -158,11 +139,13 @@ DROP TABLE IF EXISTS `question_option`;
 CREATE TABLE `question_option` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `question_id` bigint(20) NOT NULL,
-  `description` varchar(500) NOT NULL DEFAULT '',
+  `description` varchar(500) DEFAULT '',
   `sequence` int(11) DEFAULT NULL,
   `total_value` int(11) DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `net_promoter_from` varchar(100) DEFAULT '',
+  `net_promoter_to` varchar(100) DEFAULT '',
   `language` varchar(10) NOT NULL DEFAULT '',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `fk_index` (`question_id`),
   CONSTRAINT `fk_1` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -195,6 +178,47 @@ VALUES
 	(6,'Net promoter score',1);
 
 /*!40000 ALTER TABLE `question_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table section
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `section`;
+
+CREATE TABLE `section` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `form_id` int(11) NOT NULL,
+  `title` varchar(200) NOT NULL DEFAULT '',
+  `description` varchar(500) DEFAULT '',
+  `sequence` int(6) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table system_token
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `system_token`;
+
+CREATE TABLE `system_token` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(500) NOT NULL DEFAULT '',
+  `description` varchar(100) NOT NULL DEFAULT '',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+LOCK TABLES `system_token` WRITE;
+/*!40000 ALTER TABLE `system_token` DISABLE KEYS */;
+
+INSERT INTO `system_token` (`id`, `token`, `description`, `is_active`)
+VALUES
+	(1,'YWVzLTI1Ni1nY206Y0c5UGMwMXFRWGxOUXpCM1RWTXdlVTlUTUhoT1VWZFJZMUA1Mi4zOS45MC4yNjo1MjIxOQNv6RRuGEVvmGjB+jimI/gw==','iForms_web',1);
+
+/*!40000 ALTER TABLE `system_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
