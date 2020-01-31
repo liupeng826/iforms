@@ -6,6 +6,7 @@ import com.microastudio.iforms.common.bean.ResultResponse;
 import com.microastudio.iforms.domain.Language;
 import com.microastudio.iforms.domain.QuestionType;
 import com.microastudio.iforms.domain.SystemToken;
+import com.microastudio.iforms.dto.AnswerDto;
 import com.microastudio.iforms.dto.FormDto;
 import com.microastudio.iforms.service.FormService;
 import org.apache.commons.lang3.StringUtils;
@@ -147,6 +148,41 @@ public class FormController {
             return ResultResponse.success(supperId);
         } catch (Exception e) {
             logger.error("generateForm异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+        return resultResponse;
+    }
+
+    @PostMapping("/answer")
+    public ResultResponse answer(@RequestBody AnswerDto answerDto) {
+        logger.info("answer");
+        ResultResponse resultResponse = new ResultResponse();
+        try {
+            if (answerDto == null || answerDto.getSystemToken() == null
+                    || answerDto.getAnswers() == null) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+            }
+            logger.info("answer入参：" + JSONObject.toJSONString(answerDto));
+
+            // validateToken
+            resultResponse = getToken(answerDto.getSystemToken().getDescription(), answerDto.getSystemToken().getToken());
+            if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+                return resultResponse;
+            }
+
+            // add answer
+            int rows = formService.addAnswer(answerDto);
+
+            if (rows == 0) {
+                logger.error("answer插入异常");
+                resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+                resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+            }
+
+            return ResultResponse.success("");
+        } catch (Exception e) {
+            logger.error("answer异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
         }

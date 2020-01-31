@@ -2,6 +2,7 @@ package com.microastudio.iforms.service.impl;
 
 import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.domain.*;
+import com.microastudio.iforms.dto.AnswerDto;
 import com.microastudio.iforms.dto.FormDto;
 import com.microastudio.iforms.dto.SectionDto;
 import com.microastudio.iforms.mapper.FormMapper;
@@ -11,6 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -148,6 +150,20 @@ public class FormServiceImpl implements FormService {
     @Override
     public List<FormDto> getAllForms(String key) {
         return formMapper.selectAllFormsByKey(key);
+    }
+
+    @Override
+    public int addAnswer(AnswerDto answerDto) {
+        List<FormQuestionAnswer> answerList = new ArrayList<>();
+        for (FormQuestionAnswer answer : answerDto.getAnswers()) {
+            answer.setFormId(answerDto.getFormId());
+            answer.setReference(answerDto.getReference());
+            answer.setCreatedBy(answerDto.getCreatedBy());
+            answer.setModifiedBy(answerDto.getModifiedBy());
+            answerList.add(answer);
+        }
+
+        return formMapper.insertAnswer(answerList);
     }
 
 

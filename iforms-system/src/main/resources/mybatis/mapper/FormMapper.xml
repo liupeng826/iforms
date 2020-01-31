@@ -27,10 +27,10 @@
         <result column="type" property="type" jdbcType="VARCHAR"/>
         <result column="is_active" property="isActive" jdbcType="TINYINT"/>
         <result column="include_section" property="includeSection" jdbcType="TINYINT"/>
-        <result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
-        <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
-        <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
-        <result column="modified_by" property="modifiedBy" jdbcType="VARCHAR" />
+        <result column="created_date" property="createdDate" jdbcType="TIMESTAMP"/>
+        <result column="created_by" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP"/>
+        <result column="modified_by" property="modifiedBy" jdbcType="VARCHAR"/>
         <collection property="sections" ofType="com.microastudio.iforms.dto.SectionDto">
             <id column="section.id" property="id"/>
             <result column="section.form_id" property="formId"/>
@@ -220,4 +220,33 @@
     <!--        #{language},-->
     <!--        #{supperId})-->
     <!--    </insert>-->
+
+    <insert id="insertAnswer" parameterType="java.util.List">
+        INSERT INTO `form_question_answer`
+        (`form_id`,
+        `question_id`,
+        `answer_description`,
+        `answer_option_id`,
+        `answer_value`,
+        `total_value`,
+        `reference`,
+        `created_by`,
+        `created_date`,
+        `modified_by`,
+        `modified_date`)
+        VALUES
+        <foreach collection="list" index="index" separator="," item="item">
+            (#{item.formId},
+            #{item.questionId},
+            #{item.answerDescription},
+            #{item.answerOptionId},
+            #{item.answerValue},
+            #{item.totalValue},
+            #{item.reference},
+            #{item.createdBy},
+            now(),
+            #{item.modifiedBy},
+            now())
+        </foreach>
+    </insert>
 </mapper>
