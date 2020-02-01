@@ -153,13 +153,27 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int addAnswer(AnswerDto answerDto) {
+        int rows;
+        Long customerId = null;
+        Customer customer = answerDto.getCustomer();
+        // insert customer
+        if (customer != null) {
+            rows = formMapper.insertCustomer(answerDto.getCustomer());
+            if (rows > 0) {
+                customerId = customer.getId();
+            }
+        }
+
+        // insert answers
         List<FormQuestionAnswer> answerList = new ArrayList<>();
         for (FormQuestionAnswer answer : answerDto.getAnswers()) {
             answer.setFormId(answerDto.getFormId());
             answer.setReference(answerDto.getReference());
             answer.setCreatedBy(answerDto.getCreatedBy());
             answer.setModifiedBy(answerDto.getModifiedBy());
+            answer.setCustomerId(customerId);
             answerList.add(answer);
         }
 

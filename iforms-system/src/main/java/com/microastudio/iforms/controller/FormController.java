@@ -143,6 +143,7 @@ public class FormController {
                 logger.error("generateForm异常：supperId is null");
                 resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
                 resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+                return resultResponse;
             }
 
             return ResultResponse.success(supperId);
@@ -178,6 +179,7 @@ public class FormController {
                 logger.error("answer插入异常");
                 resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
                 resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+                return resultResponse;
             }
 
             return ResultResponse.success("");
@@ -186,6 +188,13 @@ public class FormController {
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
         }
+
+        //send email
+
+
+
+
+        
         return resultResponse;
     }
 

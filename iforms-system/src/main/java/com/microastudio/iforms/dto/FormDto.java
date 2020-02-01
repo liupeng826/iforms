@@ -23,9 +23,6 @@ public class FormDto implements Serializable {
     private String level;
     private String marketId;
     private String dealerId;
-//    private String customerName;
-//    private String customerEmail;
-//    private String contactNo;
     private SystemToken systemToken;
     private byte sendEmail;
     private String type;

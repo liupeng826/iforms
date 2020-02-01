@@ -25,4 +25,5 @@ public class FormQuestionAnswer implements Serializable {
     private Timestamp createdDate;
     private String modifiedBy;
     private Timestamp modifiedDate;
+    private Long customerId;
 }

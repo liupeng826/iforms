@@ -1,5 +1,6 @@
 package com.microastudio.iforms.dto;
 
+import com.microastudio.iforms.domain.Customer;
 import com.microastudio.iforms.domain.FormQuestionAnswer;
 import com.microastudio.iforms.domain.SystemToken;
 import lombok.Data;
@@ -24,12 +25,5 @@ public class AnswerDto implements Serializable {
     private String modifiedBy;
     private Timestamp modifiedDate;
     private List<FormQuestionAnswer> answers;
-
-//    private class Answer {
-//        private Long questionId;
-//        private String answerDescription;
-//        private Long answerOptionId;
-//        private String answerValue;
-//        private String totalValue;
-//    }
+    private Customer customer;
 }

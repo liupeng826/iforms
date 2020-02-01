@@ -24,5 +24,6 @@ public interface FormMapper {
     String selectSystemToken(String key);
     List<FormDto> selectAllFormsByKey(String key);
     int insertAnswer(List<FormQuestionAnswer> answers);
+    int insertCustomer(Customer customer);
 
 }

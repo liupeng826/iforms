@@ -249,4 +249,17 @@
             now())
         </foreach>
     </insert>
+
+    <insert id="insertCustomer" parameterType="com.microastudio.iforms.domain.Customer"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO `customer`
+        (`customer_name`,
+        `customer_email`,
+        `contact_no`)
+        VALUES
+        (#{customerName},
+        #{customerEmail},
+        #{contactNo})
+    </insert>
 </mapper>
