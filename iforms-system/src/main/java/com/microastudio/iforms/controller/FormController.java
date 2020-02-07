@@ -9,13 +9,21 @@ import com.microastudio.iforms.domain.SystemToken;
 import com.microastudio.iforms.dto.AnswerDto;
 import com.microastudio.iforms.dto.FormDto;
 import com.microastudio.iforms.service.FormService;
+import com.microastudio.iforms.service.MailService;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author peng
@@ -28,6 +36,10 @@ public class FormController {
 
     @Autowired
     private FormService formService;
+    @Autowired
+    private MailService mailService;
+    @Autowired
+    private FreeMarkerConfigurer freeMarkerConfigurer;
 
     @GetMapping("/questionType")
     public ResultResponse getQuestionType() {
@@ -35,7 +47,7 @@ public class FormController {
         ResultResponse resultResponse = new ResultResponse();
         try {
             List<QuestionType> questionType = formService.getQuestionType();
-            return ResultResponse.success(questionType);
+            resultResponse.success(questionType);
         } catch (Exception e) {
             logger.error("getQuestionType异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
@@ -50,7 +62,7 @@ public class FormController {
         ResultResponse resultResponse = new ResultResponse();
         try {
             List<Language> languages = formService.getLanguage();
-            return ResultResponse.success(languages);
+            resultResponse.success(languages);
         } catch (Exception e) {
             logger.error("getLanguage异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
@@ -80,7 +92,7 @@ public class FormController {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_AUTH_TOKEN, CommonConstants.ERRORS_MSG_AUTH_TOKEN);
             }
 
-            return ResultResponse.success("");
+            resultResponse.success("");
         } catch (Exception e) {
             logger.error("getToken异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
@@ -109,7 +121,7 @@ public class FormController {
             // get form
             List<FormDto> forms = formService.getAllForms(systemToken.getToken());
 
-            return ResultResponse.success(forms);
+            resultResponse.success(forms);
         } catch (Exception e) {
             logger.error("getAllForms异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
@@ -146,7 +158,7 @@ public class FormController {
                 return resultResponse;
             }
 
-            return ResultResponse.success(supperId);
+            resultResponse.success(supperId);
         } catch (Exception e) {
             logger.error("generateForm异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
@@ -182,19 +194,31 @@ public class FormController {
                 return resultResponse;
             }
 
-            return ResultResponse.success("");
+            resultResponse.success("");
+            logger.info("answer插入成功");
         } catch (Exception e) {
-            logger.error("answer异常：" + e.getMessage(), e);
+            logger.error("answer插入异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
         }
 
-        //send email
+        try {
+            //send email
+            logger.info("开始发送邮件");
+            Map<String, Object> model = new HashMap<>();
+            model.put("username", "username");
+            model.put("templateType", "Freemarker");
+            Template template = freeMarkerConfigurer.getConfiguration().getTemplate("emailTemplate.html");
+            String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+            mailService.sendHtmlMail("peng.liu@volvo.com", "主题：这是模板邮件", html);
+            resultResponse.success("");
+            logger.info("成功发送邮件");
+        } catch (IOException | TemplateException e) {
+            logger.error("发送邮件异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_MAIL);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_MAIL);
+        }
 
-
-
-
-        
         return resultResponse;
     }
 

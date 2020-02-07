@@ -24,6 +24,8 @@ public class CommonConstants {
     public static final String ERRORS_CODE_AUTH_TOKEN = "-7";
     public static final String ERRORS_MSG_AUTH_TOKEN = "token失效或不存在";
 
+    public static final String ERRORS_CODE_MAIL = "-6";
+    public static final String ERRORS_MSG_MAIL = "邮件发送异常";
     // token用
     public static final String AUTHORIZATION = "authStr";
     public static final String CURRENT_USER_ID = "userId";
