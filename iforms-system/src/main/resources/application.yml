@@ -5,11 +5,13 @@
 spring:
   session:
     store-type: redis
+  #缓存
   redis:
     host: localhost
     port: 6379
     password:
     database: 0
+  #数据库
   datasource:
     name: dataSource
     type: com.alibaba.druid.pool.DruidDataSource
@@ -36,7 +38,21 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
-
+  #邮件
+  mail:
+    host: mailgot.xxx.com
+    username: Api.support.css@xxx.com  #用户名
+    password: xxx                    #密码
+  #下面是安全认证，不加会报503错误
+  properties:
+    mail:
+    smtp:
+      auth: true
+      starttls:
+        enable: true
+        required: true
+      default-encoding: UTF-8
+fromMail: Api.support.css@xxx.com
 mybatis:
   mapper-locations: classpath*:mybatis/mapper/*.xml
   type-aliases-package: com.microastudio.*.entity
