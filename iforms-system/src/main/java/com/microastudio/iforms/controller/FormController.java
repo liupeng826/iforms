@@ -3,11 +3,13 @@ package com.microastudio.iforms.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.bean.ResultResponse;
+import com.microastudio.iforms.domain.Form;
 import com.microastudio.iforms.domain.Language;
 import com.microastudio.iforms.domain.QuestionType;
 import com.microastudio.iforms.domain.SystemToken;
 import com.microastudio.iforms.dto.AnswerDto;
 import com.microastudio.iforms.dto.FormDto;
+import com.microastudio.iforms.dto.FormRequestDto;
 import com.microastudio.iforms.service.FormService;
 import com.microastudio.iforms.service.MailService;
 import freemarker.template.Template;
@@ -102,24 +104,24 @@ public class FormController {
     }
 
     @PostMapping("/getAllForms")
-    public ResultResponse getAllForms(@RequestBody SystemToken systemToken) {
+    public ResultResponse getAllForms(@RequestBody FormRequestDto dto) {
         logger.info("getAllForms");
         ResultResponse resultResponse = new ResultResponse();
         try {
-            if (systemToken == null) {
+            if (dto == null) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
 
-            logger.info("getAllForms入参：" + JSONObject.toJSONString(systemToken));
+            logger.info("getAllForms入参：" + JSONObject.toJSONString(dto));
 
             // validateToken
-            resultResponse = getToken(systemToken.getDescription(), systemToken.getToken());
+            resultResponse = getToken(dto.getDescription(), dto.getToken());
             if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
                 return resultResponse;
             }
 
             // get form
-            List<FormDto> forms = formService.getAllForms(systemToken.getToken());
+            List<FormDto> forms = formService.getAllForms(dto.getToken(), dto.getSupperId());
 
             resultResponse.success(forms);
         } catch (Exception e) {
@@ -149,16 +151,16 @@ public class FormController {
             }
 
             // generate form
-            String supperId = formService.generateForm(formParam);
+            Form form = formService.generateForm(formParam);
 
-            if (supperId == null) {
+            if (form == null) {
                 logger.error("generateForm异常：supperId is null");
                 resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
                 resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
                 return resultResponse;
             }
 
-            resultResponse.success(supperId);
+            resultResponse.success(form);
         } catch (Exception e) {
             logger.error("generateForm异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);

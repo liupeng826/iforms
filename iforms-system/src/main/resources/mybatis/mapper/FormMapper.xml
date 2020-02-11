@@ -17,6 +17,7 @@
 
     <resultMap id="FormResultMap" type="com.microastudio.iforms.dto.FormDto">
         <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="supper_id" property="supperId" jdbcType="VARCHAR"/>
         <result column="title" property="title" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="level" property="level" jdbcType="VARCHAR"/>
@@ -101,7 +102,10 @@
         AND question_option.is_active = 1)
         WHERE section.form_id = form.id
         AND question.section_id = section.id
-        AND form.system_token = #{key}
+        AND form.system_token = #{systemToken}
+        <if test="supperId != null and supperId != '' ">
+            AND form.supper_id = #{supperId,jdbcType=VARCHAR}
+        </if>
         AND form.is_active = 1
         AND section.is_active = 1
         AND question.is_active = 1
@@ -175,7 +179,8 @@
             useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `form`
-        (`title`,
+        (`supper_id`,
+        `title`,
         `description`,
         `level`,
         `market_id`,
@@ -190,7 +195,8 @@
         `language`,
         `include_section`)
         VALUES
-        (#{title},
+        (#{supperId},
+        #{title},
         #{description},
         #{level},
         #{marketId},

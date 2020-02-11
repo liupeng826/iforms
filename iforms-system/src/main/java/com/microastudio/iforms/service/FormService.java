@@ -1,5 +1,6 @@
 package com.microastudio.iforms.service;
 
+import com.microastudio.iforms.domain.Form;
 import com.microastudio.iforms.domain.FormQuestionAnswer;
 import com.microastudio.iforms.domain.Language;
 import com.microastudio.iforms.domain.QuestionType;
@@ -17,8 +18,8 @@ public interface FormService {
      */
     List<QuestionType> getQuestionType();
     List<Language> getLanguage();
-    String generateForm(FormDto formDto);
+    Form generateForm(FormDto formDto);
     String getSystemToken(String key);
     int addAnswer(AnswerDto answers);
-    List<FormDto> getAllForms(String key);
+    List<FormDto> getAllForms(String key, String supperId);
 }

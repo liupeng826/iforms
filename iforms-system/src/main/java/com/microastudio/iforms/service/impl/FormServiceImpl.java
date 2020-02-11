@@ -1,6 +1,8 @@
 package com.microastudio.iforms.service.impl;
 
+import com.alibaba.druid.util.StringUtils;
 import com.microastudio.iforms.common.bean.CommonConstants;
+import com.microastudio.iforms.common.utils.StringUtil;
 import com.microastudio.iforms.domain.*;
 import com.microastudio.iforms.dto.AnswerDto;
 import com.microastudio.iforms.dto.FormDto;
@@ -55,10 +57,19 @@ public class FormServiceImpl implements FormService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String generateForm(FormDto formDto) {
+    public Form generateForm(FormDto formDto) {
+
         int rows = 0;
+        String uuid;
 
         Form form = new Form();
+        if (StringUtils.isEmpty(formDto.getSupperId())) {
+            uuid = StringUtil.getUuid();
+        } else {
+            uuid = formDto.getSupperId();
+        }
+
+        form.setSupperId(uuid);
         form.setTitle(formDto.getTitle());
         form.setDescription(formDto.getDescription());
         form.setLevel(formDto.getLevel());
@@ -77,8 +88,8 @@ public class FormServiceImpl implements FormService {
         if (rows == 0) {
             return null;
         }
+
         Long formId = form.getId();
-//        String supperId = StringUtil.getUuid();
 
         for (SectionDto sectionDto : formDto.getSections()) {
             Long sectionId = null;
@@ -93,6 +104,8 @@ public class FormServiceImpl implements FormService {
             } else {
                 section.setSequence(sectionDto.getSequence());
             }
+
+            section.setLanguage(formDto.getLanguage());
 
             rows = formMapper.insertSection(section);
             if (rows == 0) {
@@ -139,7 +152,7 @@ public class FormServiceImpl implements FormService {
             }
         }
 
-        return formId.toString();
+        return form;
     }
 
     @Override
@@ -148,8 +161,8 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<FormDto> getAllForms(String key) {
-        return formMapper.selectAllFormsByKey(key);
+    public List<FormDto> getAllForms(String systemToken, String supperId) {
+        return formMapper.selectAllFormsByKey(systemToken, supperId);
     }
 
     @Override
