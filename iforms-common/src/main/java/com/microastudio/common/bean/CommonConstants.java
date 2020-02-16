@@ -1,4 +1,4 @@
-package com.microastudio.iforms.common.bean;
+package com.microastudio.common.bean;
 
 /**
  * 公共常量类

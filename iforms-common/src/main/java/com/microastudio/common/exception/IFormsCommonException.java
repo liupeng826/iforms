@@ -1,10 +1,10 @@
-package com.microastudio.iforms.common.exception;
+package com.microastudio.common.exception;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.microastudio.iforms.common.bean.CommonConstants;
+import com.microastudio.common.bean.CommonConstants;
 
 /**
  * 通用异常类

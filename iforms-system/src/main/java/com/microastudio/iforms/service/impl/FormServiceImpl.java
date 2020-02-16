@@ -1,8 +1,7 @@
 package com.microastudio.iforms.service.impl;
 
-import com.alibaba.druid.util.StringUtils;
-import com.microastudio.iforms.common.bean.CommonConstants;
-import com.microastudio.iforms.common.utils.StringUtil;
+import com.microastudio.common.utils.StringUtils;
+import com.microastudio.common.bean.CommonConstants;
 import com.microastudio.iforms.domain.*;
 import com.microastudio.iforms.dto.AnswerDto;
 import com.microastudio.iforms.dto.FormDto;
@@ -64,7 +63,7 @@ public class FormServiceImpl implements FormService {
 
         Form form = new Form();
         if (StringUtils.isEmpty(formDto.getSupperId())) {
-            uuid = StringUtil.getUuid();
+            uuid = StringUtils.getUuid();
         } else {
             uuid = formDto.getSupperId();
         }

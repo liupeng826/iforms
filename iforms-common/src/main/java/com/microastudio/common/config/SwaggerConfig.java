@@ -1,4 +1,4 @@
-package com.microastudio.iforms.common.config;
+package com.microastudio.common.config;
 
 import com.google.common.base.Predicates;
 import org.springframework.beans.factory.annotation.Value;

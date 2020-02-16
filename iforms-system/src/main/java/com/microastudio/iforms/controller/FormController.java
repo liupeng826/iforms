@@ -1,12 +1,11 @@
 package com.microastudio.iforms.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.microastudio.iforms.common.bean.CommonConstants;
-import com.microastudio.iforms.common.bean.ResultResponse;
+import com.microastudio.common.bean.CommonConstants;
+import com.microastudio.common.bean.ResultResponse;
 import com.microastudio.iforms.domain.Form;
 import com.microastudio.iforms.domain.Language;
 import com.microastudio.iforms.domain.QuestionType;
-import com.microastudio.iforms.domain.SystemToken;
 import com.microastudio.iforms.dto.AnswerDto;
 import com.microastudio.iforms.dto.FormDto;
 import com.microastudio.iforms.dto.FormRequestDto;

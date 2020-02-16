@@ -1,4 +1,4 @@
-package com.microastudio.iforms.common.utils;
+package com.microastudio.common.utils;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;

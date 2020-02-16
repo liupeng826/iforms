@@ -1,4 +1,4 @@
-package com.microastudio.iforms.common.utils;
+package com.microastudio.common.utils;
 
 import java.lang.reflect.InvocationTargetException;
 
