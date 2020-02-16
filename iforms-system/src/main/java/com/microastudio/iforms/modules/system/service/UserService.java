@@ -1,5 +1,8 @@
 package com.microastudio.iforms.modules.system.service;
 
+
+import com.microastudio.iforms.modules.system.dto.UserDto;
+
 /**
  * @author peng
  */
@@ -31,13 +34,13 @@ public interface UserService {
 //     */
 //    void delete(Set<Long> ids);
 //
-//    /**
-//     * 根据用户名查询
-//     * @param userName /
-//     * @return /
-//     */
-//    UserDto findByName(String userName);
-//
+    /**
+     * 根据用户名查询
+     * @param userName /
+     * @return /
+     */
+    UserDto findByName(String userName);
+
 //    /**
 //     * 修改密码
 //     * @param username 用户名

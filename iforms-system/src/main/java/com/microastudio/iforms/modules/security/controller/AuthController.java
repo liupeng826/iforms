@@ -4,8 +4,11 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import com.microastudio.iforms.common.annotation.AnonymousAccess;
+import com.microastudio.iforms.common.bean.ResultResponse;
+import com.microastudio.iforms.common.exception.BadRequestException;
 import com.microastudio.iforms.common.utils.RedisUtils;
 import com.microastudio.iforms.common.utils.SecurityUtils;
+import com.microastudio.iforms.common.utils.StringUtils;
 import com.microastudio.iforms.modules.security.config.SecurityProperties;
 import com.microastudio.iforms.modules.security.domain.AuthUser;
 import com.microastudio.iforms.modules.security.domain.JwtUser;
@@ -65,20 +68,20 @@ public class AuthController {
     @ApiOperation("登录授权")
     @AnonymousAccess
     @PostMapping(value = "/login")
-    public ResponseEntity<Object> login(@Validated @RequestBody AuthUser authUser, HttpServletRequest request) {
+    public ResultResponse login(@Validated @RequestBody AuthUser authUser, HttpServletRequest request) {
         // 密码解密
         RSA rsa = new RSA(privateKey, null);
         String password = new String(rsa.decrypt(authUser.getPassword(), KeyType.PrivateKey));
-//        // 查询验证码
-//        String code = (String) redisUtils.get(authUser.getUuid());
-//        // 清除验证码
-//        redisUtils.del(authUser.getUuid());
-//        if (StringUtils.isBlank(code)) {
-//            throw new BadRequestException("验证码不存在或已过期");
-//        }
-//        if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
-//            throw new BadRequestException("验证码错误");
-//        }
+        // 查询验证码
+        String code = (String) redisUtils.get(authUser.getUuid());
+        // 清除验证码
+        redisUtils.del(authUser.getUuid());
+        if (StringUtils.isBlank(code)) {
+            throw new BadRequestException("验证码不存在或已过期");
+        }
+        if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
+            throw new BadRequestException("验证码错误");
+        }
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
 
@@ -97,7 +100,9 @@ public class AuthController {
             //踢掉之前已经登录的token
             onlineUserService.checkLoginOnUser(authUser.getUsername(), token);
         }
-        return ResponseEntity.ok(authInfo);
+        ResultResponse resultResponse = new ResultResponse();
+        resultResponse.success(authInfo);
+        return resultResponse;
     }
 
     @ApiOperation("获取用户信息")
@@ -110,7 +115,7 @@ public class AuthController {
     @AnonymousAccess
     @ApiOperation("获取验证码")
     @GetMapping(value = "/code")
-    public ResponseEntity<Object> getCode() {
+    public ResultResponse getCode() {
         // 算术类型 https://gitee.com/whvse/EasyCaptcha
         ArithmeticCaptcha captcha = new ArithmeticCaptcha(111, 36);
         // 几位数运算，默认是两位
@@ -125,7 +130,9 @@ public class AuthController {
             put("img", captcha.toBase64());
             put("uuid", uuid);
         }};
-        return ResponseEntity.ok(imgResult);
+        ResultResponse resultResponse = new ResultResponse();
+        resultResponse.success(imgResult);
+        return resultResponse;
     }
 
     @ApiOperation("退出登录")

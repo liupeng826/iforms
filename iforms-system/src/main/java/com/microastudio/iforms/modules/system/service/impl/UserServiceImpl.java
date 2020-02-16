@@ -1,10 +1,14 @@
 package com.microastudio.iforms.modules.system.service.impl;
 
+import com.microastudio.iforms.common.exception.EntityNotFoundException;
 import com.microastudio.iforms.common.utils.RedisUtils;
+import com.microastudio.iforms.modules.system.domain.User;
+import com.microastudio.iforms.modules.system.dto.UserDto;
 import com.microastudio.iforms.modules.system.mapper.UserMapper;
 import com.microastudio.iforms.modules.system.repository.UserRepository;
 import com.microastudio.iforms.modules.system.service.UserService;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +31,7 @@ public class UserServiceImpl implements UserService {
         this.redisUtils = redisUtils;
     }
 
-//    @Override
+    //    @Override
 //    @Cacheable
 //    public Object queryAll(UserQueryCriteria criteria, Pageable pageable) {
 //        Page<User> page = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
@@ -119,21 +123,28 @@ public class UserServiceImpl implements UserService {
 //        }
 //    }
 //
-//    @Override
-//    @Cacheable(key = "'loadUserByUsername:'+#p0")
-//    public UserDto findByName(String userName) {
-//        User user;
-//        if(ValidationUtil.isEmail(userName)){
-//            user = userRepository.findByEmail(userName);
-//        } else {
-//            user = userRepository.findByUsername(userName);
-//        }
-//        if (user == null) {
-//            throw new EntityNotFoundException(User.class, "name", userName);
-//        } else {
-//            return userMapper.toDto(user);
-//        }
-//    }
+    @Override
+    @Cacheable(key = "'loadUserByUsername:'+#p0")
+    public UserDto findByName(String userName) {
+        User user;
+        user = userRepository.findByUsername(userName);
+        if (user == null) {
+            throw new EntityNotFoundException(User.class, "name", userName);
+        } else {
+            UserDto userDto = new UserDto();
+            userDto.setId(user.getId());
+            userDto.setUsername(user.getUsername());
+            userDto.setNickName(user.getNickName());
+            userDto.setEmail(user.getEmail());
+            userDto.setPassword(user.getPassword());
+            userDto.setSex(user.getSex());
+            userDto.setPhone(user.getPhone());
+            userDto.setCreateTime(user.getCreateTime());
+            userDto.setLastPasswordResetTime(user.getLastPasswordResetTime());
+            userDto.setEnabled(user.getEnabled());
+            return userDto;
+        }
+    }
 //
 //    @Override
 //    @CacheEvict(allEntries = true)

@@ -3,6 +3,7 @@ package com.microastudio.iforms.modules.system.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -22,8 +23,6 @@ public class UserDto implements Serializable {
 
     private String sex;
 
-    private String avatar;
-
     private String email;
 
     private String phone;
@@ -34,6 +33,8 @@ public class UserDto implements Serializable {
     private String password;
 
     private Date lastPasswordResetTime;
+
+    private Long deptId;
 
     private Timestamp createTime;
 }
