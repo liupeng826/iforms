@@ -1,7 +1,6 @@
 package com.microastudio.iforms.dto;
 
 import com.microastudio.iforms.domain.Question;
-import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;

@@ -3,7 +3,6 @@ package com.microastudio.iforms.dto;
 import com.microastudio.iforms.domain.Customer;
 import com.microastudio.iforms.domain.FormQuestionAnswer;
 import com.microastudio.iforms.domain.SystemToken;
-import lombok.Data;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
