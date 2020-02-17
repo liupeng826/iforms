@@ -1,8 +1,8 @@
 package com.microastudio.iforms.common.utils;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.apache.commons.beanutils.BeanUtils;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author peng

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.microastudio.iforms.mapper.FormMapper">
+<mapper namespace="com.microastudio.iforms.modules.form.mapper.FormMapper">
 
-    <resultMap id="QuestionTypeResultMap" type="com.microastudio.iforms.domain.QuestionType">
+    <resultMap id="QuestionTypeResultMap" type="com.microastudio.iforms.modules.form.domain.QuestionType">
         <result column="id" property="id" jdbcType="BIGINT"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="is_active" property="isActive" jdbcType="TINYINT"/>
     </resultMap>
 
-    <resultMap id="LanguageResultMap" type="com.microastudio.iforms.domain.Language">
+    <resultMap id="LanguageResultMap" type="com.microastudio.iforms.modules.form.domain.Language">
         <result column="id" property="id" jdbcType="BIGINT"/>
         <result column="code" property="code" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="is_active" property="isActive" jdbcType="TINYINT"/>
     </resultMap>
 
-    <resultMap id="FormResultMap" type="com.microastudio.iforms.dto.FormDto">
+    <resultMap id="FormResultMap" type="com.microastudio.iforms.modules.form.dto.FormDto">
         <result column="id" property="id" jdbcType="BIGINT"/>
         <result column="supper_id" property="supperId" jdbcType="VARCHAR"/>
         <result column="title" property="title" jdbcType="VARCHAR"/>
@@ -32,13 +32,13 @@
         <result column="created_by" property="createdBy" jdbcType="VARCHAR"/>
         <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP"/>
         <result column="modified_by" property="modifiedBy" jdbcType="VARCHAR"/>
-        <collection property="sections" ofType="com.microastudio.iforms.dto.SectionDto">
+        <collection property="sections" ofType="com.microastudio.iforms.modules.form.dto.SectionDto">
             <id column="section.id" property="id"/>
             <result column="section.form_id" property="formId"/>
             <result column="section.title" property="title"/>
             <result column="section.description" property="description"/>
             <result column="section.sequence" property="sequence"/>
-            <collection property="questions" ofType="com.microastudio.iforms.domain.Question">
+            <collection property="questions" ofType="com.microastudio.iforms.modules.form.domain.Question">
                 <id column="question.id" property="id"/>
                 <result column="question.section_id" property="sectionId"/>
                 <result column="question.title" property="title"/>
@@ -46,7 +46,7 @@
                 <result column="question.question_type_id" property="questionTypeId"/>
                 <result column="question.mandatory" property="mandatory"/>
                 <result column="question.sequence" property="sequence"/>
-                <collection property="questionOptions" ofType="com.microastudio.iforms.domain.QuestionOption">
+                <collection property="questionOptions" ofType="com.microastudio.iforms.modules.form.domain.QuestionOption">
                     <id column="question_option.id" property="id"/>
                     <result column="question_option.question_id" property="questionId"/>
                     <result column="question_option.description" property="description"/>
@@ -111,7 +111,7 @@
         AND question.is_active = 1
     </select>
 
-    <insert id="insertQuestion" parameterType="com.microastudio.iforms.domain.Question" useGeneratedKeys="true"
+    <insert id="insertQuestion" parameterType="com.microastudio.iforms.modules.form.domain.Question" useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `question`
         (`section_id`,
@@ -139,7 +139,7 @@
         #{sequence})
     </insert>
 
-    <insert id="insertQuestionOption" parameterType="com.microastudio.iforms.domain.QuestionOption"
+    <insert id="insertQuestionOption" parameterType="com.microastudio.iforms.modules.form.domain.QuestionOption"
             useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `question_option`
@@ -160,7 +160,7 @@
         #{language})
     </insert>
 
-    <insert id="insertSection" parameterType="com.microastudio.iforms.domain.Section"
+    <insert id="insertSection" parameterType="com.microastudio.iforms.modules.form.domain.Section"
             useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `section`
@@ -175,7 +175,7 @@
         #{sequence})
     </insert>
 
-    <insert id="insertForm" parameterType="com.microastudio.iforms.domain.Form"
+    <insert id="insertForm" parameterType="com.microastudio.iforms.modules.form.domain.Form"
             useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `form`
@@ -212,7 +212,7 @@
         #{includeSection})
     </insert>
 
-    <!--    <insert id="insertFormQuestionMapping" parameterType="com.microastudio.iforms.domain.FormQuestionMapping">-->
+    <!--    <insert id="insertFormQuestionMapping" parameterType="com.microastudio.modules.iforms.domain.FormQuestionMapping">-->
     <!--        INSERT INTO `form_question`-->
     <!--        (`form_id`,-->
     <!--        `section_id`,-->
@@ -256,7 +256,7 @@
         </foreach>
     </insert>
 
-    <insert id="insertCustomer" parameterType="com.microastudio.iforms.domain.Customer"
+    <insert id="insertCustomer" parameterType="com.microastudio.iforms.modules.form.domain.Customer"
             useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `customer`

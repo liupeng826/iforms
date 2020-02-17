@@ -1,5 +1,7 @@
 package com.microastudio.iforms.common.utils;
 
+import org.springframework.util.StringUtils;
+
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,8 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.springframework.util.StringUtils;
-
+/**
+ * @author peng
+ */
 public class DateUtils {
 	
 	/** 日期格式,指定到日期. */
