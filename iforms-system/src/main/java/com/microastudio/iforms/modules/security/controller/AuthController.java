@@ -18,8 +18,6 @@ import com.wf.captcha.ArithmeticCaptcha;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -64,7 +62,7 @@ public class AuthController {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
-//    @Log("用户登录")
+    //    @Log("用户登录")
     @ApiOperation("登录授权")
     @AnonymousAccess
     @PostMapping(value = "/login")
@@ -90,7 +88,8 @@ public class AuthController {
         // 生成令牌
         String token = tokenProvider.createToken(authentication);
         final JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
-
+        // 保存在线信息
+        onlineUserService.save(jwtUser, token, request);
         // 返回 token 与 用户信息
         Map<String, Object> authInfo = new HashMap<String, Object>(2) {{
             put("token", properties.getTokenStartWith() + token);
@@ -100,6 +99,7 @@ public class AuthController {
             //踢掉之前已经登录的token
             onlineUserService.checkLoginOnUser(authUser.getUsername(), token);
         }
+
         ResultResponse resultResponse = new ResultResponse();
         resultResponse.success(authInfo);
         return resultResponse;
@@ -107,9 +107,12 @@ public class AuthController {
 
     @ApiOperation("获取用户信息")
     @GetMapping(value = "/info")
-    public ResponseEntity<Object> getUserInfo() {
+    public ResultResponse getUserInfo() {
         JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(SecurityUtils.getUsername());
-        return ResponseEntity.ok(jwtUser);
+
+        ResultResponse resultResponse = new ResultResponse();
+        resultResponse.success(jwtUser);
+        return resultResponse;
     }
 
     @AnonymousAccess
@@ -130,6 +133,7 @@ public class AuthController {
             put("img", captcha.toBase64());
             put("uuid", uuid);
         }};
+
         ResultResponse resultResponse = new ResultResponse();
         resultResponse.success(imgResult);
         return resultResponse;
@@ -138,8 +142,11 @@ public class AuthController {
     @ApiOperation("退出登录")
     @AnonymousAccess
     @DeleteMapping(value = "/logout")
-    public ResponseEntity<Object> logout(HttpServletRequest request) {
+    public ResultResponse logout(HttpServletRequest request) {
         onlineUserService.logout(tokenProvider.getToken(request));
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        ResultResponse resultResponse = new ResultResponse();
+        resultResponse.success("");
+        return resultResponse;
     }
 }

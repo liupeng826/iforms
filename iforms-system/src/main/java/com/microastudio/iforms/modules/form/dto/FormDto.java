@@ -24,11 +24,13 @@ public class FormDto implements Serializable {
     private byte sendEmail;
     private String type;
     private byte isActive;
+    private byte publishStatus;
     private String createdBy;
     private Timestamp createdDate;
     private String modifiedBy;
     private Timestamp modifiedDate;
     private String language;
+    private Timestamp deadline;
 
     private byte includeSection;
     List<SectionDto> sections;
@@ -175,5 +177,21 @@ public class FormDto implements Serializable {
 
     public void setSections(List<SectionDto> sections) {
         this.sections = sections;
+    }
+
+    public Timestamp getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Timestamp deadline) {
+        this.deadline = deadline;
+    }
+
+    public byte getPublishStatus() {
+        return publishStatus;
+    }
+
+    public void setPublishStatus(byte publishStatus) {
+        this.publishStatus = publishStatus;
     }
 }

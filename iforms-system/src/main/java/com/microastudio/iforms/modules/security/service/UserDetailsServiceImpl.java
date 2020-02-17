@@ -44,8 +44,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private UserDetails createJwtUser(UserDto user) {
-
-
         return new JwtUser(
                 user.getId(),
                 user.getUsername(),

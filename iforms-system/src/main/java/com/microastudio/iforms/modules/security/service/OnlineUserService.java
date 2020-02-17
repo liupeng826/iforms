@@ -4,13 +4,16 @@ import com.microastudio.iforms.common.utils.EncryptUtils;
 import com.microastudio.iforms.common.utils.RedisUtils;
 import com.microastudio.iforms.common.utils.StringUtils;
 import com.microastudio.iforms.modules.security.config.SecurityProperties;
+import com.microastudio.iforms.modules.security.domain.JwtUser;
 import com.microastudio.iforms.modules.security.domain.OnlineUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,19 +37,19 @@ public class OnlineUserService {
      * @param token /
      * @param request /
      */
-//    public void save(JwtUser jwtUser, String token, HttpServletRequest request){
-//        String job = jwtUser.getDept() + "/" + jwtUser.getJob();
-//        String ip = StringUtils.getIp(request);
-//        String browser = StringUtils.getBrowser(request);
-//        String address = StringUtils.getCityInfo(ip);
-//        OnlineUser onlineUser = null;
-//        try {
-//            onlineUser = new OnlineUser(jwtUser.getUsername(), jwtUser.getNickName(), job, browser , ip, address, EncryptUtils.desEncrypt(token), new Date());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        redisUtils.set(properties.getOnlineKey() + token, onlineUser, properties.getTokenValidityInSeconds()/1000);
-//    }
+    public void save(JwtUser jwtUser, String token, HttpServletRequest request){
+        String job = "";
+        String ip = "";
+        String browser = "";
+        String address = "";
+        OnlineUser onlineUser = null;
+        try {
+            onlineUser = new OnlineUser(jwtUser.getUsername(), jwtUser.getNickName(), job, browser , ip, address, EncryptUtils.desEncrypt(token), new Date());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        redisUtils.set(properties.getOnlineKey() + token, onlineUser, properties.getTokenValidityInSeconds()/1000);
+    }
 
     /**
      * 查询全部数据
