@@ -100,9 +100,7 @@ public class AuthController {
             onlineUserService.checkLoginOnUser(authUser.getUsername(), token);
         }
 
-        ResultResponse resultResponse = new ResultResponse();
-        resultResponse.success(authInfo);
-        return resultResponse;
+        return ResultResponse.success(authInfo);
     }
 
     @ApiOperation("获取用户信息")
@@ -110,9 +108,7 @@ public class AuthController {
     public ResultResponse getUserInfo() {
         JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(SecurityUtils.getUsername());
 
-        ResultResponse resultResponse = new ResultResponse();
-        resultResponse.success(jwtUser);
-        return resultResponse;
+        return ResultResponse.success(jwtUser);
     }
 
     @AnonymousAccess
@@ -134,9 +130,7 @@ public class AuthController {
             put("uuid", uuid);
         }};
 
-        ResultResponse resultResponse = new ResultResponse();
-        resultResponse.success(imgResult);
-        return resultResponse;
+        return ResultResponse.success(imgResult);
     }
 
     @ApiOperation("退出登录")
@@ -145,8 +139,6 @@ public class AuthController {
     public ResultResponse logout(HttpServletRequest request) {
         onlineUserService.logout(tokenProvider.getToken(request));
 
-        ResultResponse resultResponse = new ResultResponse();
-        resultResponse.success("");
-        return resultResponse;
+        return ResultResponse.success("");
     }
 }

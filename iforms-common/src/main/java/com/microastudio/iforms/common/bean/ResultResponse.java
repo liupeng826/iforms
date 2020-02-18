@@ -24,24 +24,19 @@ public class ResultResponse<T> {
         this.data = data;
     }
 
-    public void success(T value) {
+    public void ok(T value) {
         this.setCode(CommonConstants.SUCCESS_CODE);
         this.setMessage(CommonConstants.SUCCESS_MSG);
         this.setData(value == null ? (T) "" : value);
     }
 
-    /**
-     * 通用成功结果对象
-     *
-     * @return
-     */
-//    public static <T> ResultResponse<T> success(T value) {
-//        ResultResponse<T> res = new ResultResponse<T>();
-//        res.setCode(CommonConstants.SUCCESS_CODE);
-//        res.setMessage(CommonConstants.SUCCESS_MSG);
-//        res.setData(value == null ? (T) "" : value);
-//        return res;
-//    }
+    public static <T> ResultResponse<T> success(T value) {
+        ResultResponse<T> res = new ResultResponse<T>();
+        res.setCode(CommonConstants.SUCCESS_CODE);
+        res.setMessage(CommonConstants.SUCCESS_MSG);
+        res.setData(value == null ? (T) "" : value);
+        return res;
+    }
 
     public String getCode() {
         return code;

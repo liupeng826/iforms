@@ -50,7 +50,7 @@ public class FormController {
         ResultResponse resultResponse = new ResultResponse();
         try {
             List<QuestionType> questionType = formService.getQuestionType();
-            resultResponse.success(questionType);
+            resultResponse.ok(questionType);
         } catch (Exception e) {
             logger.error("getQuestionType异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
@@ -65,7 +65,7 @@ public class FormController {
         ResultResponse resultResponse = new ResultResponse();
         try {
             List<Language> languages = formService.getLanguage();
-            resultResponse.success(languages);
+            resultResponse.ok(languages);
         } catch (Exception e) {
             logger.error("getLanguage异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
@@ -95,7 +95,7 @@ public class FormController {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_AUTH_TOKEN, CommonConstants.ERRORS_MSG_AUTH_TOKEN);
             }
 
-            resultResponse.success("");
+            resultResponse.ok("");
         } catch (Exception e) {
             logger.error("getToken异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
@@ -124,7 +124,7 @@ public class FormController {
             // get form
             List<FormDto> forms = formService.getAllForms(dto.getToken(), dto.getSupperId());
 
-            resultResponse.success(forms);
+            resultResponse.ok(forms);
         } catch (Exception e) {
             logger.error("getAllForms异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
@@ -161,7 +161,7 @@ public class FormController {
                 return resultResponse;
             }
 
-            resultResponse.success(form);
+            resultResponse.ok(form);
         } catch (Exception e) {
             logger.error("generateForm异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
@@ -197,7 +197,7 @@ public class FormController {
                 return resultResponse;
             }
 
-            resultResponse.success("");
+            resultResponse.ok("");
             logger.info("answer插入成功");
         } catch (Exception e) {
             logger.error("answer插入异常：" + e.getMessage(), e);
@@ -214,7 +214,7 @@ public class FormController {
             Template template = freeMarkerConfigurer.getConfiguration().getTemplate("emailTemplate.html");
             String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
             mailService.sendHtmlMail("peng.liu@volvo.com", "主题：这是模板邮件", html);
-            resultResponse.success("");
+            resultResponse.ok("");
             logger.info("成功发送邮件");
         } catch (IOException | TemplateException e) {
             logger.error("发送邮件异常：" + e.getMessage(), e);
