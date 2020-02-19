@@ -78,7 +78,7 @@ spring:
 fromMail: Api.support.css@xxx.com
 mybatis:
   mapper-locations: classpath*:mybatis/mapper/*.xml
-  type-aliases-package: com.microastudio.*.entity
+  type-aliases-package: com.microastudio.iforms.modules.*
 
 #redis password
 redis:
@@ -123,7 +123,4 @@ logging:
           mapper: debug
   config:
     classpath: logback-spring.xml
-
-iforms:
-  log-path: /Users/peng/data/logs/iforms
 
