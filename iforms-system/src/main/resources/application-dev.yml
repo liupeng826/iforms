@@ -123,3 +123,6 @@ logging:
           mapper: debug
   config:
     classpath: logback-spring.xml
+
+iforms:
+  log-path: /Users/peng/data/logs/iforms

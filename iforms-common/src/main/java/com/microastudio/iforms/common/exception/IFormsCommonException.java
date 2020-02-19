@@ -2,7 +2,6 @@ package com.microastudio.iforms.common.exception;
 
 import com.microastudio.iforms.common.bean.CommonConstants;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,20 +15,20 @@ public class IFormsCommonException extends RuntimeException {
 	private static final long serialVersionUID = -8408313033879177616L;
 
 	private String message = "";// 异常概要信息
-	
+
 	private String code = CommonConstants.ERRORS_CODE;
-	
+
 	private Map<String, ?> params;// 异常时业务入参
-	
+
 	private String guid;// 业务线唯一标识号可用uuid
-	
-	
+
+
 	public IFormsCommonException(String message, String code) {
 		super(message);
 		this.message = message;
 		this.code = code;
 	}
-	
+
 	public IFormsCommonException(String message, String code, Object params) {
     	super(message);
         this.message = message;
@@ -38,18 +37,18 @@ public class IFormsCommonException extends RuntimeException {
         oParams.put("oParams", params);
         this.params = oParams;
     }
-    public static void main(String[] args) {
-		new IFormsCommonException("", "", "");
-		new IFormsCommonException("", "", new HashMap<String, String>());
-		new IFormsCommonException("", "", new ArrayList<String>());
-	}
+//    public static void main(String[] args) {
+//		new IFormsCommonException("", "", "");
+//		new IFormsCommonException("", "", new HashMap<String, String>());
+//		new IFormsCommonException("", "", new ArrayList<String>());
+//	}
     public IFormsCommonException(String message, String code, Map<String, ?> params) {
     	super(message);
         this.message = message;
         this.code = code;
         this.params = params;
     }
-    
+
     public IFormsCommonException(String message, String code, Object params, Throwable cause) {
     	super(cause);
         this.message = message;
@@ -58,14 +57,14 @@ public class IFormsCommonException extends RuntimeException {
         oParams.put("oParams", params);
         this.params = oParams;
     }
-    
+
     public IFormsCommonException(String message, String code, Map<String, ?> params, Throwable cause) {
         super(cause);
         this.message = message;
         this.code = code;
         this.params = params;
     }
-    
+
     public IFormsCommonException(String message, String code, Throwable cause) {
     	super(cause);
     	this.message = message;

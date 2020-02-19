@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>com.microastudio.iforms</groupId>
 		<artifactId>iforms</artifactId>
-		<version>0.0.1</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<groupId>com.microastudio.iforms</groupId>
 	<artifactId>iforms-common</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>iForms-common</name>
 
