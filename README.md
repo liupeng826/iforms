@@ -29,7 +29,7 @@ mvn package
 (1) 启动脚本 start.sh
 ```bash
 cd ../opt/iforms/
-nohup java -jar iforms-system-1.0.0.jar --spring.profiles.active=prod > /opt/iforms/app_start_iforms.txt 2>&1 &
+nohup java -jar -Xms64m -Xmx128m iforms-system-1.0.0.jar --spring.profiles.active=prd > /opt/iforms/nohup.out 2>&1 &
 ```
 (2) 停止脚本 stop.sh
 ```bash

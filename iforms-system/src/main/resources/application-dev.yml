@@ -1,3 +1,5 @@
+server:
+  port: 8999
 ##关闭熔断
 #feign:
 #  hystrix:
