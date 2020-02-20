@@ -22,6 +22,8 @@ public class AuthUser {
 
     private String uuid = "";
 
+    private boolean isEncrypt = true;
+
     @Override
     public String toString() {
         return "{username=" + username  + ", password= ******}";

@@ -115,6 +115,9 @@ loginCode:
 #是否开启 swagger-ui
 swagger:
   enabled: true
+#是否开启 验证码
+verificationCode:
+  enabled: false
 #sql 日志打印  root（项目）日志打印级别
 logging:
   level:

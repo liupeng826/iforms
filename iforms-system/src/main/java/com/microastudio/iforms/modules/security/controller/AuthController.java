@@ -46,6 +46,8 @@ public class AuthController {
     private String privateKey;
     @Value("${single.login:false}")
     private Boolean singleLogin;
+    @Value("${verificationCode.enabled}")
+    private Boolean enabledVerificationCode;
     private final SecurityProperties properties;
     private final RedisUtils redisUtils;
     private final UserDetailsService userDetailsService;
@@ -67,18 +69,27 @@ public class AuthController {
     @AnonymousAccess
     @PostMapping(value = "/login")
     public ResultResponse login(@Validated @RequestBody AuthUser authUser, HttpServletRequest request) {
+        String password;
         // 密码解密
         RSA rsa = new RSA(privateKey, null);
-        String password = new String(rsa.decrypt(authUser.getPassword(), KeyType.PrivateKey));
-        // 查询验证码
-        String code = (String) redisUtils.get(authUser.getUuid());
-        // 清除验证码
-        redisUtils.del(authUser.getUuid());
-        if (StringUtils.isBlank(code)) {
-            throw new BadRequestException("验证码不存在或已过期");
+        if (authUser.isEncrypt()) {
+            password = new String(rsa.decrypt(authUser.getPassword(), KeyType.PrivateKey));
+        } else {
+            password = authUser.getPassword();
         }
-        if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
-            throw new BadRequestException("验证码错误");
+
+        if (enabledVerificationCode) {
+            // 查询验证码
+            String code = (String) redisUtils.get(authUser.getUuid());
+            // 清除验证码
+            redisUtils.del(authUser.getUuid());
+
+            if (StringUtils.isBlank(code)) {
+                throw new BadRequestException("验证码不存在或已过期");
+            }
+            if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
+                throw new BadRequestException("验证码错误");
+            }
         }
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
