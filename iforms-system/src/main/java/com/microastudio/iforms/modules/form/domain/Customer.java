@@ -10,8 +10,8 @@ public class Customer implements Serializable {
     private static final long serialVersionUID = -7202005722989410480L;
 
     private Long id;
-    private String customerName;
-    private String customerEmail;
+    private String name;
+    private String email;
     private String contactNo;
 
     public Long getId() {
@@ -22,20 +22,20 @@ public class Customer implements Serializable {
         this.id = id;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getName() {
+        return name;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getCustomerEmail() {
-        return customerEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getContactNo() {

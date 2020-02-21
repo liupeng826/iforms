@@ -260,12 +260,12 @@
             useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `customer`
-        (`customer_name`,
-        `customer_email`,
+        (`name`,
+        `email`,
         `contact_no`)
         VALUES
-        (#{customerName},
-        #{customerEmail},
+        (#{name},
+        #{email},
         #{contactNo})
     </insert>
 </mapper>
