@@ -17,7 +17,7 @@ public class Form implements Serializable {
     private String level;
     private String marketId;
     private String dealerId;
-    private String systemToken;
+    private String client;
     private byte sendEmail;
     private String type;
     private byte isActive;
@@ -84,12 +84,12 @@ public class Form implements Serializable {
         this.dealerId = dealerId;
     }
 
-    public String getSystemToken() {
-        return systemToken;
+    public String getClient() {
+        return client;
     }
 
-    public void setSystemToken(String systemToken) {
-        this.systemToken = systemToken;
+    public void setClient(String client) {
+        this.client = client;
     }
 
     public byte getSendEmail() {

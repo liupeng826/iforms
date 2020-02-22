@@ -5,12 +5,12 @@ import java.io.Serializable;
 /**
  * @author peng
  */
-public class SystemToken implements Serializable {
+public class Client implements Serializable {
 
     private static final long serialVersionUID = 5368665276515547587L;
 
     private Long id;
-    private String description;
+    private String name;
     private String token;
     private byte isActive;
 
@@ -22,12 +22,12 @@ public class SystemToken implements Serializable {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getToken() {

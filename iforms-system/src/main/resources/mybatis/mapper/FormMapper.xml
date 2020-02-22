@@ -68,8 +68,8 @@
         select * from language where is_active = 1
     </select>
 
-    <select id="selectSystemToken" parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT `token` FROM `system_token` WHERE `description` = #{key} AND is_active = 1 limit 1
+    <select id="selectClient" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT `token` FROM `client` WHERE `name` = #{key} AND is_active = 1 limit 1
     </select>
 
     <select id="selectAllFormsByKey" parameterType="java.lang.String" resultMap="FormResultMap">
@@ -96,19 +96,20 @@
         `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
         `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
         `question_option`.`is_active` as `question_option.is_active`
-        FROM form, section, question
+        FROM form, section, client, question
         LEFT JOIN question_option
-        ON (question.id = question_option.question_id
-        AND question_option.is_active = 1)
+        ON (question.id = question_option.question_id AND question_option.is_active = 1)
         WHERE section.form_id = form.id
         AND question.section_id = section.id
-        AND form.system_token = #{systemToken}
+        And form.client = client.id
+        AND client.token = #{clientToken}
         <if test="supperId != null and supperId != '' ">
             AND form.supper_id = #{supperId,jdbcType=VARCHAR}
         </if>
         AND form.is_active = 1
         AND section.is_active = 1
         AND question.is_active = 1
+        And client.is_active = 1
     </select>
 
     <insert id="insertQuestion" parameterType="com.microastudio.iforms.modules.form.domain.Question" useGeneratedKeys="true"
@@ -185,7 +186,7 @@
         `level`,
         `market_id`,
         `dealer_id`,
-        `system_token`,
+        `client`,
         `send_email`,
         `type`,
         `created_by`,
@@ -201,7 +202,7 @@
         #{level},
         #{marketId},
         #{dealerId},
-        #{systemToken},
+        #{client},
         #{sendEmail},
         #{type},
         #{createdBy},

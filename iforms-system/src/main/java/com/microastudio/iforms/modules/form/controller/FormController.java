@@ -76,22 +76,22 @@ public class FormController {
 
     @GetMapping("/validateToken")
     public ResultResponse validateToken(@RequestParam(value = "key") String key
-            , @RequestParam(value = "systemToken") String systemToken) {
-        return getToken(key, systemToken);
+            , @RequestParam(value = "client") String client) {
+        return getClient(key, client);
     }
 
-    private ResultResponse getToken(String key, String systemToken) {
+    private ResultResponse getClient(String name, String token) {
         logger.info("getToken");
         ResultResponse resultResponse = new ResultResponse();
         try {
-            if (StringUtils.isEmpty(key) || StringUtils.isEmpty(systemToken)) {
+            if (StringUtils.isEmpty(name) || StringUtils.isEmpty(token)) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
 
-            logger.info("getToken入参：" + key + "," + systemToken);
+            logger.info("getToken入参：" + name + "," + token);
 
-            String token = formService.getSystemToken(key);
-            if (!systemToken.equals(token)) {
+            String clientToken = formService.getClient(name);
+            if (!token.equals(clientToken)) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_AUTH_TOKEN, CommonConstants.ERRORS_MSG_AUTH_TOKEN);
             }
 
@@ -116,13 +116,13 @@ public class FormController {
             logger.info("getAllForms入参：" + JSONObject.toJSONString(dto));
 
             // validateToken
-            resultResponse = getToken(dto.getDescription(), dto.getToken());
+            resultResponse = getClient(dto.getClientName(), dto.getClientToken());
             if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
                 return resultResponse;
             }
 
             // get form
-            List<FormDto> forms = formService.getAllForms(dto.getToken(), dto.getSupperId());
+            List<FormDto> forms = formService.getAllForms(dto.getClientToken(), dto.getSupperId());
 
             resultResponse.ok(forms);
         } catch (Exception e) {
@@ -140,13 +140,13 @@ public class FormController {
         try {
             if (formParam == null || formParam.getSections() == null
                     || formParam.getSections().get(0).getQuestions() == null
-                    || formParam.getSystemToken() == null) {
+                    || formParam.getClient() == null) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
             logger.info("generateForm入参：" + JSONObject.toJSONString(formParam));
 
             // validateToken
-            resultResponse = getToken(formParam.getSystemToken().getDescription(), formParam.getSystemToken().getToken());
+            resultResponse = getClient(formParam.getClient().getName(), formParam.getClient().getToken());
             if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
                 return resultResponse;
             }
@@ -175,14 +175,14 @@ public class FormController {
         logger.info("answer");
         ResultResponse resultResponse = new ResultResponse();
         try {
-            if (answerDto == null || answerDto.getSystemToken() == null
+            if (answerDto == null || answerDto.getClient() == null
                     || answerDto.getAnswers() == null) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
             logger.info("answer入参：" + JSONObject.toJSONString(answerDto));
 
             // validateToken
-            resultResponse = getToken(answerDto.getSystemToken().getDescription(), answerDto.getSystemToken().getToken());
+            resultResponse = getClient(answerDto.getClient().getName(), answerDto.getClient().getToken());
             if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
                 return resultResponse;
             }

@@ -49,7 +49,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 user.getUserName(),
                 user.getNickName(),
                 user.getSex(),
-                user.getRoleId(),
+                user.getRole(),
                 user.getPassword(),
                 user.getEmail(),
                 user.getPhone(),
@@ -65,7 +65,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private Collection<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
         Set<String> permissions = new HashSet<String>();
 
-        switch (user.getRoleId()) {
+        switch (user.getRole()) {
             case "10":
                 permissions.add("Admin");
                 break;

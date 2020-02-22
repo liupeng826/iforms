@@ -26,6 +26,8 @@ public class User implements Serializable {
     @NotNull(groups = Update.class)
     private Long id;
 
+    private String userId;
+
     @NotBlank
     @Column(unique = true, name = "user_name")
     private String username;
@@ -38,7 +40,7 @@ public class User implements Serializable {
     private String sex;
 
     /** 权限 */
-    private String roleId;
+    private String role;
 
     @NotBlank
     @Email
@@ -55,6 +57,12 @@ public class User implements Serializable {
     private String password;
 
     private Long deptId;
+
+    private String client;
+
+    private String marketId;
+
+    private String branchId;
 
     private String createdBy;
 

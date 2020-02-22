@@ -20,8 +20,8 @@ public interface FormMapper {
     int insertForm(Form form);
 //    int insertFormQuestionMapping(FormQuestionMapping formQuestionMapping);
 
-    String selectSystemToken(String key);
-    List<FormDto> selectAllFormsByKey(String systemToken, String supperId);
+    String selectClient(String key);
+    List<FormDto> selectAllFormsByKey(String clientToken, String supperId);
     int insertAnswer(List<FormQuestionAnswer> answers);
     int insertCustomer(Customer customer);
 

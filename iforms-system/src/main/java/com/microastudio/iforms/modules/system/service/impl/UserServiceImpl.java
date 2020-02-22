@@ -221,6 +221,7 @@ public class UserServiceImpl implements UserService {
     private UserDto translationUserToDto(User user) {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
+        userDto.setUserId(user.getUserId());
         userDto.setUserName(user.getUsername());
         userDto.setNickName(user.getNickName());
         userDto.setEmail(user.getEmail());
@@ -228,13 +229,16 @@ public class UserServiceImpl implements UserService {
         userDto.setSex(user.getSex());
         userDto.setPhone(user.getPhone());
         userDto.setDeptId(user.getDeptId());
+        userDto.setClient(user.getClient());
+        userDto.setMarket(user.getMarketId());
+        userDto.setBranch(user.getBranchId());
 
-        switch (user.getRoleId()) {
+        switch (user.getRole()) {
             case "10":
-                userDto.setRoleId("Admin");
+                userDto.setRole("Admin");
                 break;
             default:
-                userDto.setRoleId("User");
+                userDto.setRole("User");
                 break;
         }
 

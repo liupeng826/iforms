@@ -181,7 +181,7 @@
       }
   ],
   "sendEmail": 1,
-  "systemToken": {
+  "client": {
     "description": "iForms_web",
     "token": "YWVzLTI1Ni1nY206Y0c5UGMwMXFRWGxOUXpCM1RWTXdlVTlUTUhoT1VWZFJZMUA1Mi4zOS45MC4yNjo1MjIxOQNv6RRuGEVvmGjB+jimI/gw=="
   },

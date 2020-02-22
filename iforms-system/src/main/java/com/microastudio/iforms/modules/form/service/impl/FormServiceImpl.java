@@ -74,7 +74,7 @@ public class FormServiceImpl implements FormService {
         form.setLevel(formDto.getLevel());
         form.setMarketId(formDto.getMarketId());
         form.setDealerId(formDto.getDealerId());
-        form.setSystemToken(formDto.getSystemToken().getToken());
+        form.setClient(formDto.getClient().getToken());
         form.setSendEmail(formDto.getSendEmail());
         form.setType(formDto.getType());
         form.setCreatedBy(formDto.getCreatedBy());
@@ -155,13 +155,13 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public String getSystemToken(String key) {
-        return formMapper.selectSystemToken(key);
+    public String getClient(String key) {
+        return formMapper.selectClient(key);
     }
 
     @Override
-    public List<FormDto> getAllForms(String systemToken, String supperId) {
-        return formMapper.selectAllFormsByKey(systemToken, supperId);
+    public List<FormDto> getAllForms(String clientToken, String supperId) {
+        return formMapper.selectAllFormsByKey(clientToken, supperId);
     }
 
     @Override

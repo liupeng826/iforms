@@ -9,24 +9,24 @@ public class FormRequestDto implements Serializable {
 
     private static final long serialVersionUID = 6813986649917909511L;
 
-    private String description;
-    private String token;
+    private String clientName;
+    private String clientToken;
     private String supperId;
 
-    public String getDescription() {
-        return description;
+    public String getClientName() {
+        return clientName;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
-    public String getToken() {
-        return token;
+    public String getClientToken() {
+        return clientToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setClientToken(String clientToken) {
+        this.clientToken = clientToken;
     }
 
     public String getSupperId() {

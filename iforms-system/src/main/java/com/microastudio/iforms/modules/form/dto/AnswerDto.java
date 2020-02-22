@@ -1,8 +1,8 @@
 package com.microastudio.iforms.modules.form.dto;
 
+import com.microastudio.iforms.modules.form.domain.Client;
 import com.microastudio.iforms.modules.form.domain.Customer;
 import com.microastudio.iforms.modules.form.domain.FormQuestionAnswer;
-import com.microastudio.iforms.modules.form.domain.SystemToken;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -15,7 +15,7 @@ public class AnswerDto implements Serializable {
 
     private static final long serialVersionUID = -3538270732034929962L;
 
-    private SystemToken systemToken;
+    private Client client;
     private Long formId;
     private String reference;
     private String createdBy;
@@ -25,12 +25,12 @@ public class AnswerDto implements Serializable {
     private List<FormQuestionAnswer> answers;
     private Customer customer;
 
-    public SystemToken getSystemToken() {
-        return systemToken;
+    public Client getClient() {
+        return client;
     }
 
-    public void setSystemToken(SystemToken systemToken) {
-        this.systemToken = systemToken;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public Long getFormId() {

@@ -16,19 +16,27 @@ public class UserDto implements Serializable {
     @ApiModelProperty(hidden = true)
     private Long id;
 
+    private String userId;
+
     private String userName;
 
     private String nickName;
 
     private String sex;
 
-    private String roleId;
+    private String role;
 
     private String email;
 
     private String phone;
 
     private String jobId;
+
+    private String client;
+
+    private String market;
+
+    private String branch;
 
     private byte isActive;
 

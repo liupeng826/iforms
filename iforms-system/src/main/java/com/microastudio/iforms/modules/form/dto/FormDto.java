@@ -1,6 +1,6 @@
 package com.microastudio.iforms.modules.form.dto;
 
-import com.microastudio.iforms.modules.form.domain.SystemToken;
+import com.microastudio.iforms.modules.form.domain.Client;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -20,7 +20,7 @@ public class FormDto implements Serializable {
     private String level;
     private String marketId;
     private String dealerId;
-    private SystemToken systemToken;
+    private Client client;
     private byte sendEmail;
     private String type;
     private byte isActive;
@@ -91,12 +91,12 @@ public class FormDto implements Serializable {
         this.dealerId = dealerId;
     }
 
-    public SystemToken getSystemToken() {
-        return systemToken;
+    public Client getClient() {
+        return client;
     }
 
-    public void setSystemToken(SystemToken systemToken) {
-        this.systemToken = systemToken;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public byte getSendEmail() {
