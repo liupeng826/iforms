@@ -1,6 +1,7 @@
 package com.microastudio.iforms.modules.system.service.impl;
 
 import com.microastudio.iforms.common.exception.EntityNotFoundException;
+import com.microastudio.iforms.common.utils.DateUtils;
 import com.microastudio.iforms.common.utils.RedisUtils;
 import com.microastudio.iforms.modules.system.domain.User;
 import com.microastudio.iforms.modules.system.dto.UserDto;
@@ -8,10 +9,12 @@ import com.microastudio.iforms.modules.system.mapper.UserMapper;
 import com.microastudio.iforms.modules.system.repository.UserRepository;
 import com.microastudio.iforms.modules.system.service.UserService;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 
 /**
  * @author peng
@@ -127,32 +130,33 @@ public class UserServiceImpl implements UserService {
     @Cacheable(key = "'loadUserByUsername:'+#p0")
     public UserDto findByName(String userName) {
         User user;
-        user = userRepository.findByUsername(userName);
+        user = userRepository.findByUserName(userName);
         if (user == null) {
             throw new EntityNotFoundException(User.class, "name", userName);
         } else {
             UserDto userDto = new UserDto();
             userDto.setId(user.getId());
-            userDto.setUsername(user.getUsername());
+            userDto.setUsername(user.getUserName());
             userDto.setNickName(user.getNickName());
             userDto.setEmail(user.getEmail());
             userDto.setPassword(user.getPassword());
             userDto.setSex(user.getSex());
             userDto.setPhone(user.getPhone());
-            userDto.setCreateTime(user.getCreateTime());
-            userDto.setLastPasswordResetTime(user.getLastPasswordResetTime());
-            userDto.setEnabled(user.getEnabled());
+            userDto.setRoleId(user.getRoleId());
+            userDto.setCreatedDate(user.getCreatedDate());
+            userDto.setModifiedDate(user.getModifiedDate());
+            userDto.setIsActive(user.getIsActive());
             return userDto;
         }
     }
-//
-//    @Override
-//    @CacheEvict(allEntries = true)
-//    @Transactional(rollbackFor = Exception.class)
-//    public void updatePass(String username, String pass) {
-//        userRepository.updatePass(username,pass,new Date());
-//    }
-//
+
+    @Override
+    @CacheEvict(allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePass(String username, String pass) {
+        userRepository.updatePass(username, pass, DateUtils.currentTime());
+    }
+
 //    @Override
 //    @CacheEvict(allEntries = true)
 //    @Transactional(rollbackFor = Exception.class)

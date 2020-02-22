@@ -1,8 +1,18 @@
 package com.microastudio.iforms.modules.system.rest;
 
+import cn.hutool.crypto.asymmetric.KeyType;
+import cn.hutool.crypto.asymmetric.RSA;
+import com.microastudio.iforms.common.bean.ResultResponse;
+import com.microastudio.iforms.common.exception.BadRequestException;
+import com.microastudio.iforms.common.utils.SecurityUtils;
+import com.microastudio.iforms.modules.system.domain.UserPassVo;
+import com.microastudio.iforms.modules.system.dto.UserDto;
 import com.microastudio.iforms.modules.system.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -115,24 +125,28 @@ public class UserController {
 //        return new ResponseEntity<>(HttpStatus.OK);
 //    }
 //
-//    @ApiOperation("修改密码")
-//    @PostMapping(value = "/updatePass")
-//    public ResponseEntity<Object> updatePass(@RequestBody UserPassVo passVo) {
-//        // 密码解密
-//        RSA rsa = new RSA(privateKey, null);
-//        String oldPass = new String(rsa.decrypt(passVo.getOldPass(), KeyType.PrivateKey));
-//        String newPass = new String(rsa.decrypt(passVo.getNewPass(), KeyType.PrivateKey));
-//        UserDto user = userService.findByName(SecurityUtils.getUsername());
-//        if (!passwordEncoder.matches(oldPass, user.getPassword())) {
-//            throw new BadRequestException("修改失败，旧密码错误");
-//        }
-//        if (passwordEncoder.matches(newPass, user.getPassword())) {
-//            throw new BadRequestException("新密码不能与旧密码相同");
-//        }
-//        userService.updatePass(user.getUsername(), passwordEncoder.encode(newPass));
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-//
+    @ApiOperation("修改密码")
+    @PostMapping(value = "/updatePass")
+    public ResultResponse<Object> updatePass(@RequestBody UserPassVo passVo) {
+
+        // 密码解密
+        RSA rsa = new RSA(privateKey, null);
+        String oldPass = new String(rsa.decrypt(passVo.getOldPass(), KeyType.PrivateKey));
+        String newPass = new String(rsa.decrypt(passVo.getNewPass(), KeyType.PrivateKey));
+
+        UserDto user = userService.findByName(SecurityUtils.getUsername());
+        if (!passwordEncoder.matches(oldPass, user.getPassword())) {
+            throw new BadRequestException("修改失败，旧密码错误");
+        }
+
+        if (passwordEncoder.matches(newPass, user.getPassword())){
+            throw new BadRequestException("新密码不能与旧密码相同");
+        }
+
+        userService.updatePass(user.getUsername(), passwordEncoder.encode(newPass));
+        return ResultResponse.success("");
+    }
+
 //    /**
 //     * 如果当前用户的角色级别低于创建用户的角色级别，则抛出权限不足的错误
 //     *

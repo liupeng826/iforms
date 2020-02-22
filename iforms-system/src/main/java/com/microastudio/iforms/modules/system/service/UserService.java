@@ -41,13 +41,13 @@ public interface UserService {
      */
     UserDto findByName(String userName);
 
-//    /**
-//     * 修改密码
-//     * @param username 用户名
-//     * @param encryptPassword 密码
-//     */
-//    void updatePass(String username, String encryptPassword);
-//
+    /**
+     * 修改密码
+     * @param username 用户名
+     * @param encryptPassword 密码
+     */
+    void updatePass(String username, String encryptPassword);
+
 //    /**
 //     * 修改头像
 //     * @param file 文件

@@ -91,11 +91,15 @@ public class AuthController {
                 throw new BadRequestException("验证码错误");
             }
         }
+
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
 
+        // 验证用户合法性
+        // 调用userDetailsService.loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         // 生成令牌
         String token = tokenProvider.createToken(authentication);
         final JwtUser jwtUser = (JwtUser) authentication.getPrincipal();

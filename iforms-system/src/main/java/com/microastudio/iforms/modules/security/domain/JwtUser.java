@@ -24,6 +24,7 @@ public class JwtUser implements UserDetails {
     private final String nickName;
 
     private final String sex;
+    private String roleId;
 
     @JsonIgnore
     private final String password;
@@ -41,7 +42,7 @@ public class JwtUser implements UserDetails {
 
     private final boolean enabled;
 
-    private Timestamp createTime;
+    private Timestamp createDate;
 
     @JsonIgnore
     private final Date lastPasswordResetDate;

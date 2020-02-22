@@ -3,13 +3,13 @@ package com.microastudio.iforms.modules.system.domain;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -28,7 +28,7 @@ public class User implements Serializable {
 
     @NotBlank
     @Column(unique = true)
-    private String username;
+    private String userName;
 
     /** 用户昵称 */
     @NotBlank
@@ -36,6 +36,9 @@ public class User implements Serializable {
 
     /** 性别 */
     private String sex;
+
+    /** 权限 */
+    private String roleId;
 
     @NotBlank
     @Email
@@ -45,16 +48,14 @@ public class User implements Serializable {
     private String phone;
 
     @NotNull
-    private Boolean enabled;
+    private byte isActive;
 
     private String password;
 
-    @Column(name = "create_time")
     @CreationTimestamp
-    private Timestamp createTime;
+    private Timestamp createdDate;
 
-    @Column(name = "last_password_reset_time")
-    private Date lastPasswordResetTime;
+    private Timestamp modifiedDate;
 
     public @interface Update {}
 
@@ -68,11 +69,11 @@ public class User implements Serializable {
         }
         User user = (User) o;
         return Objects.equals(id, user.id) &&
-                Objects.equals(username, user.username);
+                Objects.equals(userName, user.userName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username);
+        return Objects.hash(id, userName);
     }
 }

@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * @author peng
@@ -27,14 +26,19 @@ public class UserDto implements Serializable {
 
     private String phone;
 
-    private Boolean enabled;
+    private String jobId;
+
+    private String roleId;
+
+    private byte isActive;
 
     @JsonIgnore
     private String password;
 
-    private Date lastPasswordResetTime;
-
     private Long deptId;
 
-    private Timestamp createTime;
+    private String createdBy;
+    private Timestamp createdDate;
+    private String modifiedBy;
+    private Timestamp modifiedDate;
 }

@@ -36,7 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new BadRequestException("账号不存在");
         } else {
-            if (!user.getEnabled()) {
+            if (user.getIsActive() != 1) {
                 throw new BadRequestException("账号未激活");
             }
             return createJwtUser(user);
@@ -49,21 +49,30 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 user.getUsername(),
                 user.getNickName(),
                 user.getSex(),
+                user.getRoleId(),
                 user.getPassword(),
                 user.getEmail(),
                 user.getPhone(),
                 null,
                 null,
                 mapToGrantedAuthorities(user),
-                user.getEnabled(),
-                user.getCreateTime(),
-                user.getLastPasswordResetTime()
+                user.getIsActive() == 1,
+                user.getCreatedDate(),
+                user.getModifiedDate()
         );
     }
 
     private Collection<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
         Set<String> permissions = new HashSet<String>();
-        permissions.add("user");
+
+        switch (user.getRoleId()) {
+            case "10":
+                permissions.add("Admin");
+                break;
+            default:
+                permissions.add("User");
+                break;
+        }
 
         return permissions.stream().map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
