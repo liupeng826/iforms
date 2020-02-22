@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.25)
 # Database: iForms
-# Generation Time: 2020-02-22 10:05:34 +0000
+# Generation Time: 2020-02-22 11:21:39 +0000
 # ************************************************************
 
 
@@ -44,6 +44,30 @@ CREATE TABLE `branch` (
 
 
 
+# Dump of table client
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `client`;
+
+CREATE TABLE `client` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL DEFAULT '',
+  `token` varchar(500) NOT NULL DEFAULT '',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+LOCK TABLES `client` WRITE;
+/*!40000 ALTER TABLE `client` DISABLE KEYS */;
+
+INSERT INTO `client` (`id`, `name`, `token`, `is_active`)
+VALUES
+	(1,'iForms_web','YWVzLTI1Ni1nY206Y0c5UGMwMXFRWGxOUXpCM1RWTXdlVTlUTUhoT1VWZFJZMUA1Mi4zOS45MC4yNjo1MjIxOQNv6RRuGEVvmGjB+jimI/gw==',1);
+
+/*!40000 ALTER TABLE `client` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 # Dump of table customer
 # ------------------------------------------------------------
 
@@ -73,7 +97,7 @@ CREATE TABLE `form` (
   `market_id` varchar(50) DEFAULT NULL,
   `dealer_id` varchar(50) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `system_token` varchar(500) NOT NULL DEFAULT '',
+  `client` varchar(500) NOT NULL DEFAULT '',
   `send_email` tinyint(1) NOT NULL DEFAULT '0',
   `type` varchar(100) DEFAULT NULL,
   `include_section` tinyint(1) NOT NULL,
@@ -88,12 +112,12 @@ CREATE TABLE `form` (
 LOCK TABLES `form` WRITE;
 /*!40000 ALTER TABLE `form` DISABLE KEYS */;
 
-INSERT INTO `form` (`id`, `supper_id`, `title`, `description`, `level`, `market_id`, `dealer_id`, `is_active`, `system_token`, `send_email`, `type`, `include_section`, `language`, `created_by`, `created_date`, `modified_by`, `modified_date`)
+INSERT INTO `form` (`id`, `supper_id`, `title`, `description`, `level`, `market_id`, `dealer_id`, `is_active`, `client`, `send_email`, `type`, `include_section`, `language`, `created_by`, `created_date`, `modified_by`, `modified_date`)
 VALUES
-	(19,'5b27ffbf53de4bdfabf68d0ff62537f1','Survey','test survey','market','10001','',1,'YWVzLTI1Ni1nY206Y0c5UGMwMXFRWGxOUXpCM1RWTXdlVTlUTUhoT1VWZFJZMUA1Mi4zOS45MC4yNjo1MjIxOQNv6RRuGEVvmGjB+jimI/gw==',1,'volvo GTA',1,'en-us','peng','2020-02-20 10:33:54','peng','2020-01-31 22:37:20'),
-	(20,'5b27ffbf53de4bdfabf68d0ff62537f0','Survey','test survey','market','10001','',1,'YWVzLTI1Ni1nY206Y0c5UGMwMXFRWGxOUXpCM1RWTXdlVTlUTUhoT1VWZFJZMUA1Mi4zOS45MC4yNjo1MjIxOQNv6RRuGEVvmGjB+jimI/gw==',1,'volvo GTA',1,'en-us','peng','2020-02-11 17:58:08','peng','2020-02-11 17:58:08'),
-	(21,'fd0814952fa64940af83d2a80c06de11','Survey','test survey','market','10001','',1,'YWVzLTI1Ni1nY206Y0c5UGMwMXFRWGxOUXpCM1RWTXdlVTlUTUhoT1VWZFJZMUA1Mi4zOS45MC4yNjo1MjIxOQNv6RRuGEVvmGjB+jimI/gw==',1,'volvo GTA',1,'en-us','peng','2020-02-11 17:59:48','peng','2020-02-11 17:59:48'),
-	(22,'63fa0da6b4654829968e6380fce17746','Survey','test survey','market','10001','',1,'YWVzLTI1Ni1nY206Y0c5UGMwMXFRWGxOUXpCM1RWTXdlVTlUTUhoT1VWZFJZMUA1Mi4zOS45MC4yNjo1MjIxOQNv6RRuGEVvmGjB+jimI/gw==',1,'volvo GTA',1,'en-us','peng','2020-02-20 10:48:04','peng','2020-02-20 10:48:04');
+	(19,'5b27ffbf53de4bdfabf68d0ff62537f1','Survey','test survey','market','10001','',1,'1',1,'volvo GTA',1,'en-us','peng','2020-02-22 18:59:14','peng','2020-01-31 22:37:20'),
+	(20,'5b27ffbf53de4bdfabf68d0ff62537f0','Survey','test survey','market','10001','',1,'1',1,'volvo GTA',1,'en-us','peng','2020-02-22 18:59:16','peng','2020-02-11 17:58:08'),
+	(21,'fd0814952fa64940af83d2a80c06de11','Survey','test survey','market','10001','',1,'1',1,'volvo GTA',1,'en-us','peng','2020-02-22 18:59:17','peng','2020-02-11 17:59:48'),
+	(22,'63fa0da6b4654829968e6380fce17746','Survey','test survey','market','10001','',1,'1',1,'volvo GTA',1,'en-us','peng','2020-02-22 18:59:18','peng','2020-02-20 10:48:04');
 
 /*!40000 ALTER TABLE `form` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -406,30 +430,6 @@ VALUES
 UNLOCK TABLES;
 
 
-# Dump of table system_token
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `system_token`;
-
-CREATE TABLE `system_token` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `token` varchar(500) NOT NULL DEFAULT '',
-  `description` varchar(100) NOT NULL DEFAULT '',
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-LOCK TABLES `system_token` WRITE;
-/*!40000 ALTER TABLE `system_token` DISABLE KEYS */;
-
-INSERT INTO `system_token` (`id`, `token`, `description`, `is_active`)
-VALUES
-	(1,'YWVzLTI1Ni1nY206Y0c5UGMwMXFRWGxOUXpCM1RWTXdlVTlUTUhoT1VWZFJZMUA1Mi4zOS45MC4yNjo1MjIxOQNv6RRuGEVvmGjB+jimI/gw==','iForms_web',1);
-
-/*!40000 ALTER TABLE `system_token` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
 # Dump of table user
 # ------------------------------------------------------------
 
@@ -437,17 +437,20 @@ DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `avatar_id` bigint(20) DEFAULT NULL COMMENT '头像',
-  `email` varchar(255) DEFAULT NULL COMMENT '邮箱',
-  `is_active` tinyint(1) NOT NULL COMMENT '状态：1启用、0禁用',
-  `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码',
+  `user_id` varchar(200) NOT NULL DEFAULT '' COMMENT '头像',
   `user_name` varchar(255) NOT NULL DEFAULT '' COMMENT '用户名',
+  `nick_name` varchar(255) DEFAULT NULL,
+  `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码',
+  `email` varchar(255) DEFAULT NULL COMMENT '邮箱',
   `dept_id` bigint(20) DEFAULT NULL COMMENT '部门名称',
   `phone` varchar(255) DEFAULT NULL COMMENT '手机号码',
   `job_id` bigint(20) DEFAULT NULL COMMENT '岗位名称',
-  `nick_name` varchar(255) DEFAULT NULL,
   `sex` varchar(255) DEFAULT NULL COMMENT '性别',
-  `role_id` int(11) DEFAULT NULL COMMENT '职责(10：管理员，20：普通用户)',
+  `role` varchar(50) NOT NULL DEFAULT '' COMMENT '职责(10：管理员，20：普通用户)',
+  `client` varchar(255) NOT NULL DEFAULT '' COMMENT '性别',
+  `market_id` varchar(255) DEFAULT NULL COMMENT '性别',
+  `branch_id` varchar(255) DEFAULT NULL COMMENT '性别',
+  `is_active` tinyint(1) NOT NULL COMMENT '状态：1启用、0禁用',
   `created_by` varchar(50) NOT NULL DEFAULT '',
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modified_by` varchar(50) DEFAULT NULL,
@@ -460,10 +463,10 @@ CREATE TABLE `user` (
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 
-INSERT INTO `user` (`id`, `avatar_id`, `email`, `is_active`, `password`, `user_name`, `dept_id`, `phone`, `job_id`, `nick_name`, `sex`, `role_id`, `created_by`, `created_date`, `modified_by`, `modified_date`)
+INSERT INTO `user` (`id`, `user_id`, `user_name`, `nick_name`, `password`, `email`, `dept_id`, `phone`, `job_id`, `sex`, `role`, `client`, `market_id`, `branch_id`, `is_active`, `created_by`, `created_date`, `modified_by`, `modified_date`)
 VALUES
-	(1,NULL,'liupeng826@hotmail.com',1,'$2a$10$JY1WZn9fyIRALJJQH2LZReW3bOm54fiJOokvjm6QQbjQVhs8viG5S','admin',2,'18888888888',11,'管理员','男',10,'peng','2020-02-22 15:11:51','peng','2020-02-22 07:11:52'),
-	(3,NULL,'peng.liu@volvo.com',1,'$2a$10$HhxyGZy.ulf3RvAwaHUGb.k.2i9PBpv4YbLMJWp8pES7pPhTyRCF.','test',2,'17777777777',12,'测试','男',20,'peng','2020-01-31 22:37:20','peng','2020-01-31 22:37:20');
+	(1,'v1000','admin','管理员','$2a$10$E1hlUKrF5ZduoY1qs9TtCeo7YQDOYN2w.c3.Pfsl2.52c9fpM52R2','liupeng826@hotmail.com',2,'18888888888',11,'男','10','1',NULL,NULL,1,'peng','2020-02-22 19:19:18','peng','2020-02-22 11:19:19'),
+	(3,'v1001','test','测试','$2a$10$HhxyGZy.ulf3RvAwaHUGb.k.2i9PBpv4YbLMJWp8pES7pPhTyRCF.','peng.liu@volvo.com',2,'17777777777',12,'男','20','1',NULL,NULL,1,'peng','2020-02-22 18:56:41','peng','2020-01-31 22:37:20');
 
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
