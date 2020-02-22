@@ -7,14 +7,13 @@ import com.microastudio.iforms.common.exception.BadRequestException;
 import com.microastudio.iforms.common.utils.SecurityUtils;
 import com.microastudio.iforms.modules.system.domain.UserPassVo;
 import com.microastudio.iforms.modules.system.dto.UserDto;
+import com.microastudio.iforms.modules.system.dto.UserQueryCriteria;
 import com.microastudio.iforms.modules.system.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author peng
@@ -41,40 +40,43 @@ public class UserController {
 //        userService.download(userService.queryAll(criteria), response);
 //    }
 
-    //    @Log("查询用户")
-//    @ApiOperation("查询用户")
-//    @GetMapping
+    //        @Log("查询用户")
+    @ApiOperation("查询用户")
+    @GetMapping
 //    @PreAuthorize("@el.check('user:list')")
-//    public ResponseEntity<Object> getUsers(UserQueryCriteria criteria, Pageable pageable) {
+    public ResultResponse<Object> getUsers(UserQueryCriteria criteria, Pageable pageable) {
+
 //        Set<Long> deptSet = new HashSet<>();
 //        Set<Long> result = new HashSet<>();
 //        if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
 //            deptSet.add(criteria.getDeptId());
 //            deptSet.addAll(dataScope.getDeptChildren(deptService.findByPid(criteria.getDeptId())));
 //        }
-//        // 数据权限
+        // 数据权限
 //        Set<Long> deptIds = dataScope.getDeptIds();
-//        // 查询条件不为空并且数据权限不为空则取交集
+        // 查询条件不为空并且数据权限不为空则取交集
 //        if (!CollectionUtils.isEmpty(deptIds) && !CollectionUtils.isEmpty(deptSet)) {
-//            // 取交集
+        // 取交集
 //            result.addAll(deptSet);
 //            result.retainAll(deptIds);
-//            // 若无交集，则代表无数据权限
+        // 若无交集，则代表无数据权限
 //            criteria.setDeptIds(result);
 //            if (result.size() == 0) {
-//                return new ResponseEntity<>(PageUtil.toPage(null, 0), HttpStatus.OK);
+//                return new ResultResponse<>(PageUtil.toPage(null, 0), HttpStatus.OK);
 //            } else {
-//                return new ResponseEntity<>(userService.queryAll(criteria, pageable), HttpStatus.OK);
+        Object data = userService.queryAll(criteria);
+        return ResultResponse.success(data);
 //            }
 //            // 否则取并集
 //        } else {
 //            result.addAll(deptSet);
 //            result.addAll(deptIds);
 //            criteria.setDeptIds(result);
-//            return new ResponseEntity<>(userService.queryAll(criteria, pageable), HttpStatus.OK);
+//            return new ResultResponse<>(userService.queryAll(criteria, pageable), HttpStatus.OK);
 //        }
-//    }
-//
+    }
+
+    //
 //    //    @Log("新增用户")
 //    @ApiOperation("新增用户")
 //    @PostMapping
@@ -139,11 +141,11 @@ public class UserController {
             throw new BadRequestException("修改失败，旧密码错误");
         }
 
-        if (passwordEncoder.matches(newPass, user.getPassword())){
+        if (passwordEncoder.matches(newPass, user.getPassword())) {
             throw new BadRequestException("新密码不能与旧密码相同");
         }
 
-        userService.updatePass(user.getUsername(), passwordEncoder.encode(newPass));
+        userService.updatePass(user.getUserName(), passwordEncoder.encode(newPass));
         return ResultResponse.success("");
     }
 

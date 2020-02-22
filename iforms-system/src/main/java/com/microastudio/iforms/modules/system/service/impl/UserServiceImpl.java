@@ -1,19 +1,24 @@
 package com.microastudio.iforms.modules.system.service.impl;
 
 import com.microastudio.iforms.common.exception.EntityNotFoundException;
-import com.microastudio.iforms.common.utils.DateUtils;
-import com.microastudio.iforms.common.utils.RedisUtils;
+import com.microastudio.iforms.common.utils.*;
 import com.microastudio.iforms.modules.system.domain.User;
 import com.microastudio.iforms.modules.system.dto.UserDto;
+import com.microastudio.iforms.modules.system.dto.UserQueryCriteria;
 import com.microastudio.iforms.modules.system.mapper.UserMapper;
 import com.microastudio.iforms.modules.system.repository.UserRepository;
 import com.microastudio.iforms.modules.system.service.UserService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -34,29 +39,49 @@ public class UserServiceImpl implements UserService {
         this.redisUtils = redisUtils;
     }
 
+    @Override
+    @Cacheable
+    public Object queryAll(UserQueryCriteria criteria, Pageable pageable) {
+        Page<User> page = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
+//        List<UserDto> users = new ArrayList<>();
+//        for (User user: page) {
+//            UserDto userDto = new UserDto();
+//            userDto.setId(user.getId());
+//            userDto.setUsername(user.getUsername());
+//            userDto.setNickName(user.getNickName());
+//            userDto.setEmail(user.getEmail());
+//            userDto.setPassword(user.getPassword());
+//            userDto.setSex(user.getSex());
+//            userDto.setPhone(user.getPhone());
+//            userDto.setRoleId(user.getRoleId());
+//            userDto.setCreatedDate(user.getCreatedDate());
+//            userDto.setModifiedDate(user.getModifiedDate());
+//            userDto.setIsActive(user.getIsActive());
+//            users.add(userDto);
+//        }
+        return PageUtil.toPage(page.map(userMapper::toDto));
+    }
+
+    @Override
+    @Cacheable
+    public List<UserDto> queryAll(UserQueryCriteria criteria) {
+        List<User> users = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder));
+        List<UserDto> userDtos = new ArrayList<>();
+        for (User user : users) {
+            userDtos.add(translationUserToDto(user));
+        }
+        return userDtos;
+    }
+
+    @Override
+    @Cacheable(key = "#p0")
+    public UserDto findById(long id) {
+        User user = userRepository.findById(id).orElseGet(User::new);
+        ValidationUtil.isNull(user.getId(), "User", "id", id);
+        return translationUserToDto(user);
+    }
+
     //    @Override
-//    @Cacheable
-//    public Object queryAll(UserQueryCriteria criteria, Pageable pageable) {
-//        Page<User> page = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-//        return PageUtil.toPage(page.map(userMapper::toDto));
-//    }
-//
-//    @Override
-//    @Cacheable
-//    public List<UserDto> queryAll(UserQueryCriteria criteria) {
-//        List<User> users = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder));
-//        return userMapper.toDto(users);
-//    }
-//
-//    @Override
-//    @Cacheable(key = "#p0")
-//    public UserDto findById(long id) {
-//        User user = userRepository.findById(id).orElseGet(User::new);
-//        ValidationUtil.isNull(user.getId(),"User","id",id);
-//        return userMapper.toDto(user);
-//    }
-//
-//    @Override
 //    @CacheEvict(allEntries = true)
 //    @Transactional(rollbackFor = Exception.class)
 //    public UserDto create(User resources) {
@@ -128,25 +153,13 @@ public class UserServiceImpl implements UserService {
 //
     @Override
     @Cacheable(key = "'loadUserByUsername:'+#p0")
-    public UserDto findByName(String userName) {
+    public UserDto findByName(String username) {
         User user;
-        user = userRepository.findByUserName(userName);
+        user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new EntityNotFoundException(User.class, "name", userName);
+            throw new EntityNotFoundException(User.class, "name", username);
         } else {
-            UserDto userDto = new UserDto();
-            userDto.setId(user.getId());
-            userDto.setUsername(user.getUserName());
-            userDto.setNickName(user.getNickName());
-            userDto.setEmail(user.getEmail());
-            userDto.setPassword(user.getPassword());
-            userDto.setSex(user.getSex());
-            userDto.setPhone(user.getPhone());
-            userDto.setRoleId(user.getRoleId());
-            userDto.setCreatedDate(user.getCreatedDate());
-            userDto.setModifiedDate(user.getModifiedDate());
-            userDto.setIsActive(user.getIsActive());
-            return userDto;
+            return translationUserToDto(user);
         }
     }
 
@@ -183,7 +196,7 @@ public class UserServiceImpl implements UserService {
 //    public void updateEmail(String username, String email) {
 //        userRepository.updateEmail(username,email);
 //    }
-//
+
 //    @Override
 //    public void download(List<UserDto> queryAll, HttpServletResponse response) throws IOException {
 //        List<Map<String, Object>> list = new ArrayList<>();
@@ -204,4 +217,29 @@ public class UserServiceImpl implements UserService {
 //        }
 //        FileUtil.downloadExcel(list, response);
 //    }
+
+    private UserDto translationUserToDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setUserName(user.getUsername());
+        userDto.setNickName(user.getNickName());
+        userDto.setEmail(user.getEmail());
+        userDto.setPassword(user.getPassword());
+        userDto.setSex(user.getSex());
+        userDto.setPhone(user.getPhone());
+
+        switch (user.getRoleId()) {
+            case "10":
+                userDto.setRoleId("Admin");
+                break;
+            default:
+                userDto.setRoleId("User");
+                break;
+        }
+
+        userDto.setCreatedDate(user.getCreatedDate());
+        userDto.setModifiedDate(user.getModifiedDate());
+        userDto.setIsActive(user.getIsActive());
+        return userDto;
+    }
 }

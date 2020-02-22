@@ -16,8 +16,8 @@ import java.util.Date;
 public class OnlineUser implements Serializable {
 
     private static final long serialVersionUID = 8267157405894375702L;
-    
-    private String userName;
+
+    private String username;
 
     private String nickName;
 

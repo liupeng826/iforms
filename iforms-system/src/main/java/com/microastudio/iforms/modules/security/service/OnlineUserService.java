@@ -120,7 +120,7 @@ public class OnlineUserService {
 //        List<Map<String, Object>> list = new ArrayList<>();
 //        for (OnlineUser user : all) {
 //            Map<String,Object> map = new LinkedHashMap<>();
-//            map.put("用户名", user.getUserName());
+//            map.put("用户名", user.getUsername());
 //            map.put("岗位", user.getJob());
 //            map.put("登录IP", user.getIp());
 //            map.put("登录地点", user.getAddress());
@@ -144,15 +144,15 @@ public class OnlineUserService {
     /**
      * 检测用户是否在之前已经登录，已经登录踢下线
      *
-     * @param userName 用户名
+     * @param username 用户名
      */
-    public void checkLoginOnUser(String userName, String ignoreToken) {
-        List<OnlineUser> onlineUsers = getAll(userName);
+    public void checkLoginOnUser(String username, String ignoreToken) {
+        List<OnlineUser> onlineUsers = getAll(username);
         if (onlineUsers == null || onlineUsers.isEmpty()) {
             return;
         }
         for (OnlineUser onlineUser : onlineUsers) {
-            if (onlineUser.getUserName().equals(userName)) {
+            if (onlineUser.getUsername().equals(username)) {
                 try {
                     String token = EncryptUtils.desDecrypt(onlineUser.getKey());
                     if (StringUtils.isNotBlank(ignoreToken) && !ignoreToken.equals(token)) {

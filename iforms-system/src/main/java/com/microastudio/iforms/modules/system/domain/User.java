@@ -27,8 +27,8 @@ public class User implements Serializable {
     private Long id;
 
     @NotBlank
-    @Column(unique = true)
-    private String userName;
+    @Column(unique = true, name = "user_name")
+    private String username;
 
     /** 用户昵称 */
     @NotBlank
@@ -47,13 +47,21 @@ public class User implements Serializable {
     @NotBlank
     private String phone;
 
+    private String jobId;
+
     @NotNull
     private byte isActive;
 
     private String password;
 
+    private Long deptId;
+
+    private String createdBy;
+
     @CreationTimestamp
     private Timestamp createdDate;
+
+    private String modifiedBy;
 
     private Timestamp modifiedDate;
 
@@ -69,11 +77,11 @@ public class User implements Serializable {
         }
         User user = (User) o;
         return Objects.equals(id, user.id) &&
-                Objects.equals(userName, user.userName);
+                Objects.equals(username, user.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName);
+        return Objects.hash(id, username);
     }
 }

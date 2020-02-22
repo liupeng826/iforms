@@ -2,19 +2,23 @@ package com.microastudio.iforms.modules.system.service;
 
 
 import com.microastudio.iforms.modules.system.dto.UserDto;
+import com.microastudio.iforms.modules.system.dto.UserQueryCriteria;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 /**
  * @author peng
  */
 public interface UserService {
 
-//    /**
-//     * 根据ID查询
-//     * @param id ID
-//     * @return /
-//     */
-//    UserDto findById(long id);
-//
+    /**
+     * 根据ID查询
+     * @param id ID
+     * @return /
+     */
+    UserDto findById(long id);
+
 //    /**
 //     * 新增用户
 //     * @param resources /
@@ -36,10 +40,10 @@ public interface UserService {
 //
     /**
      * 根据用户名查询
-     * @param userName /
+     * @param username /
      * @return /
      */
-    UserDto findByName(String userName);
+    UserDto findByName(String username);
 
     /**
      * 修改密码
@@ -61,21 +65,21 @@ public interface UserService {
 //     */
 //    void updateEmail(String username, String email);
 //
-//    /**
-//     * 查询全部
-//     * @param criteria 条件
-//     * @param pageable 分页参数
-//     * @return /
-//     */
-//    Object queryAll(UserQueryCriteria criteria, Pageable pageable);
-//
-//    /**
-//     * 查询全部不分页
-//     * @param criteria 条件
-//     * @return /
-//     */
-//    List<UserDto> queryAll(UserQueryCriteria criteria);
-//
+    /**
+     * 查询全部
+     * @param criteria 条件
+     * @param pageable 分页参数
+     * @return /
+     */
+    Object queryAll(UserQueryCriteria criteria, Pageable pageable);
+
+    /**
+     * 查询全部不分页
+     * @param criteria 条件
+     * @return /
+     */
+    List<UserDto> queryAll(UserQueryCriteria criteria);
+
 //    /**
 //     * 导出数据
 //     * @param queryAll 待导出的数据
