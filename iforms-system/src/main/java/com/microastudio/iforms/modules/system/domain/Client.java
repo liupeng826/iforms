@@ -1,14 +1,19 @@
-package com.microastudio.iforms.modules.form.domain;
+package com.microastudio.iforms.modules.system.domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * @author peng
  */
+@Entity
+@Table(name = "client")
 public class Client implements Serializable {
 
     private static final long serialVersionUID = 5368665276515547587L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String token;

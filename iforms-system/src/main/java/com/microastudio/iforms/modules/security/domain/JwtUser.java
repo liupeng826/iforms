@@ -1,10 +1,14 @@
 package com.microastudio.iforms.modules.security.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.microastudio.iforms.modules.system.domain.Branch;
+import com.microastudio.iforms.modules.system.domain.Client;
+import com.microastudio.iforms.modules.system.domain.Market;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
@@ -24,7 +28,8 @@ public class JwtUser implements UserDetails {
     private final String nickName;
 
     private final String sex;
-    private String roleId;
+
+    private String role;
 
     @JsonIgnore
     private final String password;
@@ -76,7 +81,14 @@ public class JwtUser implements UserDetails {
         return enabled;
     }
 
+    @JsonIgnore
     public Collection getRoles() {
         return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
     }
+
+    private Client client;
+
+    private Market market;
+
+    private Branch branch;
 }

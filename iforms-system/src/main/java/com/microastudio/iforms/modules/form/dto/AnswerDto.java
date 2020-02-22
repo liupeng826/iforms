@@ -1,6 +1,6 @@
 package com.microastudio.iforms.modules.form.dto;
 
-import com.microastudio.iforms.modules.form.domain.Client;
+import com.microastudio.iforms.modules.system.domain.Client;
 import com.microastudio.iforms.modules.form.domain.Customer;
 import com.microastudio.iforms.modules.form.domain.FormQuestionAnswer;
 

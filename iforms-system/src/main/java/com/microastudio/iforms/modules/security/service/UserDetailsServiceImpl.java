@@ -58,7 +58,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 mapToGrantedAuthorities(user),
                 user.getIsActive() == 1,
                 user.getCreatedDate(),
-                user.getModifiedDate()
+                user.getModifiedDate(),
+                user.getClient(),
+                user.getMarket(),
+                user.getBranch()
         );
     }
 

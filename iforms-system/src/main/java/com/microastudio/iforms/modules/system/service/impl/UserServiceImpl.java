@@ -230,8 +230,8 @@ public class UserServiceImpl implements UserService {
         userDto.setPhone(user.getPhone());
         userDto.setDeptId(user.getDeptId());
         userDto.setClient(user.getClient());
-        userDto.setMarket(user.getMarketId());
-        userDto.setBranch(user.getBranchId());
+        userDto.setMarket(user.getMarket());
+        userDto.setBranch(user.getBranch());
 
         switch (user.getRole()) {
             case "10":

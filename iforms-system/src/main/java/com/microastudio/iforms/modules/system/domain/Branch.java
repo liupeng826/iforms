@@ -1,15 +1,20 @@
-package com.microastudio.iforms.modules.form.domain;
+package com.microastudio.iforms.modules.system.domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * @author peng
  */
+@Entity
+@Table(name = "branch")
 public class Branch implements Serializable {
 
     private static final long serialVersionUID = 3935460485544487088L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String branchId;
     private String name;

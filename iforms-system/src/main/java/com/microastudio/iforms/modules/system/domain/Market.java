@@ -1,14 +1,19 @@
-package com.microastudio.iforms.modules.form.domain;
+package com.microastudio.iforms.modules.system.domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * @author peng
  */
+@Entity
+@Table(name = "market")
 public class Market implements Serializable {
 
     private static final long serialVersionUID = -3511754758539154938L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String marketId;
     private String description;

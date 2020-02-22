@@ -18,8 +18,10 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@Table(name="user")
+@Table(name = "user")
 public class User implements Serializable {
+
+    private static final long serialVersionUID = -4890257193045287410L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,17 +31,23 @@ public class User implements Serializable {
     private String userId;
 
     @NotBlank
-    @Column(unique = true, name = "user_name")
+    @Column(name = "user_name")
     private String username;
 
-    /** 用户昵称 */
+    /**
+     * 用户昵称
+     */
     @NotBlank
     private String nickName;
 
-    /** 性别 */
+    /**
+     * 性别
+     */
     private String sex;
 
-    /** 权限 */
+    /**
+     * 权限
+     */
     private String role;
 
     @NotBlank
@@ -58,11 +66,17 @@ public class User implements Serializable {
 
     private Long deptId;
 
-    private String client;
+    @JoinColumn(name = "client")
+    @OneToOne
+    private Client client;
 
-    private String marketId;
+    @JoinColumn(name = "market_id")
+    @OneToOne
+    private Market market;
 
-    private String branchId;
+    @JoinColumn(name = "branch_id")
+    @OneToOne
+    private Branch branch;
 
     private String createdBy;
 
@@ -73,7 +87,8 @@ public class User implements Serializable {
 
     private Timestamp modifiedDate;
 
-    public @interface Update {}
+    public @interface Update {
+    }
 
     @Override
     public boolean equals(Object o) {
