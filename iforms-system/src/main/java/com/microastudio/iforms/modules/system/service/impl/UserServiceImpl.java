@@ -227,6 +227,7 @@ public class UserServiceImpl implements UserService {
         userDto.setPassword(user.getPassword());
         userDto.setSex(user.getSex());
         userDto.setPhone(user.getPhone());
+        userDto.setDeptId(user.getDeptId());
 
         switch (user.getRoleId()) {
             case "10":
