@@ -1,6 +1,7 @@
 package com.microastudio.iforms.modules.security.service;
 
 import com.microastudio.iforms.common.exception.BadRequestException;
+import com.microastudio.iforms.common.utils.RoleEnum;
 import com.microastudio.iforms.modules.security.domain.JwtUser;
 import com.microastudio.iforms.modules.system.dto.UserDto;
 import com.microastudio.iforms.modules.system.service.UserService;
@@ -68,12 +69,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private Collection<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
         Set<String> permissions = new HashSet<String>();
 
-        switch (user.getRole()) {
-            case "10":
-                permissions.add("Admin");
+        switch (RoleEnum.getByValue(user.getRole())) {
+            case SUPER_ADMIN:
+                permissions.add(RoleEnum.SUPER_ADMIN.getName());
+                break;
+            case ADMIN:
+                permissions.add(RoleEnum.ADMIN.getName());
                 break;
             default:
-                permissions.add("User");
+                permissions.add(RoleEnum.USER.getName());
                 break;
         }
 

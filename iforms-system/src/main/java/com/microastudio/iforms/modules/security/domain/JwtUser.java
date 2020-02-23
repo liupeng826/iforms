@@ -29,7 +29,7 @@ public class JwtUser implements UserDetails {
 
     private final String sex;
 
-    private String role;
+    private final int role;
 
     @JsonIgnore
     private final String password;
@@ -86,9 +86,9 @@ public class JwtUser implements UserDetails {
         return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
     }
 
-    private Client client;
+    private final Client client;
 
-    private Market market;
+    private final Market market;
 
-    private Branch branch;
+    private final Branch branch;
 }

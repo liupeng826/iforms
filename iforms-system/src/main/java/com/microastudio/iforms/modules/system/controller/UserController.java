@@ -12,6 +12,7 @@ import com.microastudio.iforms.modules.system.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ public class UserController {
     //        @Log("查询用户")
     @ApiOperation("查询用户")
     @GetMapping
-//    @PreAuthorize("@el.check('user:list')")
+    @PreAuthorize("hasRole('SuperAdmin')")
     public ResultResponse<Object> getUsers(UserQueryCriteria criteria, Pageable pageable) {
 
 //        Set<Long> deptSet = new HashSet<>();
@@ -129,6 +130,7 @@ public class UserController {
 //
     @ApiOperation("修改密码")
     @PostMapping(value = "/updatePass")
+    @PreAuthorize("hasRole('SuperAdmin')")
     public ResultResponse<Object> updatePass(@RequestBody UserPassVo passVo) {
 
         // 密码解密

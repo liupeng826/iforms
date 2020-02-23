@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.25)
 # Database: iForms
-# Generation Time: 2020-02-22 11:21:39 +0000
+# Generation Time: 2020-02-22 14:05:19 +0000
 # ************************************************************
 
 
@@ -27,7 +27,7 @@ SET NAMES utf8mb4;
 DROP TABLE IF EXISTS `branch`;
 
 CREATE TABLE `branch` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `branch_id` varchar(200) NOT NULL DEFAULT '',
   `name` varchar(200) NOT NULL DEFAULT '',
   `market_id` varchar(200) DEFAULT NULL,
@@ -42,6 +42,15 @@ CREATE TABLE `branch` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+LOCK TABLES `branch` WRITE;
+/*!40000 ALTER TABLE `branch` DISABLE KEYS */;
+
+INSERT INTO `branch` (`id`, `branch_id`, `name`, `market_id`, `contact_no`, `email`, `address`, `is_active`, `created_by`, `created_date`, `modified_by`, `modified_date`)
+VALUES
+	(1,'TJ1','天津','1','1','1','',1,'','2020-02-22 20:20:15',NULL,NULL);
+
+/*!40000 ALTER TABLE `branch` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table client
@@ -62,7 +71,7 @@ LOCK TABLES `client` WRITE;
 
 INSERT INTO `client` (`id`, `name`, `token`, `is_active`)
 VALUES
-	(1,'iForms_web','YWVzLTI1Ni1nY206Y0c5UGMwMXFRWGxOUXpCM1RWTXdlVTlUTUhoT1VWZFJZMUA1Mi4zOS45MC4yNjo1MjIxOQNv6RRuGEVvmGjB+jimI/gw==',1);
+	(1,'iForms_GTA','YWVzLTI1Ni1nY206Y0c5UGMwMXFRWGxOUXpCM1RWTXdlVTlUTUhoT1VWZFJZMUA1Mi4zOS45MC4yNjo1MjIxOQNv6RRuGEVvmGjB+jimI/gw==',1);
 
 /*!40000 ALTER TABLE `client` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -206,6 +215,15 @@ CREATE TABLE `market` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+LOCK TABLES `market` WRITE;
+/*!40000 ALTER TABLE `market` DISABLE KEYS */;
+
+INSERT INTO `market` (`id`, `market_id`, `description`, `is_active`)
+VALUES
+	(1,'CN','中国',1);
+
+/*!40000 ALTER TABLE `market` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table question
@@ -437,9 +455,9 @@ DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `user_id` varchar(200) NOT NULL DEFAULT '' COMMENT '头像',
-  `user_name` varchar(255) NOT NULL DEFAULT '' COMMENT '用户名',
-  `nick_name` varchar(255) DEFAULT NULL,
+  `user_id` varchar(200) NOT NULL DEFAULT '' COMMENT '用户id',
+  `user_name` varchar(200) NOT NULL DEFAULT '' COMMENT '用户名',
+  `nick_name` varchar(255) DEFAULT NULL COMMENT '昵称',
   `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码',
   `email` varchar(255) DEFAULT NULL COMMENT '邮箱',
   `dept_id` bigint(20) DEFAULT NULL COMMENT '部门名称',
@@ -447,17 +465,23 @@ CREATE TABLE `user` (
   `job_id` bigint(20) DEFAULT NULL COMMENT '岗位名称',
   `sex` varchar(255) DEFAULT NULL COMMENT '性别',
   `role` varchar(50) NOT NULL DEFAULT '' COMMENT '职责(10：管理员，20：普通用户)',
-  `client` varchar(255) NOT NULL DEFAULT '' COMMENT '性别',
-  `market_id` varchar(255) DEFAULT NULL COMMENT '性别',
-  `branch_id` varchar(255) DEFAULT NULL COMMENT '性别',
+  `client` int(11) NOT NULL COMMENT '客户端',
+  `market_id` int(11) DEFAULT NULL COMMENT '市场',
+  `branch_id` int(11) DEFAULT NULL COMMENT '分支机构',
   `is_active` tinyint(1) NOT NULL COMMENT '状态：1启用、0禁用',
   `created_by` varchar(50) NOT NULL DEFAULT '',
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modified_by` varchar(50) DEFAULT NULL,
   `modified_date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `username` (`user_name`) USING BTREE,
-  UNIQUE KEY `UK_kpubos9gc2cvtkb0thktkbkes` (`email`) USING BTREE
+  UNIQUE KEY `UK_user_email` (`email`) USING BTREE,
+  KEY `idx_user_client` (`client`),
+  KEY `fk_user_client_on_client_id_idx` (`client`),
+  KEY `fk_user_client_on_market_id_idx` (`market_id`),
+  KEY `fk_user_client_on_branch_id_idx` (`branch_id`),
+  CONSTRAINT `fk_user_client_on_branch_id` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_client_on_client_id` FOREIGN KEY (`client`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_client_on_market_id` FOREIGN KEY (`market_id`) REFERENCES `market` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统用户';
 
 LOCK TABLES `user` WRITE;
@@ -465,8 +489,8 @@ LOCK TABLES `user` WRITE;
 
 INSERT INTO `user` (`id`, `user_id`, `user_name`, `nick_name`, `password`, `email`, `dept_id`, `phone`, `job_id`, `sex`, `role`, `client`, `market_id`, `branch_id`, `is_active`, `created_by`, `created_date`, `modified_by`, `modified_date`)
 VALUES
-	(1,'v1000','admin','管理员','$2a$10$E1hlUKrF5ZduoY1qs9TtCeo7YQDOYN2w.c3.Pfsl2.52c9fpM52R2','liupeng826@hotmail.com',2,'18888888888',11,'男','10','1',NULL,NULL,1,'peng','2020-02-22 19:19:18','peng','2020-02-22 11:19:19'),
-	(3,'v1001','test','测试','$2a$10$HhxyGZy.ulf3RvAwaHUGb.k.2i9PBpv4YbLMJWp8pES7pPhTyRCF.','peng.liu@volvo.com',2,'17777777777',12,'男','20','1',NULL,NULL,1,'peng','2020-02-22 18:56:41','peng','2020-01-31 22:37:20');
+	(1,'v1000','admin','管理员','$2a$10$cEByg.MeQ6NUj7q0e5QD4udx0h6h6EenL3vkGas0yL0I1vZBD8PTe','liupeng826@hotmail.com',2,'18888888888',11,'男','10',1,1,1,1,'peng','2020-02-22 21:40:51','peng','2020-02-22 13:40:52'),
+	(3,'v1001','test','测试','$2a$10$HhxyGZy.ulf3RvAwaHUGb.k.2i9PBpv4YbLMJWp8pES7pPhTyRCF.','peng.liu@volvo.com',2,'17777777777',12,'男','20',1,1,1,1,'peng','2020-02-22 20:20:34','peng','2020-01-31 22:37:20');
 
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;

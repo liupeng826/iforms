@@ -232,16 +232,7 @@ public class UserServiceImpl implements UserService {
         userDto.setClient(user.getClient());
         userDto.setMarket(user.getMarket());
         userDto.setBranch(user.getBranch());
-
-        switch (user.getRole()) {
-            case "10":
-                userDto.setRole("Admin");
-                break;
-            default:
-                userDto.setRole("User");
-                break;
-        }
-
+        userDto.setRole(user.getRole());
         userDto.setCreatedDate(user.getCreatedDate());
         userDto.setModifiedDate(user.getModifiedDate());
         userDto.setIsActive(user.getIsActive());

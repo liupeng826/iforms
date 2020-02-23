@@ -48,7 +48,7 @@ public class User implements Serializable {
     /**
      * 权限
      */
-    private String role;
+    private int role;
 
     @NotBlank
     @Email
