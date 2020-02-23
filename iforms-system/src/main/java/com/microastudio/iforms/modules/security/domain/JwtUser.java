@@ -1,9 +1,8 @@
 package com.microastudio.iforms.modules.security.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.microastudio.iforms.modules.system.domain.Branch;
 import com.microastudio.iforms.modules.system.domain.Client;
-import com.microastudio.iforms.modules.system.domain.Market;
+import com.microastudio.iforms.modules.system.domain.Dept;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,8 +36,6 @@ public class JwtUser implements UserDetails {
     private final String email;
 
     private final String phone;
-
-    private final String dept;
 
     private final String job;
 
@@ -88,7 +85,5 @@ public class JwtUser implements UserDetails {
 
     private final Client client;
 
-    private final Market market;
-
-    private final Branch branch;
+    private final Dept dept;
 }

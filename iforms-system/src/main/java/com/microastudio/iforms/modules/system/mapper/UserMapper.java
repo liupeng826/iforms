@@ -9,11 +9,12 @@ import org.mapstruct.ReportingPolicy;
 /**
  * @author peng
  */
-@Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper extends BaseMapper<UserDto, User> {
 
     /**
      * 转换
+     *
      * @param user 原始数据
      * @return /
      */

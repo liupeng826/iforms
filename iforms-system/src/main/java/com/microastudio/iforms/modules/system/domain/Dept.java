@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -18,69 +17,47 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@Table(name = "user")
-public class User implements Serializable {
+@Table(name = "dept")
+public class Dept implements Serializable {
 
-    private static final long serialVersionUID = -4890257193045287410L;
+    private static final long serialVersionUID = -1287039399523002080L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     @NotNull(groups = Update.class)
     private Long id;
 
-    private String userId;
-
+    @Column(name = "dept_id", nullable = false)
     @NotBlank
-    @Column(name = "user_name")
-    private String userName;
+    private String deptId;
 
-    /**
-     * 用户昵称
-     */
+    @Column(name = "name", nullable = false)
     @NotBlank
-    private String nickName;
+    private String name;
 
-    /**
-     * 性别
-     */
-    private String sex;
+    @Column(name = "pid", nullable = false)
+    @NotNull
+    private Long pid;
 
-    /**
-     * 权限
-     */
-    private int role;
+//    @JsonIgnore
+//    @ManyToMany(mappedBy = "depts")
+//    private Set<Role> roles;
 
-    @NotBlank
-    @Email
+    private String contactNo;
     private String email;
-
-    @NotBlank
-    private String phone;
-
-    private String jobId;
+    private String address;
 
     @NotNull
     private byte isActive;
 
-    private String password;
-
-    private Long deptId;
-
-    @JoinColumn(name = "client")
-    @OneToOne
-    private Client client;
-
-    @JoinColumn(name = "dept")
-    @OneToOne
-    private Dept dept;
-
     private String createdBy;
 
+    @Column(name = "created_date")
     @CreationTimestamp
     private Timestamp createdDate;
 
     private String modifiedBy;
-
     private Timestamp modifiedDate;
 
     public @interface Update {
@@ -94,13 +71,14 @@ public class User implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(userName, user.userName);
+        Dept dept = (Dept) o;
+        return Objects.equals(id, dept.id) &&
+                Objects.equals(deptId, dept.deptId) &&
+                Objects.equals(name, dept.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName);
+        return Objects.hash(id, deptId, name);
     }
 }

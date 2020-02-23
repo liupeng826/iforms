@@ -55,14 +55,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 user.getEmail(),
                 user.getPhone(),
                 null,
-                null,
                 mapToGrantedAuthorities(user),
                 user.getIsActive() == 1,
                 user.getCreatedDate(),
                 user.getModifiedDate(),
                 user.getClient(),
-                user.getMarket(),
-                user.getBranch()
+                user.getDept()
         );
     }
 

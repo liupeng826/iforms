@@ -1,9 +1,8 @@
 package com.microastudio.iforms.modules.system.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.microastudio.iforms.modules.system.domain.Branch;
 import com.microastudio.iforms.modules.system.domain.Client;
-import com.microastudio.iforms.modules.system.domain.Market;
+import com.microastudio.iforms.modules.system.domain.Dept;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -37,9 +36,7 @@ public class UserDto implements Serializable {
 
     private Client client;
 
-    private Market market;
-
-    private Branch branch;
+    private Dept dept;
 
     private byte isActive;
 

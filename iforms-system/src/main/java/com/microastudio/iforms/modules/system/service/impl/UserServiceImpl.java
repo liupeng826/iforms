@@ -230,8 +230,7 @@ public class UserServiceImpl implements UserService {
         userDto.setPhone(user.getPhone());
         userDto.setDeptId(user.getDeptId());
         userDto.setClient(user.getClient());
-        userDto.setMarket(user.getMarket());
-        userDto.setBranch(user.getBranch());
+        userDto.setDept(user.getDept());
         userDto.setRole(user.getRole());
         userDto.setCreatedDate(user.getCreatedDate());
         userDto.setModifiedDate(user.getModifiedDate());

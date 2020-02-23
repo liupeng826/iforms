@@ -65,9 +65,9 @@ spring:
     time-zone: GMT+8
   #邮件
   mail:
-    host: mailgot.xxx.com
-    username: Api.support.css@xxx.com  #用户名
-    password: xxx                    #密码
+    host: smtp.163.com
+    username: liupeng826@163.com  #用户名
+    password: 826rilyuuhou                    #密码
   #下面是安全认证，不加会报503错误
   properties:
     mail:
@@ -77,7 +77,7 @@ spring:
         enable: true
         required: true
       default-encoding: UTF-8
-fromMail: Api.support.css@xxx.com
+fromMail: liupeng826@163.com
 mybatis:
   mapper-locations: classpath*:mybatis/mapper/*.xml
   type-aliases-package: com.microastudio.iforms.modules.*
