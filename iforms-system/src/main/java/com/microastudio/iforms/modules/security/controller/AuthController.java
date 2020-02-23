@@ -15,6 +15,7 @@ import com.microastudio.iforms.modules.security.domain.JwtUser;
 import com.microastudio.iforms.modules.security.security.TokenProvider;
 import com.microastudio.iforms.modules.security.service.OnlineUserService;
 import com.wf.captcha.ArithmeticCaptcha;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RestController
 @RequestMapping("/auth")
+@Api(tags = "Auth")
 public class AuthController {
 
     @Value("${loginCode.expiration}")

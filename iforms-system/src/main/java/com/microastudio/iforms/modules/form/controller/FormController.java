@@ -218,7 +218,7 @@ public class FormController {
             Map<String, Object> model = new HashMap<>();
             model.put("username", "username");
             model.put("templateType", "Freemarker");
-            Template template = freeMarkerConfigurer.getConfiguration().getTemplate("emailTemplate.html");
+            Template template = freeMarkerConfigurer.getConfiguration().getTemplate("surveyEmailTemplate.html");
             String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
             mailService.sendHtmlMail("peng.liu@volvo.com", "主题：这是模板邮件", html);
             resultResponse.ok("");

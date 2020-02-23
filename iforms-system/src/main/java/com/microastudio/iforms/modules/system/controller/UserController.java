@@ -9,6 +9,7 @@ import com.microastudio.iforms.modules.system.domain.UserPassVo;
 import com.microastudio.iforms.modules.system.dto.UserDto;
 import com.microastudio.iforms.modules.system.dto.UserQueryCriteria;
 import com.microastudio.iforms.modules.system.service.UserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * @author peng
  */
+@Api(tags = "User")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
