@@ -119,13 +119,13 @@ swagger:
 verificationCode:
   enabled: false
 
-#sql 日志打印  root（项目）日志打印级别
-logging:
-  level:
-    #    root: warn
-    com:
-      microastudio:
-        iforms:
-          mapper: debug
-  config:
-    classpath: logback-spring.xml
+##sql 日志打印  root（项目）日志打印级别
+#logging:
+#  level:
+#    #    root: warn
+#    com:
+#      microastudio:
+#        iforms:
+#          mapper: debug
+#  config:
+#    classpath: logback-spring.xml

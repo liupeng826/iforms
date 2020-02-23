@@ -32,7 +32,7 @@ public class User implements Serializable {
 
     @NotBlank
     @Column(name = "user_name")
-    private String username;
+    private String userName;
 
     /**
      * 用户昵称
@@ -100,11 +100,11 @@ public class User implements Serializable {
         }
         User user = (User) o;
         return Objects.equals(id, user.id) &&
-                Objects.equals(username, user.username);
+                Objects.equals(userName, user.userName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username);
+        return Objects.hash(id, userName);
     }
 }

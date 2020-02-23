@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
     @Cacheable(key = "'loadUserByUsername:'+#p0")
     public UserDto findByName(String username) {
         User user;
-        user = userRepository.findByUsername(username);
+        user = userRepository.findByUserName(username);
         if (user == null) {
             throw new EntityNotFoundException(User.class, "name", username);
         } else {
@@ -222,7 +222,7 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setUserId(user.getUserId());
-        userDto.setUserName(user.getUsername());
+        userDto.setUserName(user.getUserName());
         userDto.setNickName(user.getNickName());
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
