@@ -11,6 +11,7 @@ import com.microastudio.iforms.modules.form.dto.AnswerDto;
 import com.microastudio.iforms.modules.form.dto.FormDto;
 import com.microastudio.iforms.modules.form.dto.FormRequestDto;
 import com.microastudio.iforms.modules.form.service.FormService;
+import com.microastudio.iforms.modules.system.domain.Client;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
@@ -74,30 +76,45 @@ public class FormController {
         return resultResponse;
     }
 
-    @GetMapping("/validateToken")
-    public ResultResponse validateToken(@RequestParam(value = "key") String key
-            , @RequestParam(value = "client") String client) {
-        return getClient(key, client);
-    }
+//    @GetMapping("/validateToken")
+//    public ResultResponse validateToken(@RequestParam(value = "key") String key
+//            , @RequestParam(value = "client") String client) {
+//        return getClient(key, client);
+//    }
 
-    private ResultResponse getClient(String name, String token) {
-        logger.info("getToken");
+    @PostMapping("/getForms")
+    public ResultResponse getForms(@RequestBody FormRequestDto dto) {
+        logger.info("getForms");
         ResultResponse resultResponse = new ResultResponse();
         try {
-            if (StringUtils.isEmpty(name) || StringUtils.isEmpty(token)) {
+            if (dto == null || (StringUtils.isEmpty(dto.getSupperId())
+                    && (dto.getClient() == null
+                    || StringUtils.isEmpty(dto.getClient().getName())
+                    || StringUtils.isEmpty(dto.getClient().getToken())))) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
 
-            logger.info("getToken入参：" + name + "," + token);
+            // validateToken
+            if (dto.getClient() != null
+                    && !StringUtils.isEmpty(dto.getClient().getName())
+                    && !StringUtils.isEmpty(dto.getClient().getToken())) {
 
-            String clientToken = formService.getClient(name);
-            if (!token.equals(clientToken)) {
-                return new ResultResponse(CommonConstants.ERRORS_CODE_AUTH_TOKEN, CommonConstants.ERRORS_MSG_AUTH_TOKEN);
+                resultResponse = getClient(dto.getClient());
+                if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+                    return resultResponse;
+                }
             }
 
-            resultResponse.ok("");
+            logger.info("getAllForms入参：" + JSONObject.toJSONString(dto));
+            // get form
+            String clientToken = dto.getClient().getToken();
+            clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
+
+            List<FormDto> forms = formService.getAllForms(clientToken, dto.getSupperId());
+
+            resultResponse.ok(forms);
         } catch (Exception e) {
-            logger.error("getToken异常：" + e.getMessage(), e);
+            logger.error("getAllForms异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
         }
@@ -105,24 +122,13 @@ public class FormController {
     }
 
     @PostMapping("/getAllForms")
-    public ResultResponse getAllForms(@RequestBody FormRequestDto dto) {
+    @PreAuthorize("hasRole('SuperAdmin')")
+    public ResultResponse getAllForms() {
         logger.info("getAllForms");
         ResultResponse resultResponse = new ResultResponse();
         try {
-            if (dto == null) {
-                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
-            }
-
-            logger.info("getAllForms入参：" + JSONObject.toJSONString(dto));
-
-            // validateToken
-            resultResponse = getClient(dto.getClientName(), dto.getClientToken());
-            if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
-                return resultResponse;
-            }
-
-            // get form
-            List<FormDto> forms = formService.getAllForms(dto.getClientToken(), dto.getSupperId());
+            logger.info("getAllForms：");
+            List<FormDto> forms = formService.getAllForms("", "");
 
             resultResponse.ok(forms);
         } catch (Exception e) {
@@ -146,7 +152,7 @@ public class FormController {
             logger.info("generateForm入参：" + JSONObject.toJSONString(formParam));
 
             // validateToken
-            resultResponse = getClient(formParam.getClient().getName(), formParam.getClient().getToken());
+            resultResponse = getClient(formParam.getClient());
             if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
                 return resultResponse;
             }
@@ -162,7 +168,8 @@ public class FormController {
             }
 
             resultResponse.ok(form);
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             logger.error("generateForm异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
@@ -182,7 +189,7 @@ public class FormController {
             logger.info("answer入参：" + JSONObject.toJSONString(answerDto));
 
             // validateToken
-            resultResponse = getClient(answerDto.getClient().getName(), answerDto.getClient().getToken());
+            resultResponse = getClient(answerDto.getClient());
             if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
                 return resultResponse;
             }
@@ -225,4 +232,28 @@ public class FormController {
         return resultResponse;
     }
 
+
+    private ResultResponse getClient(Client client) {
+        logger.info("getToken");
+        ResultResponse resultResponse = new ResultResponse();
+        try {
+            if (client == null || StringUtils.isEmpty(client.getName()) || StringUtils.isEmpty(client.getToken())) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+            }
+
+            logger.info("getToken入参：" + client.getName() + "," + client.getToken());
+
+            String clientToken = formService.getClient(client.getName());
+            if (!client.getToken().equals(clientToken)) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_AUTH_TOKEN, CommonConstants.ERRORS_MSG_AUTH_TOKEN);
+            }
+
+            resultResponse.ok("");
+        } catch (Exception e) {
+            logger.error("getToken异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+        return resultResponse;
+    }
 }

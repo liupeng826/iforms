@@ -130,7 +130,6 @@ public class UserController {
 //
     @ApiOperation("修改密码")
     @PostMapping(value = "/updatePass")
-    @PreAuthorize("hasRole('SuperAdmin')")
     public ResultResponse<Object> updatePass(@RequestBody UserPassVo passVo) {
 
         // 密码解密

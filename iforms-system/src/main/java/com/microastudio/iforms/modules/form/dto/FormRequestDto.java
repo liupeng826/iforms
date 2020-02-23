@@ -1,5 +1,7 @@
 package com.microastudio.iforms.modules.form.dto;
 
+import com.microastudio.iforms.modules.system.domain.Client;
+
 import java.io.Serializable;
 
 /**
@@ -9,24 +11,15 @@ public class FormRequestDto implements Serializable {
 
     private static final long serialVersionUID = 6813986649917909511L;
 
-    private String clientName;
-    private String clientToken;
+    private Client client;
     private String supperId;
 
-    public String getClientName() {
-        return clientName;
+    public Client getClient() {
+        return client;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getClientToken() {
-        return clientToken;
-    }
-
-    public void setClientToken(String clientToken) {
-        this.clientToken = clientToken;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public String getSupperId() {

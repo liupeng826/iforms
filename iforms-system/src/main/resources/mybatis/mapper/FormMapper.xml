@@ -102,7 +102,9 @@
         WHERE section.form_id = form.id
         AND question.section_id = section.id
         And form.client = client.id
+        <if test="clientToken != null and clientToken != '' ">
         AND client.token = #{clientToken}
+        </if>
         <if test="supperId != null and supperId != '' ">
             AND form.supper_id = #{supperId,jdbcType=VARCHAR}
         </if>
