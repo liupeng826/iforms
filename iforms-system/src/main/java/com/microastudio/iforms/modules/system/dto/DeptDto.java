@@ -16,17 +16,19 @@ public class DeptDto implements Serializable {
 
     private Long id;
 
+    private String deptId;
+
     private String name;
 
     @NotNull
-    private Boolean enabled;
+    private byte isActive;
 
     private Long pid;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<DeptDto> children;
 
-    private Timestamp createTime;
+    private Timestamp createdDate;
 
     public String getLabel() {
         return name;

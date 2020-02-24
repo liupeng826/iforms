@@ -1,6 +1,7 @@
 package com.microastudio.iforms.modules.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.microastudio.iforms.common.bean.ResultResponse;
 import com.microastudio.iforms.common.exception.BadRequestException;
 import com.microastudio.iforms.common.utils.ThrowableUtil;
 import com.microastudio.iforms.modules.system.domain.Dept;
@@ -9,8 +10,6 @@ import com.microastudio.iforms.modules.system.dto.DeptQueryCriteria;
 import com.microastudio.iforms.modules.system.service.DeptService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,36 +48,37 @@ public class DeptController {
     @ApiOperation("查询部门")
     @GetMapping
     @PreAuthorize("hasRole('SuperAdmin')")
-    public ResponseEntity<Object> getDepts(DeptQueryCriteria criteria) {
+    public ResultResponse<Object> getDepts(DeptQueryCriteria criteria) {
         List<DeptDto> deptDtos = deptService.queryAll(criteria);
-        return new ResponseEntity<>(deptService.buildTree(deptDtos), HttpStatus.OK);
+        return ResultResponse.success(deptDtos);
+//        return ResultResponse.success(deptService.buildTree(deptDtos));
     }
 
     //    @Log("新增部门")
     @ApiOperation("新增部门")
     @PostMapping
     @PreAuthorize("hasRole('SuperAdmin')")
-    public ResponseEntity<Object> create(@Validated @RequestBody Dept resources) {
+    public ResultResponse<Object> create(@Validated @RequestBody Dept resources) {
         if (resources.getId() != null) {
             throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
         }
-        return new ResponseEntity<>(deptService.create(resources), HttpStatus.CREATED);
+        return ResultResponse.success(deptService.create(resources));
     }
 
     //    @Log("修改部门")
     @ApiOperation("修改部门")
     @PutMapping
     @PreAuthorize("hasRole('SuperAdmin')")
-    public ResponseEntity<Object> update(@Validated(Dept.Update.class) @RequestBody Dept resources) {
+    public ResultResponse<Object> update(@Validated(Dept.Update.class) @RequestBody Dept resources) {
         deptService.update(resources);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResultResponse.success("");
     }
 
     //    @Log("删除部门")
     @ApiOperation("删除部门")
     @DeleteMapping
     @PreAuthorize("hasRole('SuperAdmin')")
-    public ResponseEntity<Object> delete(@RequestBody Set<Long> ids) {
+    public ResultResponse<Object> delete(@RequestBody Set<Long> ids) {
         Set<DeptDto> deptDtos = new HashSet<>();
         for (Long id : ids) {
             List<Dept> deptList = deptService.findByPid(id);
@@ -92,6 +92,6 @@ public class DeptController {
         } catch (Throwable e) {
             ThrowableUtil.throwForeignKeyException(e, "所选部门中存在岗位或者角色关联，请取消关联后再试");
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResultResponse.success("");
     }
 }

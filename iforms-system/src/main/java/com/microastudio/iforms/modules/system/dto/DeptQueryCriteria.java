@@ -3,8 +3,6 @@ package com.microastudio.iforms.modules.system.dto;
 import com.microastudio.iforms.common.annotation.Query;
 import lombok.Data;
 
-import java.sql.Timestamp;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,7 +22,4 @@ public class DeptQueryCriteria{
 
     @Query
     private Long pid;
-
-    @Query(type = Query.Type.BETWEEN)
-    private List<Timestamp> createTime;
 }

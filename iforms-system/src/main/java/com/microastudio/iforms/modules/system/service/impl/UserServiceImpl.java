@@ -43,22 +43,6 @@ public class UserServiceImpl implements UserService {
     @Cacheable
     public Object queryAll(UserQueryCriteria criteria, Pageable pageable) {
         Page<User> page = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
-//        List<UserDto> users = new ArrayList<>();
-//        for (User user: page) {
-//            UserDto userDto = new UserDto();
-//            userDto.setId(user.getId());
-//            userDto.setUsername(user.getUsername());
-//            userDto.setNickName(user.getNickName());
-//            userDto.setEmail(user.getEmail());
-//            userDto.setPassword(user.getPassword());
-//            userDto.setSex(user.getSex());
-//            userDto.setPhone(user.getPhone());
-//            userDto.setRoleId(user.getRoleId());
-//            userDto.setCreatedDate(user.getCreatedDate());
-//            userDto.setModifiedDate(user.getModifiedDate());
-//            userDto.setIsActive(user.getIsActive());
-//            users.add(userDto);
-//        }
         return PageUtil.toPage(page.map(userMapper::toDto));
     }
 
@@ -68,7 +52,7 @@ public class UserServiceImpl implements UserService {
         List<User> users = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder));
         List<UserDto> userDtos = new ArrayList<>();
         for (User user : users) {
-            userDtos.add(translationUserToDto(user));
+            userDtos.add(toDto(user));
         }
         return userDtos;
     }
@@ -78,7 +62,7 @@ public class UserServiceImpl implements UserService {
     public UserDto findById(long id) {
         User user = userRepository.findById(id).orElseGet(User::new);
         ValidationUtil.isNull(user.getId(), "User", "id", id);
-        return translationUserToDto(user);
+        return toDto(user);
     }
 
     //    @Override
@@ -159,7 +143,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new EntityNotFoundException(User.class, "name", username);
         } else {
-            return translationUserToDto(user);
+            return toDto(user);
         }
     }
 
@@ -218,23 +202,85 @@ public class UserServiceImpl implements UserService {
 //        FileUtil.downloadExcel(list, response);
 //    }
 
-    private UserDto translationUserToDto(User user) {
+    public User toEntity(UserDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setId(dto.getId());
+        user.setUserId(dto.getUserId());
+        user.setUserName(dto.getUserName());
+        user.setNickName(dto.getNickName());
+        user.setSex(dto.getSex());
+        user.setRole(dto.getRole());
+        user.setEmail(dto.getEmail());
+        user.setPhone(dto.getPhone());
+        user.setJobId(dto.getJobId());
+        user.setIsActive(dto.getIsActive());
+        user.setPassword(dto.getPassword());
+        user.setClient(dto.getClient());
+        user.setDept(dto.getDept());
+        user.setCreatedBy(dto.getCreatedBy());
+        user.setCreatedDate(dto.getCreatedDate());
+        user.setModifiedBy(dto.getModifiedBy());
+        user.setModifiedDate(dto.getModifiedDate());
+
+        return user;
+    }
+
+    public List<User> toEntity(List<UserDto> dtoList) {
+        if (dtoList == null) {
+            return null;
+        }
+
+        List<User> list = new ArrayList<User>(dtoList.size());
+        for (UserDto userDto : dtoList) {
+            list.add(toEntity(userDto));
+        }
+
+        return list;
+    }
+
+    public List<UserDto> toDto(List<User> entityList) {
+        if (entityList == null) {
+            return null;
+        }
+
+        List<UserDto> list = new ArrayList<UserDto>(entityList.size());
+        for (User user : entityList) {
+            list.add(toDto(user));
+        }
+
+        return list;
+    }
+
+    public UserDto toDto(User user) {
+        if (user == null) {
+            return null;
+        }
+
         UserDto userDto = new UserDto();
+
         userDto.setId(user.getId());
         userDto.setUserId(user.getUserId());
         userDto.setUserName(user.getUserName());
         userDto.setNickName(user.getNickName());
-        userDto.setEmail(user.getEmail());
-        userDto.setPassword(user.getPassword());
         userDto.setSex(user.getSex());
+        userDto.setRole(user.getRole());
+        userDto.setEmail(user.getEmail());
         userDto.setPhone(user.getPhone());
-        userDto.setDeptId(user.getDeptId());
+        userDto.setJobId(user.getJobId());
         userDto.setClient(user.getClient());
         userDto.setDept(user.getDept());
-        userDto.setRole(user.getRole());
-        userDto.setCreatedDate(user.getCreatedDate());
-        userDto.setModifiedDate(user.getModifiedDate());
         userDto.setIsActive(user.getIsActive());
+        userDto.setPassword(user.getPassword());
+        userDto.setCreatedBy(user.getCreatedBy());
+        userDto.setCreatedDate(user.getCreatedDate());
+        userDto.setModifiedBy(user.getModifiedBy());
+        userDto.setModifiedDate(user.getModifiedDate());
+
         return userDto;
     }
 }

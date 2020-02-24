@@ -25,8 +25,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
-* @author peng
-*/
+ * @author peng
+ */
 @Service
 @CacheConfig(cacheNames = "dept")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
@@ -44,15 +44,15 @@ public class DeptServiceImpl implements DeptService {
     @Override
     @Cacheable
     public List<DeptDto> queryAll(DeptQueryCriteria criteria) {
-        return deptMapper.toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+        return toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
     }
 
     @Override
     @Cacheable(key = "#p0")
     public DeptDto findById(Long id) {
         Dept dept = deptRepository.findById(id).orElseGet(Dept::new);
-        ValidationUtil.isNull(dept.getId(),"Dept","id",id);
-        return deptMapper.toDto(dept);
+        ValidationUtil.isNull(dept.getId(), "Dept", "id", id);
+        return toDto(dept);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class DeptServiceImpl implements DeptService {
     @Cacheable
     public Object buildTree(List<DeptDto> deptDtos) {
         Set<DeptDto> trees = new LinkedHashSet<>();
-        Set<DeptDto> depts= new LinkedHashSet<>();
+        Set<DeptDto> depts = new LinkedHashSet<>();
         List<String> deptNames = deptDtos.stream().map(DeptDto::getName).collect(Collectors.toList());
         boolean isChild;
         for (DeptDto deptDTO : deptDtos) {
@@ -87,9 +87,9 @@ public class DeptServiceImpl implements DeptService {
                     deptDTO.getChildren().add(it);
                 }
             }
-            if(isChild) {
+            if (isChild) {
                 depts.add(deptDTO);
-            } else if(!deptNames.contains(deptRepository.findNameById(deptDTO.getPid()))) {
+            } else if (!deptNames.contains(deptRepository.findNameById(deptDTO.getPid()))) {
                 depts.add(deptDTO);
             }
         }
@@ -100,9 +100,9 @@ public class DeptServiceImpl implements DeptService {
 
         Integer totalElements = deptDtos.size();
 
-        Map<String,Object> map = new HashMap<>(2);
-        map.put("totalElements",totalElements);
-        map.put("content",CollectionUtils.isEmpty(trees)? deptDtos :trees);
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("totalElements", totalElements);
+        map.put("content", CollectionUtils.isEmpty(trees) ? deptDtos : trees);
         return map;
     }
 
@@ -110,18 +110,18 @@ public class DeptServiceImpl implements DeptService {
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public DeptDto create(Dept resources) {
-        return deptMapper.toDto(deptRepository.save(resources));
+        return toDto(deptRepository.save(resources));
     }
 
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(Dept resources) {
-        if(resources.getId().equals(resources.getPid())) {
+        if (resources.getId().equals(resources.getPid())) {
             throw new BadRequestException("上级不能为自己");
         }
         Dept dept = deptRepository.findById(resources.getId()).orElseGet(Dept::new);
-        ValidationUtil.isNull( dept.getId(),"Dept","id",resources.getId());
+        ValidationUtil.isNull(dept.getId(), "Dept", "id", resources.getId());
         resources.setId(dept.getId());
         deptRepository.save(resources);
     }
@@ -139,10 +139,10 @@ public class DeptServiceImpl implements DeptService {
     public void download(List<DeptDto> deptDtos, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (DeptDto deptDTO : deptDtos) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("部门名称", deptDTO.getName());
-            map.put("部门状态", deptDTO.getEnabled() ? "启用" : "停用");
-            map.put("创建日期", deptDTO.getCreateTime());
+            map.put("部门状态", deptDTO.getIsActive() == 1 ? "启用" : "停用");
+            map.put("创建日期", deptDTO.getCreatedDate());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
@@ -151,12 +151,72 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public Set<DeptDto> getDeleteDepts(List<Dept> menuList, Set<DeptDto> deptDtos) {
         for (Dept dept : menuList) {
-            deptDtos.add(deptMapper.toDto(dept));
+            deptDtos.add(toDto(dept));
             List<Dept> depts = deptRepository.findByPid(dept.getId());
-            if(depts!=null && depts.size()!=0){
+            if (depts != null && depts.size() != 0) {
                 getDeleteDepts(depts, deptDtos);
             }
         }
         return deptDtos;
+    }
+
+    public Dept toEntity(DeptDto dto) {
+        if ( dto == null ) {
+            return null;
+        }
+
+        Dept dept = new Dept();
+
+        dept.setId( dto.getId() );
+        dept.setDeptId( dto.getDeptId() );
+        dept.setName( dto.getName() );
+        dept.setPid( dto.getPid() );
+        dept.setIsActive( dto.getIsActive() );
+        dept.setCreatedDate( dto.getCreatedDate() );
+
+        return dept;
+    }
+
+    public DeptDto toDto(Dept entity) {
+        if ( entity == null ) {
+            return null;
+        }
+
+        DeptDto deptDto = new DeptDto();
+
+        deptDto.setId( entity.getId() );
+        deptDto.setDeptId( entity.getDeptId() );
+        deptDto.setName( entity.getName() );
+        deptDto.setIsActive( entity.getIsActive() );
+        deptDto.setPid( entity.getPid() );
+        deptDto.setCreatedDate( entity.getCreatedDate() );
+
+        return deptDto;
+    }
+
+    public List<Dept> toEntity(List<DeptDto> dtoList) {
+        if ( dtoList == null ) {
+            return null;
+        }
+
+        List<Dept> list = new ArrayList<Dept>( dtoList.size() );
+        for ( DeptDto deptDto : dtoList ) {
+            list.add( toEntity( deptDto ) );
+        }
+
+        return list;
+    }
+
+    public List<DeptDto> toDto(List<Dept> entityList) {
+        if ( entityList == null ) {
+            return null;
+        }
+
+        List<DeptDto> list = new ArrayList<DeptDto>( entityList.size() );
+        for ( Dept dept : entityList ) {
+            list.add( toDto( dept ) );
+        }
+
+        return list;
     }
 }

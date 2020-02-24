@@ -64,8 +64,6 @@ public class User implements Serializable {
 
     private String password;
 
-    private Long deptId;
-
     @JoinColumn(name = "client")
     @OneToOne
     private Client client;
