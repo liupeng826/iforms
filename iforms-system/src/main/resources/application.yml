@@ -27,12 +27,6 @@ spring:
     url: jdbc:mysql://localhost:3306/iForms?serverTimezone=UTC&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8&useSSL=true
     username: root
     password: Passw0rd12
-    druid:
-      db-type: com.alibaba.druid.pool.DruidDataSource
-      driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-      url: jdbc:log4jdbc:mysql://localhost:3306/iForms?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
-      username: root
-      password: Passw0rd12
 
     # 配置监控统计拦截的filters
     filters: stat
@@ -71,9 +65,9 @@ spring:
     time-zone: GMT+8
   #邮件
   mail:
-    host: smtp.163.com
-    username: liupeng826@163.com  #用户名
-    password: 826rilyuuhou                    #密码
+    host: mailgot.xxx.com
+    username: Api.support.css@xxx.com  #用户名
+    password: xxx                    #密码
   #下面是安全认证，不加会报503错误
   properties:
     mail:
@@ -83,7 +77,7 @@ spring:
         enable: true
         required: true
       default-encoding: UTF-8
-fromMail: liupeng826@163.com
+fromMail: Api.support.css@xxx.com
 mybatis:
   mapper-locations: classpath*:mybatis/mapper/*.xml
   type-aliases-package: com.microastudio.iforms.modules.*
@@ -124,14 +118,16 @@ swagger:
 #是否开启 验证码
 verificationCode:
   enabled: false
+#sql 日志打印  root（项目）日志打印级别
+logging:
+  level:
+    #    root: warn
+    com:
+      microastudio:
+        iforms:
+          mapper: debug
+  config:
+    classpath: logback-spring.xml
 
-##sql 日志打印  root（项目）日志打印级别
-#logging:
-#  level:
-#    #    root: warn
-#    com:
-#      microastudio:
-#        iforms:
-#          mapper: debug
-#  config:
-#    classpath: logback-spring.xml
+#iforms:
+#  log-path: /Users/peng/data/logs/iforms
