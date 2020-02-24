@@ -6,10 +6,11 @@ import java.sql.Timestamp;
 /**
  * @author peng
  */
-public class FormQuestionAnswer implements Serializable {
+public class Answer implements Serializable {
 
     private static final long serialVersionUID = -3538270732034929962L;
 
+    private String answerId;
     private Long id;
     private Long formId;
     private Long questionId;
@@ -23,6 +24,16 @@ public class FormQuestionAnswer implements Serializable {
     private String modifiedBy;
     private Timestamp modifiedDate;
     private Long customerId;
+    private Customer customer;
+    private String language;
+
+    public String getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(String answerId) {
+        this.answerId = answerId;
+    }
 
     public Long getId() {
         return id;
@@ -126,5 +137,21 @@ public class FormQuestionAnswer implements Serializable {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

@@ -1,6 +1,7 @@
 package com.microastudio.iforms.modules.form.mapper;
 
 import com.microastudio.iforms.modules.form.domain.*;
+import com.microastudio.iforms.modules.form.dto.AnswerDto;
 import com.microastudio.iforms.modules.form.dto.FormDto;
 
 import java.util.List;
@@ -22,7 +23,8 @@ public interface FormMapper {
 
     String selectClient(String key);
     List<FormDto> selectAllFormsByKey(String clientToken, String supperId);
-    int insertAnswer(List<FormQuestionAnswer> answers);
+    List<AnswerDto> selectAllAnswersByKey(String clientToken, String answerId);
+    int insertAnswer(List<Answer> answers);
     int insertCustomer(Customer customer);
 
 }

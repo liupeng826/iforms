@@ -165,8 +165,13 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
+    public List<AnswerDto> getAllAnswers(String clientToken, String answerId) {
+        return formMapper.selectAllAnswersByKey(clientToken, answerId);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    public int addAnswer(AnswerDto answerDto) {
+    public String addAnswer(AnswerDto answerDto) {
         int rows;
         Long customerId = null;
         Customer customer = answerDto.getCustomer();
@@ -178,18 +183,23 @@ public class FormServiceImpl implements FormService {
             }
         }
 
+        String uuid = StringUtils.getUuid();
+
         // insert answers
-        List<FormQuestionAnswer> answerList = new ArrayList<>();
-        for (FormQuestionAnswer answer : answerDto.getAnswers()) {
+        List<Answer> answerList = new ArrayList<>();
+        for (Answer answer : answerDto.getAnswers()) {
+            answer.setAnswerId(uuid);
+            answer.setCustomerId(customerId);
+            answer.setLanguage(answerDto.getLanguage());
             answer.setFormId(answerDto.getFormId());
             answer.setReference(answerDto.getReference());
             answer.setCreatedBy(answerDto.getCreatedBy());
             answer.setModifiedBy(answerDto.getModifiedBy());
-            answer.setCustomerId(customerId);
             answerList.add(answer);
         }
 
-        return formMapper.insertAnswer(answerList);
+        formMapper.insertAnswer(answerList);
+        return uuid;
     }
 
 

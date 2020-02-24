@@ -125,7 +125,9 @@ logging:
     com:
       microastudio:
         iforms:
-          mapper: debug
+          modules:
+            form:
+              mapper: debug
   config:
     classpath: logback-spring.xml
 

@@ -1,8 +1,8 @@
 package com.microastudio.iforms.modules.form.dto;
 
+import com.microastudio.iforms.modules.form.domain.Answer;
 import com.microastudio.iforms.modules.system.domain.Client;
 import com.microastudio.iforms.modules.form.domain.Customer;
-import com.microastudio.iforms.modules.form.domain.FormQuestionAnswer;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -17,13 +17,14 @@ public class AnswerDto implements Serializable {
 
     private Client client;
     private Long formId;
+    private List<Answer> answers;
+    private Customer customer;
+    private String language;
     private String reference;
     private String createdBy;
     private Timestamp createdDate;
     private String modifiedBy;
     private Timestamp modifiedDate;
-    private List<FormQuestionAnswer> answers;
-    private Customer customer;
 
     public Client getClient() {
         return client;
@@ -81,11 +82,11 @@ public class AnswerDto implements Serializable {
         this.modifiedDate = modifiedDate;
     }
 
-    public List<FormQuestionAnswer> getAnswers() {
+    public List<Answer> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<FormQuestionAnswer> answers) {
+    public void setAnswers(List<Answer> answers) {
         this.answers = answers;
     }
 
@@ -95,5 +96,13 @@ public class AnswerDto implements Serializable {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

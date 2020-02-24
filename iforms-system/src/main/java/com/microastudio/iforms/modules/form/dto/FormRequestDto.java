@@ -12,7 +12,14 @@ public class FormRequestDto implements Serializable {
     private static final long serialVersionUID = 6813986649917909511L;
 
     private Client client;
+    /**
+     *  form supper id
+     */
     private String supperId;
+    /**
+     * answer id
+     */
+    private String answerId;
 
     public Client getClient() {
         return client;
@@ -28,5 +35,13 @@ public class FormRequestDto implements Serializable {
 
     public void setSupperId(String supperId) {
         this.supperId = supperId;
+    }
+
+    public String getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(String answerId) {
+        this.answerId = answerId;
     }
 }

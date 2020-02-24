@@ -46,7 +46,8 @@
                 <result column="question.question_type_id" property="questionTypeId"/>
                 <result column="question.mandatory" property="mandatory"/>
                 <result column="question.sequence" property="sequence"/>
-                <collection property="questionOptions" ofType="com.microastudio.iforms.modules.form.domain.QuestionOption">
+                <collection property="questionOptions"
+                            ofType="com.microastudio.iforms.modules.form.domain.QuestionOption">
                     <id column="question_option.id" property="id"/>
                     <result column="question_option.question_id" property="questionId"/>
                     <result column="question_option.description" property="description"/>
@@ -58,6 +59,29 @@
                 </collection>
             </collection>
         </collection>
+    </resultMap>
+
+    <resultMap id="AnswerResultMap" type="com.microastudio.iforms.modules.form.domain.Answer">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="form_id" property="formId" jdbcType="BIGINT"/>
+        <result column="answer_id" property="answerId" jdbcType="BIGINT"/>
+        <result column="question_id" property="questionId" jdbcType="BIGINT"/>
+        <result column="answer_description" property="answerDescription" jdbcType="VARCHAR"/>
+        <result column="answer_option_id" property="answerOptionId" jdbcType="BIGINT"/>
+        <result column="answer_value" property="answerValue" jdbcType="VARCHAR"/>
+        <result column="total_value" property="totalValue" jdbcType="VARCHAR"/>
+        <result column="language" property="language" jdbcType="VARCHAR"/>
+        <result column="reference" property="reference" jdbcType="VARCHAR"/>
+        <result column="created_date" property="createdDate" jdbcType="TIMESTAMP"/>
+        <result column="created_by" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP"/>
+        <result column="modified_by" property="modifiedBy" jdbcType="VARCHAR"/>
+        <association property="customer" javaType="com.microastudio.iforms.modules.form.domain.Customer">
+            <id column="c_id" property="id"/>
+            <result column="contact_no" property="contactNo"/>
+            <result column="name" property="name"/>
+            <result column="email" property="email"/>
+        </association>
     </resultMap>
 
     <select id="selectQuestionType" resultMap="QuestionTypeResultMap">
@@ -103,7 +127,7 @@
         AND question.section_id = section.id
         And form.client = client.id
         <if test="clientToken != null and clientToken != '' ">
-        AND client.token = #{clientToken}
+            AND client.token = #{clientToken}
         </if>
         <if test="supperId != null and supperId != '' ">
             AND form.supper_id = #{supperId,jdbcType=VARCHAR}
@@ -114,7 +138,33 @@
         And client.is_active = 1
     </select>
 
-    <insert id="insertQuestion" parameterType="com.microastudio.iforms.modules.form.domain.Question" useGeneratedKeys="true"
+    <select id="selectAllAnswersByKey" parameterType="java.lang.String" resultMap="AnswerResultMap">
+        SELECT `answer`.`answer_id`,
+            `answer`.`id`,
+            `answer`.`form_id`,
+            `answer`.`question_id`,
+            `answer`.`answer_description`,
+            `answer`.`answer_option_id`,
+            `answer`.`answer_value`,
+            `answer`.`total_value`,
+            `answer`.`reference`,
+            `answer`.`created_by`,
+            `answer`.`created_date`,
+            `answer`.`modified_by`,
+            `answer`.`modified_date`,
+            `answer`.`language`,
+            `customer`.`id` c_id,
+            `customer`.`name`,
+            `customer`.`email`,
+            `customer`.`contact_no`
+        FROM `iForms`.`answer`
+        LEFT JOIN `iForms`.`customer`
+        ON `customer`.`id` = `answer`.`customer_id`
+        WHERE `answer`.`answer_id` = #{answerId};
+    </select>
+
+    <insert id="insertQuestion" parameterType="com.microastudio.iforms.modules.form.domain.Question"
+            useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `question`
         (`section_id`,
@@ -231,14 +281,16 @@
     <!--    </insert>-->
 
     <insert id="insertAnswer" parameterType="java.util.List">
-        INSERT INTO `form_question_answer`
-        (`form_id`,
+        INSERT INTO `answer`
+        (`answer_id`,
+        `form_id`,
         `question_id`,
         `answer_description`,
         `answer_option_id`,
         `answer_value`,
         `total_value`,
         `reference`,
+        `language`,
         `customer_id`,
         `created_by`,
         `created_date`,
@@ -246,13 +298,15 @@
         `modified_date`)
         VALUES
         <foreach collection="list" index="index" separator="," item="item">
-            (#{item.formId},
+            (#{item.answerId},
+            #{item.formId},
             #{item.questionId},
             #{item.answerDescription},
             #{item.answerOptionId},
             #{item.answerValue},
             #{item.totalValue},
             #{item.reference},
+            #{item.language},
             #{item.customerId},
             #{item.createdBy},
             now(),
