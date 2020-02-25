@@ -16,10 +16,22 @@ public interface FormService {
      * @return
      */
     List<QuestionType> getQuestionType();
+
     List<Language> getLanguage();
+
     Form generateForm(FormDto formDto);
+
     String getClient(String key);
+
     String addAnswer(AnswerDto answers);
-    List<FormDto> getAllForms(String clientToken, String supperId);
-    List<AnswerDto> getAllAnswers(String clientToken, String supperId);
+
+    List<FormDto> getForms(String clientToken, String superFormId);
+
+    List<FormDto> getFormsByUserId(String clientToken, String userId);
+
+    List<FormDto> getFormsByDeptId(String clientToken, String deptId);
+
+    List<FormDto> getFormsByMarketId(String clientToken, String parentId);
+
+    List<AnswerDto> getAllAnswers(String clientToken, String superFormId);
 }

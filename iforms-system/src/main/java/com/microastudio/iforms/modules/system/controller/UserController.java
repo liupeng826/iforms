@@ -64,7 +64,7 @@ public class UserController {
 //            result.retainAll(deptIds);
         // 若无交集，则代表无数据权限
 //            criteria.setDeptIds(result);
-//            if (result.size() == 0) {
+//            if (result.size() <= 0) {
 //                return new ResultResponse<>(PageUtil.toPage(null, 0), HttpStatus.OK);
 //            } else {
         Object data = userService.queryAll(criteria);

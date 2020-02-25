@@ -13,13 +13,13 @@ public class FormDto implements Serializable {
 
     private static final long serialVersionUID = -6764362501696187002L;
 
-    private String supperId;
+    private String superFormId;
     private Long id;
     private String title;
     private String description;
     private String level;
     private String marketId;
-    private String dealerId;
+    private String deptId;
     private Client client;
     private byte sendEmail;
     private String type;
@@ -35,12 +35,12 @@ public class FormDto implements Serializable {
     private byte includeSection;
     List<SectionDto> sections;
 
-    public String getSupperId() {
-        return supperId;
+    public String getSuperFormId() {
+        return superFormId;
     }
 
-    public void setSupperId(String supperId) {
-        this.supperId = supperId;
+    public void setSuperFormId(String superFormId) {
+        this.superFormId = superFormId;
     }
 
     public Long getId() {
@@ -83,12 +83,12 @@ public class FormDto implements Serializable {
         this.marketId = marketId;
     }
 
-    public String getDealerId() {
-        return dealerId;
+    public String getDeptId() {
+        return deptId;
     }
 
-    public void setDealerId(String dealerId) {
-        this.dealerId = dealerId;
+    public void setDeptId(String deptId) {
+        this.deptId = deptId;
     }
 
     public Client getClient() {

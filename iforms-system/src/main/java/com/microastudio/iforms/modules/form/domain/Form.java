@@ -10,13 +10,13 @@ public class Form implements Serializable {
 
     private static final long serialVersionUID = 7126526811516176046L;
 
-    private String supperId;
+    private String superFormId;
     private Long id;
     private String title;
     private String description;
     private String level;
     private String marketId;
-    private String dealerId;
+    private String deptId;
     private String client;
     private byte sendEmail;
     private String type;
@@ -28,12 +28,12 @@ public class Form implements Serializable {
     private String language;
     private byte includeSection;
 
-    public String getSupperId() {
-        return supperId;
+    public String getSuperFormId() {
+        return superFormId;
     }
 
-    public void setSupperId(String supperId) {
-        this.supperId = supperId;
+    public void setSuperFormId(String superFormId) {
+        this.superFormId = superFormId;
     }
 
     public Long getId() {
@@ -76,12 +76,12 @@ public class Form implements Serializable {
         this.marketId = marketId;
     }
 
-    public String getDealerId() {
-        return dealerId;
+    public String getDeptId() {
+        return deptId;
     }
 
-    public void setDealerId(String dealerId) {
-        this.dealerId = dealerId;
+    public void setDeptId(String deptId) {
+        this.deptId = deptId;
     }
 
     public String getClient() {

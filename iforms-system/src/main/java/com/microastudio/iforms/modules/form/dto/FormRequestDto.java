@@ -13,9 +13,9 @@ public class FormRequestDto implements Serializable {
 
     private Client client;
     /**
-     *  form supper id
+     *  form super id
      */
-    private String supperId;
+    private String superFormId;
     /**
      * answer id
      */
@@ -29,12 +29,12 @@ public class FormRequestDto implements Serializable {
         this.client = client;
     }
 
-    public String getSupperId() {
-        return supperId;
+    public String getSuperFormId() {
+        return superFormId;
     }
 
-    public void setSupperId(String supperId) {
-        this.supperId = supperId;
+    public void setSuperFormId(String superFormId) {
+        this.superFormId = superFormId;
     }
 
     public String getAnswerId() {

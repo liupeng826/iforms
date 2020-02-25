@@ -17,12 +17,12 @@
 
     <resultMap id="FormResultMap" type="com.microastudio.iforms.modules.form.dto.FormDto">
         <result column="id" property="id" jdbcType="BIGINT"/>
-        <result column="supper_id" property="supperId" jdbcType="VARCHAR"/>
+        <result column="super_form_id" property="superFormId" jdbcType="VARCHAR"/>
         <result column="title" property="title" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="level" property="level" jdbcType="VARCHAR"/>
         <result column="market_id" property="marketId" jdbcType="VARCHAR"/>
-        <result column="dealer_id" property="dealerId" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR"/>
         <result column="language" property="language" jdbcType="VARCHAR"/>
         <result column="send_email" property="sendEmail" jdbcType="TINYINT"/>
         <result column="type" property="type" jdbcType="VARCHAR"/>
@@ -129,8 +129,133 @@
         <if test="clientToken != null and clientToken != '' ">
             AND client.token = #{clientToken}
         </if>
-        <if test="supperId != null and supperId != '' ">
-            AND form.supper_id = #{supperId,jdbcType=VARCHAR}
+        <if test="superFormId != null and superFormId != '' ">
+            AND form.super_form_id = #{superFormId,jdbcType=VARCHAR}
+        </if>
+        AND form.is_active = 1
+        AND section.is_active = 1
+        AND question.is_active = 1
+        And client.is_active = 1
+    </select>
+
+    <select id="selectAllFormsByUserId" parameterType="java.lang.String" resultMap="FormResultMap">
+        SELECT form.*,
+        `section`.`id` as `section.id`,
+        `section`.`form_id` as `section.form_id`,
+        `section`.`title` as `section.title`,
+        `section`.`description` as `section.description`,
+        `section`.`sequence` as `section.sequence`,
+        `section`.`is_active` as `section.is_active`,
+        `question`.`id` as `question.id`,
+        `question`.`section_id` as `question.section_id`,
+        `question`.`title` as `question.title`,
+        `question`.`subtitle` as `question.subtitle`,
+        `question`.`question_type_id` as `question.question_type_id`,
+        `question`.`is_active` as `question.is_active`,
+        `question`.`mandatory` as `question.mandatory`,
+        `question`.`sequence` as `question.sequence`,
+        `question_option`.`id` as `question_option.id`,
+        `question_option`.`question_id` as `question_option.question_id`,
+        `question_option`.`description` as `question_option.description`,
+        `question_option`.`sequence` as `question_option.sequence`,
+        `question_option`.`total_value` as `question_option.total_value`,
+        `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
+        `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
+        `question_option`.`is_active` as `question_option.is_active`
+        FROM form, section, client, question
+        LEFT JOIN question_option
+        ON (question.id = question_option.question_id AND question_option.is_active = 1)
+        WHERE section.form_id = form.id
+        AND question.section_id = section.id
+        And form.client = client.id
+        <if test="clientToken != null and clientToken != '' ">
+            AND client.token = #{clientToken}
+        </if>
+        AND form.created_by = #{userId,jdbcType=VARCHAR}
+        AND form.is_active = 1
+        AND section.is_active = 1
+        AND question.is_active = 1
+        And client.is_active = 1
+    </select>
+
+    <select id="selectAllFormsByDept" parameterType="java.lang.String" resultMap="FormResultMap">
+        SELECT form.*,
+        `section`.`id` as `section.id`,
+        `section`.`form_id` as `section.form_id`,
+        `section`.`title` as `section.title`,
+        `section`.`description` as `section.description`,
+        `section`.`sequence` as `section.sequence`,
+        `section`.`is_active` as `section.is_active`,
+        `question`.`id` as `question.id`,
+        `question`.`section_id` as `question.section_id`,
+        `question`.`title` as `question.title`,
+        `question`.`subtitle` as `question.subtitle`,
+        `question`.`question_type_id` as `question.question_type_id`,
+        `question`.`is_active` as `question.is_active`,
+        `question`.`mandatory` as `question.mandatory`,
+        `question`.`sequence` as `question.sequence`,
+        `question_option`.`id` as `question_option.id`,
+        `question_option`.`question_id` as `question_option.question_id`,
+        `question_option`.`description` as `question_option.description`,
+        `question_option`.`sequence` as `question_option.sequence`,
+        `question_option`.`total_value` as `question_option.total_value`,
+        `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
+        `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
+        `question_option`.`is_active` as `question_option.is_active`
+        FROM form, section, client, question
+        LEFT JOIN question_option
+        ON (question.id = question_option.question_id AND question_option.is_active = 1)
+        WHERE section.form_id = form.id
+        AND question.section_id = section.id
+        And form.client = client.id
+        <if test="clientToken != null and clientToken != '' ">
+            AND client.token = #{clientToken}
+        </if>
+        <if test="deptId != null and deptId != '' ">
+            AND form.dept_id = #{deptId,jdbcType=VARCHAR}
+        </if>
+        AND form.is_active = 1
+        AND section.is_active = 1
+        AND question.is_active = 1
+        And client.is_active = 1
+    </select>
+
+    <select id="selectAllFormsByMarket" parameterType="java.lang.String" resultMap="FormResultMap">
+        SELECT form.*,
+        `section`.`id` as `section.id`,
+        `section`.`form_id` as `section.form_id`,
+        `section`.`title` as `section.title`,
+        `section`.`description` as `section.description`,
+        `section`.`sequence` as `section.sequence`,
+        `section`.`is_active` as `section.is_active`,
+        `question`.`id` as `question.id`,
+        `question`.`section_id` as `question.section_id`,
+        `question`.`title` as `question.title`,
+        `question`.`subtitle` as `question.subtitle`,
+        `question`.`question_type_id` as `question.question_type_id`,
+        `question`.`is_active` as `question.is_active`,
+        `question`.`mandatory` as `question.mandatory`,
+        `question`.`sequence` as `question.sequence`,
+        `question_option`.`id` as `question_option.id`,
+        `question_option`.`question_id` as `question_option.question_id`,
+        `question_option`.`description` as `question_option.description`,
+        `question_option`.`sequence` as `question_option.sequence`,
+        `question_option`.`total_value` as `question_option.total_value`,
+        `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
+        `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
+        `question_option`.`is_active` as `question_option.is_active`
+        FROM form, section, client, question
+        LEFT JOIN question_option
+        ON (question.id = question_option.question_id AND question_option.is_active = 1)
+        WHERE section.form_id = form.id
+        AND question.section_id = section.id
+        And form.client = client.id
+        <if test="clientToken != null and clientToken != '' ">
+            AND client.token = #{clientToken}
+        </if>
+        <if test="marketId != null and marketId != '' ">
+            AND form.level = 'market'
+            AND form.market_id = #{marketId,jdbcType=VARCHAR}
         </if>
         AND form.is_active = 1
         AND section.is_active = 1
@@ -232,12 +357,12 @@
             useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `form`
-        (`supper_id`,
+        (`super_form_id`,
         `title`,
         `description`,
         `level`,
         `market_id`,
-        `dealer_id`,
+        `dept_id`,
         `client`,
         `send_email`,
         `type`,
@@ -248,12 +373,12 @@
         `language`,
         `include_section`)
         VALUES
-        (#{supperId},
+        (#{superFormId},
         #{title},
         #{description},
         #{level},
         #{marketId},
-        #{dealerId},
+        #{deptId},
         #{client},
         #{sendEmail},
         #{type},
@@ -271,13 +396,13 @@
     <!--        `section_id`,-->
     <!--        `question_id`,-->
     <!--        `language`,-->
-    <!--        `supper_id`)-->
+    <!--        `super_form_id`)-->
     <!--        VALUES-->
     <!--        (#{formId},-->
     <!--        #{sectionId},-->
     <!--        #{questionId},-->
     <!--        #{language},-->
-    <!--        #{supperId})-->
+    <!--        #{superFormId})-->
     <!--    </insert>-->
 
     <insert id="insertAnswer" parameterType="java.util.List">

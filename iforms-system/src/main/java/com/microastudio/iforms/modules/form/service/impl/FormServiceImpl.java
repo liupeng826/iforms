@@ -62,18 +62,18 @@ public class FormServiceImpl implements FormService {
         String uuid;
 
         Form form = new Form();
-        if (StringUtils.isEmpty(formDto.getSupperId())) {
+        if (StringUtils.isEmpty(formDto.getSuperFormId())) {
             uuid = StringUtils.getUuid();
         } else {
-            uuid = formDto.getSupperId();
+            uuid = formDto.getSuperFormId();
         }
 
-        form.setSupperId(uuid);
+        form.setSuperFormId(uuid);
         form.setTitle(formDto.getTitle());
         form.setDescription(formDto.getDescription());
         form.setLevel(formDto.getLevel());
         form.setMarketId(formDto.getMarketId());
-        form.setDealerId(formDto.getDealerId());
+        form.setDeptId(formDto.getDeptId());
         form.setClient(formDto.getClient().getToken());
         form.setSendEmail(formDto.getSendEmail());
         form.setType(formDto.getType());
@@ -84,7 +84,7 @@ public class FormServiceImpl implements FormService {
 
         // insert form
         rows = formMapper.insertForm(form);
-        if (rows == 0) {
+        if (rows <= 0) {
             return null;
         }
 
@@ -107,7 +107,7 @@ public class FormServiceImpl implements FormService {
             section.setLanguage(formDto.getLanguage());
 
             rows = formMapper.insertSection(section);
-            if (rows == 0) {
+            if (rows <= 0) {
                 return null;
             }
             sectionId = section.getId();
@@ -120,7 +120,7 @@ public class FormServiceImpl implements FormService {
                 q.setModifiedBy(formDto.getModifiedBy());
 
                 rows = formMapper.insertQuestion(q);
-                if (rows == 0) {
+                if (rows <= 0) {
                     return null;
                 }
 
@@ -132,10 +132,10 @@ public class FormServiceImpl implements FormService {
 //                fm.setSectionId(sectionId);
 //                fm.setQuestionId(questionId);
 //                fm.setLanguage(q.getLanguage());
-//                fm.setSupperId(supperId);
+//                fm.setSuperFormId(superFormId);
 //
 //                rows = formMapper.insertFormQuestionMapping(fm);
-//                if (rows == 0) {
+//                if (rows <= 0) {
 //                    return null;
 //                }
 
@@ -160,8 +160,23 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<FormDto> getAllForms(String clientToken, String supperId) {
-        return formMapper.selectAllFormsByKey(clientToken, supperId);
+    public List<FormDto> getForms(String clientToken, String superFormId) {
+        return formMapper.selectAllFormsByKey(clientToken, superFormId);
+    }
+
+    @Override
+    public List<FormDto> getFormsByUserId(String clientToken, String userId) {
+        return formMapper.selectAllFormsByUserId(clientToken, userId);
+    }
+
+    @Override
+    public List<FormDto> getFormsByDeptId(String clientToken, String deptId) {
+        return formMapper.selectAllFormsByDept(clientToken, deptId);
+    }
+
+    @Override
+    public List<FormDto> getFormsByMarketId(String clientToken, String parentId) {
+        return formMapper.selectAllFormsByMarket(clientToken, parentId);
     }
 
     @Override
