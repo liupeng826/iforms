@@ -136,6 +136,7 @@
         AND section.is_active = 1
         AND question.is_active = 1
         And client.is_active = 1
+        ORDER BY form.id, question.section_id, question.sequence, question_option.sequence
     </select>
 
     <select id="selectAllFormsByUserId" parameterType="java.lang.String" resultMap="FormResultMap">
@@ -176,6 +177,7 @@
         AND section.is_active = 1
         AND question.is_active = 1
         And client.is_active = 1
+        ORDER BY form.id, question.section_id, question.sequence, question_option.sequence
     </select>
 
     <select id="selectAllFormsByDept" parameterType="java.lang.String" resultMap="FormResultMap">
@@ -218,6 +220,7 @@
         AND section.is_active = 1
         AND question.is_active = 1
         And client.is_active = 1
+        ORDER BY form.id, question.section_id, question.sequence, question_option.sequence
     </select>
 
     <select id="selectAllFormsByMarket" parameterType="java.lang.String" resultMap="FormResultMap">
@@ -261,6 +264,7 @@
         AND section.is_active = 1
         AND question.is_active = 1
         And client.is_active = 1
+        ORDER BY form.id, question.section_id, question.sequence, question_option.sequence
     </select>
 
     <select id="selectAllAnswersByKey" parameterType="java.lang.String" resultMap="AnswerResultMap">

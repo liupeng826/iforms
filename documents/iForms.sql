@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.25)
 # Database: iForms
-# Generation Time: 2020-02-22 14:05:19 +0000
+# Generation Time: 2020-02-27 05:47:55 +0000
 # ************************************************************
 
 
@@ -21,35 +21,48 @@ SET NAMES utf8mb4;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-# Dump of table branch
+# Dump of table answer
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `branch`;
+DROP TABLE IF EXISTS `answer`;
 
-CREATE TABLE `branch` (
+CREATE TABLE `answer` (
+  `answer_id` varchar(100) NOT NULL DEFAULT '',
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `branch_id` varchar(200) NOT NULL DEFAULT '',
-  `name` varchar(200) NOT NULL DEFAULT '',
-  `market_id` varchar(200) DEFAULT NULL,
-  `contact_no` varchar(100) NOT NULL DEFAULT '1',
-  `email` varchar(100) NOT NULL DEFAULT '1',
-  `address` varchar(200) NOT NULL DEFAULT '',
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `form_id` int(11) NOT NULL,
+  `question_id` bigint(20) NOT NULL,
+  `answer_description` varchar(200) DEFAULT NULL,
+  `answer_option_id` varchar(200) DEFAULT NULL,
+  `answer_value` varchar(200) DEFAULT NULL,
+  `total_value` int(11) DEFAULT NULL,
+  `reference` varchar(200) DEFAULT NULL,
   `created_by` varchar(50) DEFAULT '',
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modified_by` varchar(50) DEFAULT NULL,
   `modified_date` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `customer_id` int(11) DEFAULT NULL,
+  `language` varchar(10) NOT NULL DEFAULT 'en-us',
+  PRIMARY KEY (`id`),
+  KEY `fk_form_id_idx` (`form_id`),
+  KEY `fk_question_id_idx` (`question_id`),
+  CONSTRAINT `fk_form_answer_on_form_id` FOREIGN KEY (`form_id`) REFERENCES `form` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_question_answer_on_question_id` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-LOCK TABLES `branch` WRITE;
-/*!40000 ALTER TABLE `branch` DISABLE KEYS */;
+LOCK TABLES `answer` WRITE;
+/*!40000 ALTER TABLE `answer` DISABLE KEYS */;
 
-INSERT INTO `branch` (`id`, `branch_id`, `name`, `market_id`, `contact_no`, `email`, `address`, `is_active`, `created_by`, `created_date`, `modified_by`, `modified_date`)
+INSERT INTO `answer` (`answer_id`, `id`, `form_id`, `question_id`, `answer_description`, `answer_option_id`, `answer_value`, `total_value`, `reference`, `created_by`, `created_date`, `modified_by`, `modified_date`, `customer_id`, `language`)
 VALUES
-	(1,'TJ1','天津','1','1','1','',1,'','2020-02-22 20:20:15',NULL,NULL);
+	('5b27ffbf53de4bdfabf68d0ff62537f1',1,19,76,NULL,'1',NULL,NULL,'order-10000001','peng','2020-02-24 21:36:39','peng','2020-01-31 23:25:07',101,'en-us'),
+	('5b27ffbf53de4bdfabf68d0ff62537f1',2,19,77,NULL,'1',NULL,NULL,'order-10000001','peng','2020-02-24 21:36:46','peng','2020-01-31 23:25:07',101,'en-us'),
+	('5b27ffbf53de4bdfabf68d0ff62537f1',3,19,77,NULL,'2',NULL,NULL,'order-10000001','peng','2020-02-24 21:39:12','peng','2020-01-31 23:25:07',102,'en-us'),
+	('5b27ffbf53de4bdfabf68d0ff62537f1',4,19,78,'test',NULL,NULL,NULL,'order-10000001','peng','2020-02-24 21:39:14','peng','2020-01-31 23:25:07',102,'en-us'),
+	('5b27ffbf53de4bdfabf68d0ff62537f1',5,19,79,NULL,NULL,'4',5,'order-10000001','peng','2020-02-24 21:39:17','peng','2020-01-31 23:25:07',102,'en-us'),
+	('5b27ffbf53de4bdfabf68d0ff62537f1',6,19,80,'2020-01-01',NULL,NULL,NULL,'order-10000001','peng','2020-02-24 21:39:19','peng','2020-01-31 23:25:07',102,'en-us'),
+	('5b27ffbf53de4bdfabf68d0ff62537f1',7,19,81,NULL,NULL,'6',10,'order-10000001','peng','2020-02-24 21:39:20','peng','2020-01-31 23:25:07',102,'en-us');
 
-/*!40000 ALTER TABLE `branch` ENABLE KEYS */;
+/*!40000 ALTER TABLE `answer` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
@@ -90,6 +103,78 @@ CREATE TABLE `customer` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+LOCK TABLES `customer` WRITE;
+/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+
+INSERT INTO `customer` (`id`, `name`, `email`, `contact_no`)
+VALUES
+	(101,'PengLiu','peng.liu@volvo.com','123456789'),
+	(102,'L','L','123');
+
+/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table dept
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `dept`;
+
+CREATE TABLE `dept` (
+  `id` bigint(20) NOT NULL,
+  `dept_id` varchar(200) NOT NULL DEFAULT '',
+  `name` varchar(200) NOT NULL DEFAULT '',
+  `pid` bigint(20) NOT NULL COMMENT '上级部门',
+  `contact_no` varchar(100) DEFAULT '1',
+  `email` varchar(100) DEFAULT '1',
+  `address` varchar(200) DEFAULT '',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_by` varchar(50) DEFAULT '',
+  `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `modified_by` varchar(50) DEFAULT NULL,
+  `modified_date` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+LOCK TABLES `dept` WRITE;
+/*!40000 ALTER TABLE `dept` DISABLE KEYS */;
+
+INSERT INTO `dept` (`id`, `dept_id`, `name`, `pid`, `contact_no`, `email`, `address`, `is_active`, `created_by`, `created_date`, `modified_by`, `modified_date`)
+VALUES
+	(1,'TJ1','天津',0,'1','1','',1,'','2020-02-23 22:35:35',NULL,NULL);
+
+/*!40000 ALTER TABLE `dept` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table email_config
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `email_config`;
+
+CREATE TABLE `email_config` (
+  `language` varchar(20) NOT NULL DEFAULT '',
+  `subject` varchar(5000) DEFAULT '',
+  `body` varchar(5000) DEFAULT '',
+  PRIMARY KEY (`language`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+LOCK TABLES `email_config` WRITE;
+/*!40000 ALTER TABLE `email_config` DISABLE KEYS */;
+
+INSERT INTO `email_config` (`language`, `subject`, `body`)
+VALUES
+	('ar-ar','شكرا لمشاركتك في الاستبيان ','عزيزي العميل،,&lt;br/&gt;&lt;br/&gt;نشكرك على تخصيص بعض الوقت  لردك على الاستبيان في ما يلي ردك الذي قدمته خلال الاستطلاع. وسيتصل بك احد  موظيفنا للمزيد من المعلومات&lt;br/&gt;&lt;br/&gt;{0}&lt;br/&gt;{1}&lt;br/&gt;{2}&lt;br/&gt;التقييم{3}&lt;br/&gt;&lt;br/&gt;أطيب التحيات&lt;br/&gt;{4}'),
+	('en-us','Thank you for your feedback','Dear Customer,&lt;br/&gt;&lt;br/&gt;Thank you for taking time to provide your feedback. Below is your response that you have provided during the survey. Our dealer personnel will contact you to discuss further.&lt;br/&gt;Your Response to survey :&lt;br/&gt;&lt;br/&gt;{0}&lt;br/&gt;{1}&lt;br/&gt;{2}&lt;br/&gt;Your Feedback:{3}&lt;br/&gt;&lt;br/&gt;Kind Regards&lt;br/&gt;{4}'),
+	('es-ni','Gracias por su comentario','Estimado cliente,&lt;br/&gt;&lt;br/&gt;Gracias por tomarse el tiempo para enviarnos sus comentarios. A continuación se encuentra su respuesta que ha proporcionado durante la encuesta. Nuestro personal del concesionario se comunicará con usted para analizarlo más al detalle.&lt;br/&gt;Su respuesta a la encuesta:&lt;br/&gt;&lt;br/&gt;{0}&lt;br/&gt;{1}&lt;br/&gt;{2}&lt;br/&gt;Sus comentarios: {3}&lt;br/&gt;&lt;br/&gt;Muy atentamente&lt;br/&gt;{4}'),
+	('id-id','Terima kasih atas tanggapan anda','Pelanggan yang terhormat,&lt;br/&gt;&lt;br/&gt;Terima kasih telah meluangkan waktu untuk memberikan tanggapan Anda. Berikut adalah tanggapanyang Anda berikan selama survei berlangsung. Petugas dealer kami akan menghubungi Anda untuk mendiskusikan lebih lanjut.&lt;br/&gt;Tanggapan survey anda:&lt;br/&gt;&lt;br/&gt;{0}&lt;br/&gt;{1}&lt;br/&gt;{2}&lt;br/&gt;Tanggapan Anda:{3}&lt;br/&gt;&lt;br/&gt;Salam&lt;br/&gt;{4}'),
+	('ja-jp','',''),
+	('th-th','ขอบคุณสำหรับการให้ข้อมูล','เรียน ลูกค้า,&lt;br/&gt;&lt;br/&gt;ขอขอบคุณที่สละเวลาในการให้คำติชมของคุณ ซึ่งคำตอบของคุณที่ให้ไว้ในระหว่างการสำรวจ ศูนย์บริการของเราจะติดต่อคุณเพื่อนำข้อมูลไปพัฒนาการทำงานให้ดีย่งขึ้น&lt;br/&gt;คำตอบสำหรับการสำรวจของคุณ:&lt;br/&gt;&lt;br/&gt;{0}&lt;br/&gt;{1}&lt;br/&gt;{2}&lt;br/&gt;ความคิดเห็นของคุณ:{3}&lt;br/&gt;&lt;br/&gt;ขอแสดงความนับถือ&lt;br/&gt;{4}'),
+	('zh-cn','',''),
+	('zh-tw','','');
+
+/*!40000 ALTER TABLE `email_config` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table form
@@ -99,79 +184,38 @@ DROP TABLE IF EXISTS `form`;
 
 CREATE TABLE `form` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `supper_id` varchar(200) NOT NULL DEFAULT '',
+  `super_form_id` varchar(200) NOT NULL DEFAULT '',
   `title` varchar(200) NOT NULL DEFAULT '',
   `description` varchar(500) NOT NULL DEFAULT '',
-  `level` varchar(50) DEFAULT NULL,
+  `level` varchar(50) DEFAULT '' COMMENT '问卷归属级别',
   `market_id` varchar(50) DEFAULT NULL,
-  `dealer_id` varchar(50) DEFAULT NULL,
+  `dept_id` varchar(50) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `client` varchar(500) NOT NULL DEFAULT '',
+  `client` int(11) NOT NULL,
   `send_email` tinyint(1) NOT NULL DEFAULT '0',
   `type` varchar(100) DEFAULT NULL,
   `include_section` tinyint(1) NOT NULL,
-  `language` varchar(10) NOT NULL DEFAULT '1',
+  `language` varchar(10) NOT NULL DEFAULT 'en-us',
   `created_by` varchar(50) NOT NULL DEFAULT '',
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modified_by` varchar(50) DEFAULT NULL,
   `modified_date` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_form_client_on_client_id_idx` (`client`),
+  CONSTRAINT `fk_form_client_on_client_id` FOREIGN KEY (`client`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 LOCK TABLES `form` WRITE;
 /*!40000 ALTER TABLE `form` DISABLE KEYS */;
 
-INSERT INTO `form` (`id`, `supper_id`, `title`, `description`, `level`, `market_id`, `dealer_id`, `is_active`, `client`, `send_email`, `type`, `include_section`, `language`, `created_by`, `created_date`, `modified_by`, `modified_date`)
+INSERT INTO `form` (`id`, `super_form_id`, `title`, `description`, `level`, `market_id`, `dept_id`, `is_active`, `client`, `send_email`, `type`, `include_section`, `language`, `created_by`, `created_date`, `modified_by`, `modified_date`)
 VALUES
-	(19,'5b27ffbf53de4bdfabf68d0ff62537f1','Survey','test survey','market','10001','',1,'1',1,'volvo GTA',1,'en-us','peng','2020-02-22 18:59:14','peng','2020-01-31 22:37:20'),
-	(20,'5b27ffbf53de4bdfabf68d0ff62537f0','Survey','test survey','market','10001','',1,'1',1,'volvo GTA',1,'en-us','peng','2020-02-22 18:59:16','peng','2020-02-11 17:58:08'),
-	(21,'fd0814952fa64940af83d2a80c06de11','Survey','test survey','market','10001','',1,'1',1,'volvo GTA',1,'en-us','peng','2020-02-22 18:59:17','peng','2020-02-11 17:59:48'),
-	(22,'63fa0da6b4654829968e6380fce17746','Survey','test survey','market','10001','',1,'1',1,'volvo GTA',1,'en-us','peng','2020-02-22 18:59:18','peng','2020-02-20 10:48:04');
+	(19,'5b27ffbf53de4bdfabf68d0ff62537f1','Survey','test survey','market','10001','',1,1,1,'volvo GTA',1,'en-us','1','2020-02-25 13:01:54','peng','2020-01-31 22:37:20'),
+	(20,'5b27ffbf53de4bdfabf68d0ff62537f0','Survey','test survey','','10001','1',1,1,1,'volvo GTA',1,'en-us','1','2020-02-25 14:53:16','peng','2020-02-11 17:58:08'),
+	(21,'fd0814952fa64940af83d2a80c06de11','Survey','test survey','','10001','1',1,1,1,'volvo GTA',1,'en-us','1','2020-02-27 09:28:41','peng','2020-02-11 17:59:48'),
+	(22,'63fa0da6b4654829968e6380fce17746','Survey','test survey','market','10002','',1,1,1,'volvo GTA',1,'en-us','1','2020-02-25 14:53:18','peng','2020-02-20 10:48:04');
 
 /*!40000 ALTER TABLE `form` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table form_question_answer
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `form_question_answer`;
-
-CREATE TABLE `form_question_answer` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `form_id` int(11) NOT NULL,
-  `question_id` bigint(20) NOT NULL,
-  `answer_description` varchar(200) DEFAULT NULL,
-  `answer_option_id` varchar(200) DEFAULT NULL,
-  `answer_value` varchar(200) DEFAULT NULL,
-  `total_value` int(11) DEFAULT NULL,
-  `reference` varchar(200) DEFAULT NULL,
-  `created_by` varchar(50) DEFAULT '',
-  `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `modified_by` varchar(50) DEFAULT NULL,
-  `modified_date` timestamp NULL DEFAULT NULL,
-  `customer_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_form_id_idx` (`form_id`),
-  KEY `fk_question_id_idx` (`question_id`),
-  CONSTRAINT `fk_form_answer_on_form_id` FOREIGN KEY (`form_id`) REFERENCES `form` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_question_answer_on_question_id` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-LOCK TABLES `form_question_answer` WRITE;
-/*!40000 ALTER TABLE `form_question_answer` DISABLE KEYS */;
-
-INSERT INTO `form_question_answer` (`id`, `form_id`, `question_id`, `answer_description`, `answer_option_id`, `answer_value`, `total_value`, `reference`, `created_by`, `created_date`, `modified_by`, `modified_date`, `customer_id`)
-VALUES
-	(1,19,76,NULL,'1',NULL,NULL,'order-10000001','peng','2020-01-31 23:25:07','peng','2020-01-31 23:25:07',NULL),
-	(2,19,77,NULL,'1',NULL,NULL,'order-10000001','peng','2020-01-31 23:25:07','peng','2020-01-31 23:25:07',NULL),
-	(3,19,77,NULL,'2',NULL,NULL,'order-10000001','peng','2020-01-31 23:25:07','peng','2020-01-31 23:25:07',NULL),
-	(4,19,78,'test',NULL,NULL,NULL,'order-10000001','peng','2020-01-31 23:25:07','peng','2020-01-31 23:25:07',NULL),
-	(5,19,79,NULL,NULL,'4',5,'order-10000001','peng','2020-01-31 23:25:07','peng','2020-01-31 23:25:07',NULL),
-	(6,19,80,'2020-01-01',NULL,NULL,NULL,'order-10000001','peng','2020-01-31 23:25:07','peng','2020-01-31 23:25:07',NULL),
-	(7,19,81,NULL,NULL,'6',10,'order-10000001','peng','2020-01-31 23:25:07','peng','2020-01-31 23:25:07',NULL);
-
-/*!40000 ALTER TABLE `form_question_answer` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
@@ -196,7 +240,11 @@ VALUES
 	(1,'en-us','United States - English',1),
 	(2,'zh-cn','中国 - 简体中文',1),
 	(3,'ja-jp','日本 - 日本語',1),
-	(4,'zh-tw','台灣 - 繁體中文',1);
+	(4,'zh-tw','台灣 - 繁體中文',1),
+	(5,'es-ni','Nicaragua - Español',1),
+	(6,'ar-ar','العراق - العربية',1),
+	(7,'id-id','Indonesia - Bahasa Indonesia',1),
+	(8,'th-th','ไทย - ไทย',1);
 
 /*!40000 ALTER TABLE `language` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -242,7 +290,7 @@ CREATE TABLE `question` (
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modified_by` varchar(50) DEFAULT NULL,
   `modified_date` timestamp NULL DEFAULT NULL,
-  `language` varchar(10) NOT NULL DEFAULT '1',
+  `language` varchar(10) NOT NULL DEFAULT 'en-us',
   `mandatory` tinyint(1) NOT NULL DEFAULT '1',
   `sequence` int(6) NOT NULL,
   PRIMARY KEY (`id`),
@@ -321,7 +369,7 @@ CREATE TABLE `question_option` (
   `total_value` int(11) DEFAULT NULL,
   `net_promoter_from` varchar(100) DEFAULT '',
   `net_promoter_to` varchar(100) DEFAULT '',
-  `language` varchar(10) NOT NULL DEFAULT '1',
+  `language` varchar(10) NOT NULL DEFAULT 'en-us',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `fk_index` (`question_id`),
@@ -380,7 +428,9 @@ VALUES
 	(57,119,'questionOptions21',1,0,NULL,NULL,'en-us',1),
 	(58,119,'questionOptions22',2,0,NULL,NULL,'en-us',1),
 	(59,121,NULL,0,5,NULL,NULL,'en-us',1),
-	(60,123,NULL,0,10,'Not at all likely','Extremely likely','en-us',1);
+	(60,123,NULL,0,10,'Not at all likely','Extremely likely','en-us',1),
+	(61,88,'option3',3,NULL,'','','en-us',1),
+	(62,88,'option4',4,NULL,'','','en-us',1);
 
 /*!40000 ALTER TABLE `question_option` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -426,7 +476,7 @@ CREATE TABLE `section` (
   `description` varchar(500) DEFAULT '',
   `sequence` int(6) NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `language` varchar(10) NOT NULL DEFAULT '1',
+  `language` varchar(10) NOT NULL DEFAULT 'en-us',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -435,14 +485,14 @@ LOCK TABLES `section` WRITE;
 
 INSERT INTO `section` (`id`, `form_id`, `title`, `description`, `sequence`, `is_active`, `language`)
 VALUES
-	(3,19,'section1','test section1',0,1,''),
-	(4,19,'section2','test section2',0,1,''),
-	(5,20,'section1','test section1',0,1,'1'),
-	(6,20,'section2','test section2',0,1,'1'),
-	(7,21,'section1','test section1',0,1,'1'),
-	(8,21,'section2','test section2',0,1,'1'),
-	(9,22,'section1','test section1',0,1,'1'),
-	(10,22,'section2','test section2',0,1,'1');
+	(3,19,'section1','test section1',0,1,'en-us'),
+	(4,19,'section2','test section2',0,1,'en-us'),
+	(5,20,'section1','test section1',0,1,'en-us'),
+	(6,20,'section2','test section2',0,1,'en-us'),
+	(7,21,'section1','test section1',0,1,'en-us'),
+	(8,21,'section2','test section2',0,1,'en-us'),
+	(9,22,'section1','test section1',0,1,'en-us'),
+	(10,22,'section2','test section2',0,1,'en-us');
 
 /*!40000 ALTER TABLE `section` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -460,14 +510,12 @@ CREATE TABLE `user` (
   `nick_name` varchar(255) DEFAULT NULL COMMENT '昵称',
   `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码',
   `email` varchar(255) DEFAULT NULL COMMENT '邮箱',
-  `dept_id` bigint(20) DEFAULT NULL COMMENT '部门名称',
+  `dept` bigint(20) DEFAULT NULL COMMENT '部门名称',
   `phone` varchar(255) DEFAULT NULL COMMENT '手机号码',
   `job_id` bigint(20) DEFAULT NULL COMMENT '岗位名称',
   `sex` varchar(255) DEFAULT NULL COMMENT '性别',
   `role` varchar(50) NOT NULL DEFAULT '' COMMENT '职责(10：管理员，20：普通用户)',
   `client` int(11) NOT NULL COMMENT '客户端',
-  `market_id` int(11) DEFAULT NULL COMMENT '市场',
-  `branch_id` int(11) DEFAULT NULL COMMENT '分支机构',
   `is_active` tinyint(1) NOT NULL COMMENT '状态：1启用、0禁用',
   `created_by` varchar(50) NOT NULL DEFAULT '',
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -477,20 +525,18 @@ CREATE TABLE `user` (
   UNIQUE KEY `UK_user_email` (`email`) USING BTREE,
   KEY `idx_user_client` (`client`),
   KEY `fk_user_client_on_client_id_idx` (`client`),
-  KEY `fk_user_client_on_market_id_idx` (`market_id`),
-  KEY `fk_user_client_on_branch_id_idx` (`branch_id`),
-  CONSTRAINT `fk_user_client_on_branch_id` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `fk_user_deptId_on_dept_id_idx` (`dept`),
   CONSTRAINT `fk_user_client_on_client_id` FOREIGN KEY (`client`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_user_client_on_market_id` FOREIGN KEY (`market_id`) REFERENCES `market` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_user_deptId_on_dept_id` FOREIGN KEY (`dept`) REFERENCES `dept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统用户';
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 
-INSERT INTO `user` (`id`, `user_id`, `user_name`, `nick_name`, `password`, `email`, `dept_id`, `phone`, `job_id`, `sex`, `role`, `client`, `market_id`, `branch_id`, `is_active`, `created_by`, `created_date`, `modified_by`, `modified_date`)
+INSERT INTO `user` (`id`, `user_id`, `user_name`, `nick_name`, `password`, `email`, `dept`, `phone`, `job_id`, `sex`, `role`, `client`, `is_active`, `created_by`, `created_date`, `modified_by`, `modified_date`)
 VALUES
-	(1,'v1000','admin','管理员','$2a$10$cEByg.MeQ6NUj7q0e5QD4udx0h6h6EenL3vkGas0yL0I1vZBD8PTe','liupeng826@hotmail.com',2,'18888888888',11,'男','10',1,1,1,1,'peng','2020-02-22 21:40:51','peng','2020-02-22 13:40:52'),
-	(3,'v1001','test','测试','$2a$10$HhxyGZy.ulf3RvAwaHUGb.k.2i9PBpv4YbLMJWp8pES7pPhTyRCF.','peng.liu@volvo.com',2,'17777777777',12,'男','20',1,1,1,1,'peng','2020-02-22 20:20:34','peng','2020-01-31 22:37:20');
+	(1,'v1000','admin','管理员','$2a$10$HD6MPf1f8jml178PENbkzux4RCykd5ZmCikyWCgmor.t.EUCX8Nnu','liupeng826@hotmail.com',1,'18888888888',11,'0','10',1,1,'peng','2020-02-25 14:59:32','peng','2020-02-25 06:59:32'),
+	(3,'v1001','test','测试','$2a$10$ITmQ9UJaTmvwSxB/KT2J9eTl6MRk/B9fX1n9SrchbOKh8/Qp8c4C.','peng.liu@volvo.com',1,'17777777777',12,'1','20',1,1,'peng','2020-02-23 22:17:46','peng','2020-02-23 06:09:35');
 
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
