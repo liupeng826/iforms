@@ -93,7 +93,7 @@
     </select>
 
     <select id="selectClient" parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT `token` FROM `client` WHERE `name` = #{key} AND is_active = 1 limit 1
+        SELECT `id` FROM `client` WHERE `name` = #{name} AND `token` = #{token} AND is_active = 1 limit 1
     </select>
 
     <select id="selectAllFormsByKey" parameterType="java.lang.String" resultMap="FormResultMap">

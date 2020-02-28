@@ -21,7 +21,7 @@ public interface FormService {
 
     Form generateForm(FormDto formDto);
 
-    String getClient(String key);
+    String getClient(String name, String token);
 
     String addAnswer(AnswerDto answers);
 

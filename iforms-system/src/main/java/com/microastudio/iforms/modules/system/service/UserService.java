@@ -1,6 +1,7 @@
 package com.microastudio.iforms.modules.system.service;
 
 
+import com.microastudio.iforms.modules.system.domain.User;
 import com.microastudio.iforms.modules.system.dto.UserDto;
 import com.microastudio.iforms.modules.system.dto.UserQueryCriteria;
 import org.springframework.data.domain.Pageable;
@@ -14,18 +15,26 @@ public interface UserService {
 
     /**
      * 根据ID查询
+     *
      * @param id ID
      * @return /
      */
     UserDto findById(long id);
 
-//    /**
-//     * 新增用户
-//     * @param resources /
-//     * @return /
-//     */
-//    UserDto create(User resources);
-//
+    UserDto findByUserId(String id);
+
+    long countByUserIdAndIsActive(String userId, byte isActive);
+
+    User createUserAndDept(UserDto resources);
+
+    /**
+     * 新增用户
+     *
+     * @param resources /
+     * @return /
+     */
+    UserDto create(User resources);
+
 //    /**
 //     * 编辑用户
 //     * @param resources /
@@ -38,8 +47,10 @@ public interface UserService {
 //     */
 //    void delete(Set<Long> ids);
 //
+
     /**
      * 根据用户名查询
+     *
      * @param username /
      * @return /
      */
@@ -47,7 +58,8 @@ public interface UserService {
 
     /**
      * 修改密码
-     * @param username 用户名
+     *
+     * @param username        用户名
      * @param encryptPassword 密码
      */
     void updatePass(String username, String encryptPassword);
@@ -65,8 +77,10 @@ public interface UserService {
 //     */
 //    void updateEmail(String username, String email);
 //
+
     /**
      * 查询全部
+     *
      * @param criteria 条件
      * @param pageable 分页参数
      * @return /
@@ -75,6 +89,7 @@ public interface UserService {
 
     /**
      * 查询全部不分页
+     *
      * @param criteria 条件
      * @return /
      */

@@ -21,6 +21,10 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      */
     User findByUserName(String username);
 
+    User findByUserId(String id);
+
+    long countByUserIdAndIsActive(String id, byte isActive);
+
     /**
      * 根据邮箱查询
      *
@@ -32,8 +36,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     /**
      * 修改密码
      *
-     * @param username              用户名
-     * @param pass                  密码
+     * @param username     用户名
+     * @param pass         密码
      * @param modifiedDate
      */
     @Modifying

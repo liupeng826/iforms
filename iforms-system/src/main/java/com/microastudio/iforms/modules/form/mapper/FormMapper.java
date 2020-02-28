@@ -23,7 +23,7 @@ public interface FormMapper {
 
     int insertForm(Form form);
 
-    String selectClient(String key);
+    String selectClient(String name, String token);
 
     List<FormDto> selectAllFormsByKey(String clientToken, String superFormId);
 

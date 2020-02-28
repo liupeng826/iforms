@@ -26,6 +26,10 @@ public class CommonConstants {
 
     public static final String ERRORS_CODE_MAIL = "-6";
     public static final String ERRORS_MSG_MAIL = "邮件发送异常";
+
+    public static final String ERRORS_CODE_EXISTS = "-5";
+    public static final String ERRORS_MSG_EXISTS = "数据已存在";
+
     // token用
     public static final String AUTHORIZATION = "authStr";
     public static final String CURRENT_USER_ID = "userId";

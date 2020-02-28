@@ -14,7 +14,9 @@ import com.microastudio.iforms.modules.form.dto.FormRequestDto;
 import com.microastudio.iforms.modules.form.service.FormService;
 import com.microastudio.iforms.modules.form.service.MailService;
 import com.microastudio.iforms.modules.system.domain.Client;
+import com.microastudio.iforms.modules.system.domain.User;
 import com.microastudio.iforms.modules.system.dto.UserDto;
+import com.microastudio.iforms.modules.system.service.DeptService;
 import com.microastudio.iforms.modules.system.service.UserService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -25,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
@@ -45,11 +48,15 @@ public class FormController {
     private final static Logger logger = LoggerFactory.getLogger(FormController.class);
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
     private FormService formService;
     @Autowired
     private MailService mailService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private DeptService deptService;
     @Autowired
     private FreeMarkerConfigurer freeMarkerConfigurer;
 
@@ -444,6 +451,59 @@ public class FormController {
         return resultResponse;
     }
 
+    @PostMapping("/registerDealer")
+    public ResultResponse registerDealer(@RequestBody UserDto userDto) {
+        logger.info("registerDealer");
+
+        ResultResponse resultResponse = new ResultResponse();
+        try {
+            if (userDto == null || userDto.getDept() == null || StringUtils.isEmpty(userDto.getUserId())) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+            }
+
+            resultResponse = getClient(userDto.getClient());
+            if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+                return resultResponse;
+            }
+
+            logger.info("registerDealer：DEPT");
+            userDto.getClient().setId(Long.valueOf((String) resultResponse.getData()));
+            Long pid = userDto.getDept().getPid();
+            userDto.getDept().setPid(pid == null ? 0 : pid);
+
+            long countByDeptIdAndPidAndIsActive = deptService.countByDeptIdAndPidAndIsActive(userDto.getDept().getDeptId(), pid, Byte.valueOf("1"));
+            if (countByDeptIdAndPidAndIsActive > 0) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EXISTS, CommonConstants.ERRORS_MSG_EXISTS);
+            }
+
+            long countByUserIdAndIsActive = userService.countByUserIdAndIsActive(userDto.getUserId(), Byte.valueOf("1"));
+            if (countByUserIdAndIsActive > 0) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EXISTS, CommonConstants.ERRORS_MSG_EXISTS);
+            }
+
+            userDto.getDept().setIsActive(Byte.valueOf("0"));
+
+            logger.info("registerDealer：USER");
+            userDto.setUserName(userDto.getUserId());
+            userDto.setIsActive(Byte.valueOf("0"));
+            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            userDto.setCreatedBy(userDto.getUserId());
+            User user = userService.createUserAndDept(userDto);
+
+            if (user != null) {
+                resultResponse.ok("");
+            } else {
+                resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+                resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+            }
+        } catch (Exception e) {
+            logger.error("registerDealer 异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+        return resultResponse;
+    }
+
 //    @GetMapping("/validateToken")
 //    public ResultResponse validateToken(@RequestParam(value = "key") String key
 //            , @RequestParam(value = "client") String client) {
@@ -460,12 +520,12 @@ public class FormController {
 
             logger.info("getToken入参：" + client.getName() + "," + client.getToken());
 
-            String clientToken = formService.getClient(client.getName());
-            if (!client.getToken().equals(clientToken)) {
+            String id = formService.getClient(client.getName(), client.getToken());
+            if (StringUtils.isEmpty(id)) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_AUTH_TOKEN, CommonConstants.ERRORS_MSG_AUTH_TOKEN);
             }
 
-            resultResponse.ok("");
+            resultResponse.ok(id);
         } catch (Exception e) {
             logger.error("getToken异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);

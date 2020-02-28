@@ -28,7 +28,7 @@ public class JwtUser implements UserDetails {
 
     private final String nickName;
 
-    private final String sex;
+    private final byte sex;
 
     private final int role;
 

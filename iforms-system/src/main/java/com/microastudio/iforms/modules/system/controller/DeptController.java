@@ -57,7 +57,7 @@ public class DeptController {
     //    @Log("新增部门")
     @ApiOperation("新增部门")
     @PostMapping
-    @PreAuthorize("hasRole('SuperAdmin')")
+//    @PreAuthorize("hasRole('SuperAdmin')")
     public ResultResponse<Object> create(@Validated @RequestBody Dept resources) {
         if (resources.getId() != null) {
             throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");

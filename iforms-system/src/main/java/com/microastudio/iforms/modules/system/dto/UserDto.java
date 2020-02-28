@@ -1,6 +1,5 @@
 package com.microastudio.iforms.modules.system.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.microastudio.iforms.modules.system.domain.Client;
 import com.microastudio.iforms.modules.system.domain.Dept;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,7 +23,7 @@ public class UserDto implements Serializable {
 
     private String nickName;
 
-    private String sex;
+    private byte sex;
 
     private int role;
 
@@ -40,7 +39,7 @@ public class UserDto implements Serializable {
 
     private byte isActive;
 
-    @JsonIgnore
+//    @JsonIgnore
     private String password;
 
     private Long deptId;

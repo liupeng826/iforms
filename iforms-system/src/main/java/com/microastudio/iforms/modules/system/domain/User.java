@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -43,18 +42,15 @@ public class User implements Serializable {
     /**
      * 性别
      */
-    private String sex;
+    private byte sex;
 
     /**
      * 权限
      */
     private int role;
 
-    @NotBlank
-    @Email
     private String email;
 
-    @NotBlank
     private String phone;
 
     private String jobId;

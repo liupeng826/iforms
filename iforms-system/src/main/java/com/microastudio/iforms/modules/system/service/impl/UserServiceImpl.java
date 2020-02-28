@@ -1,11 +1,14 @@
 package com.microastudio.iforms.modules.system.service.impl;
 
+import com.microastudio.iforms.common.exception.EntityExistException;
 import com.microastudio.iforms.common.exception.EntityNotFoundException;
 import com.microastudio.iforms.common.utils.*;
+import com.microastudio.iforms.modules.system.domain.Dept;
 import com.microastudio.iforms.modules.system.domain.User;
 import com.microastudio.iforms.modules.system.dto.UserDto;
 import com.microastudio.iforms.modules.system.dto.UserQueryCriteria;
 import com.microastudio.iforms.modules.system.mapper.UserMapper;
+import com.microastudio.iforms.modules.system.repository.DeptRepository;
 import com.microastudio.iforms.modules.system.repository.UserRepository;
 import com.microastudio.iforms.modules.system.service.UserService;
 import org.springframework.cache.annotation.CacheConfig;
@@ -30,11 +33,13 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final DeptRepository deptRepository;
     private final UserMapper userMapper;
     private final RedisUtils redisUtils;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RedisUtils redisUtils) {
+    public UserServiceImpl(UserRepository userRepository, DeptRepository deptRepository, UserMapper userMapper, RedisUtils redisUtils) {
         this.userRepository = userRepository;
+        this.deptRepository = deptRepository;
         this.userMapper = userMapper;
         this.redisUtils = redisUtils;
     }
@@ -65,20 +70,42 @@ public class UserServiceImpl implements UserService {
         return toDto(user);
     }
 
+    @Override
+    public UserDto findByUserId(String id) {
+        User user = userRepository.findByUserId(id);
+        ValidationUtil.isNull(user.getId(), "User", "id", id);
+        return toDto(user);
+    }
+
+    @Override
+    public long countByUserIdAndIsActive(String userId, byte isActive) {
+        return userRepository.countByUserIdAndIsActive(userId, isActive);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    public UserDto create(User resources) {
+        if (userRepository.findByUserName(resources.getUserName()) != null) {
+            throw new EntityExistException(User.class, "username", resources.getUserName());
+        }
+
+        if (userRepository.findByEmail(resources.getEmail()) != null) {
+            throw new EntityExistException(User.class, "email", resources.getEmail());
+        }
+        return userMapper.toDto(userRepository.save(resources));
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    public User createUserAndDept(UserDto resources) {
+        Dept dept = deptRepository.save(resources.getDept());
+        resources.setDeptId(dept.getId());
+        return userRepository.save(toEntity(resources));
+    }
+
     //    @Override
-//    @CacheEvict(allEntries = true)
-//    @Transactional(rollbackFor = Exception.class)
-//    public UserDto create(User resources) {
-//        if(userRepository.findByUsername(resources.getUsername())!=null){
-//            throw new EntityExistException(User.class,"username",resources.getUsername());
-//        }
-//        if(userRepository.findByEmail(resources.getEmail())!=null){
-//            throw new EntityExistException(User.class,"email",resources.getEmail());
-//        }
-//        return userMapper.toDto(userRepository.save(resources));
-//    }
-//
-//    @Override
 //    @CacheEvict(allEntries = true)
 //    @Transactional(rollbackFor = Exception.class)
 //    public void update(User resources) {

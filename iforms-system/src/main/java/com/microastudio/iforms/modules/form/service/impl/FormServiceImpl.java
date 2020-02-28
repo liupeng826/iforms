@@ -155,8 +155,8 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public String getClient(String key) {
-        return formMapper.selectClient(key);
+    public String getClient(String name, String token) {
+        return formMapper.selectClient(name, token);
     }
 
     @Override

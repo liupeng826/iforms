@@ -67,6 +67,11 @@ public class DeptServiceImpl implements DeptService {
 //    }
 
     @Override
+    public long countByDeptIdAndPidAndIsActive(String deptId, Long pid, byte isActive) {
+        return deptRepository.countByDeptIdAndPidAndIsActive(deptId, pid, isActive);
+    }
+
+    @Override
     @Cacheable
     public Object buildTree(List<DeptDto> deptDtos) {
         Set<DeptDto> trees = new LinkedHashSet<>();
@@ -161,60 +166,60 @@ public class DeptServiceImpl implements DeptService {
     }
 
     public Dept toEntity(DeptDto dto) {
-        if ( dto == null ) {
+        if (dto == null) {
             return null;
         }
 
         Dept dept = new Dept();
 
-        dept.setId( dto.getId() );
-        dept.setDeptId( dto.getDeptId() );
-        dept.setName( dto.getName() );
-        dept.setPid( dto.getPid() );
-        dept.setIsActive( dto.getIsActive() );
-        dept.setCreatedDate( dto.getCreatedDate() );
+        dept.setId(dto.getId());
+        dept.setDeptId(dto.getDeptId());
+        dept.setName(dto.getName());
+        dept.setPid(dto.getPid());
+        dept.setIsActive(dto.getIsActive());
+        dept.setCreatedDate(dto.getCreatedDate());
 
         return dept;
     }
 
     public DeptDto toDto(Dept entity) {
-        if ( entity == null ) {
+        if (entity == null) {
             return null;
         }
 
         DeptDto deptDto = new DeptDto();
 
-        deptDto.setId( entity.getId() );
-        deptDto.setDeptId( entity.getDeptId() );
-        deptDto.setName( entity.getName() );
-        deptDto.setIsActive( entity.getIsActive() );
-        deptDto.setPid( entity.getPid() );
-        deptDto.setCreatedDate( entity.getCreatedDate() );
+        deptDto.setId(entity.getId());
+        deptDto.setDeptId(entity.getDeptId());
+        deptDto.setName(entity.getName());
+        deptDto.setIsActive(entity.getIsActive());
+        deptDto.setPid(entity.getPid());
+        deptDto.setCreatedDate(entity.getCreatedDate());
 
         return deptDto;
     }
 
     public List<Dept> toEntity(List<DeptDto> dtoList) {
-        if ( dtoList == null ) {
+        if (dtoList == null) {
             return null;
         }
 
-        List<Dept> list = new ArrayList<Dept>( dtoList.size() );
-        for ( DeptDto deptDto : dtoList ) {
-            list.add( toEntity( deptDto ) );
+        List<Dept> list = new ArrayList<Dept>(dtoList.size());
+        for (DeptDto deptDto : dtoList) {
+            list.add(toEntity(deptDto));
         }
 
         return list;
     }
 
     public List<DeptDto> toDto(List<Dept> entityList) {
-        if ( entityList == null ) {
+        if (entityList == null) {
             return null;
         }
 
-        List<DeptDto> list = new ArrayList<DeptDto>( entityList.size() );
-        for ( Dept dept : entityList ) {
-            list.add( toDto( dept ) );
+        List<DeptDto> list = new ArrayList<DeptDto>(entityList.size());
+        for (Dept dept : entityList) {
+            list.add(toDto(dept));
         }
 
         return list;
