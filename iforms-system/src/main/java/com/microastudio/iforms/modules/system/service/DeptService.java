@@ -31,6 +31,8 @@ public interface DeptService {
      */
     DeptDto findById(Long id);
 
+    Dept findByDeptIdAndIsActive(String id);
+
     /**
      * 创建
      *

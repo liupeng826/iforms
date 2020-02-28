@@ -61,6 +61,11 @@ public class DeptServiceImpl implements DeptService {
         return deptRepository.findByPid(pid);
     }
 
+    @Override
+    public Dept findByDeptIdAndIsActive(String deptId) {
+        return deptRepository.findByDeptIdAndIsActive(deptId, 1);
+    }
+
 //    @Override
 //    public Set<Dept> findByRoleIds(Long id) {
 //        return deptRepository.findByRoles_Id(id);

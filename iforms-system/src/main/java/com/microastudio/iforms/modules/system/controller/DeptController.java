@@ -1,6 +1,7 @@
 package com.microastudio.iforms.modules.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.bean.ResultResponse;
 import com.microastudio.iforms.common.exception.BadRequestException;
 import com.microastudio.iforms.common.utils.ThrowableUtil;
@@ -35,6 +36,27 @@ public class DeptController {
     public DeptController(DeptService deptService) {
         this.deptService = deptService;
     }
+
+    //    @Log("查询部门")
+    @ApiOperation("查询是否部门")
+    @GetMapping("/checkDeptByDeptIdAndPid")
+    public ResultResponse<Object> checkDeptByDeptIdAndPid(String deptId, String parentId) {
+
+        Dept dept = deptService.findByDeptIdAndIsActive(parentId);
+        long pid;
+        if (dept != null) {
+            pid = dept.getId();
+            long countByDeptIdAndPidAndIsActive = deptService.countByDeptIdAndPidAndIsActive(deptId, pid, Byte.valueOf("1"));
+            if (countByDeptIdAndPidAndIsActive > 0) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EXISTS, CommonConstants.ERRORS_MSG_EXISTS);
+            }
+        } else {
+            return new ResultResponse(CommonConstants.ERRORS_CODE_NOT_EXISTS, CommonConstants.ERRORS_MSG_NOT_EXISTS);
+        }
+
+        return ResultResponse.success("");
+    }
+
 
     //    @Log("导出部门数据")
     @ApiOperation("导出部门数据")
