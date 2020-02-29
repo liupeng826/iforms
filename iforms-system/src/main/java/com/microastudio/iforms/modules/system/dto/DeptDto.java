@@ -14,16 +14,14 @@ import java.util.List;
 @Data
 public class DeptDto implements Serializable {
 
-    private Long id;
-
-    private String deptId;
+    private String id;
 
     private String name;
 
     @NotNull
     private byte isActive;
 
-    private Long pid;
+    private String marketId;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<DeptDto> children;

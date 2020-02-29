@@ -23,15 +23,17 @@ public interface DeptService {
      */
     List<DeptDto> queryAll(DeptQueryCriteria criteria);
 
+    List<DeptDto> findAll();
+
     /**
      * 根据ID查询
      *
      * @param id /
      * @return /
      */
-    DeptDto findById(Long id);
+    DeptDto findById(String id);
 
-    Dept findByDeptIdAndIsActive(String id);
+    Dept findByIdAndIsActive(String id);
 
     /**
      * 创建
@@ -55,22 +57,22 @@ public interface DeptService {
      */
     void delete(Set<DeptDto> deptDtos);
 
-    /**
-     * 构建树形数据
-     *
-     * @param deptDtos 原始数据
-     * @return /
-     */
-    Object buildTree(List<DeptDto> deptDtos);
-
-    /**
-     * 根据PID查询
-     *
-     * @param pid /
-     * @return /
-     */
-    List<Dept> findByPid(long pid);
-
+//    /**
+//     * 构建树形数据
+//     *
+//     * @param deptDtos 原始数据
+//     * @return /
+//     */
+//    Object buildTree(List<DeptDto> deptDtos);
+//
+//    /**
+//     * 根据PID查询
+//     *
+//     * @param pid /
+//     * @return /
+//     */
+//    List<Dept> findByPid(long pid);
+//
 //    /**
 //     * 根据角色ID查询
 //     *
@@ -79,7 +81,7 @@ public interface DeptService {
 //     */
 //    Set<Dept> findByRoleIds(Long id);
 
-    long countByDeptIdAndPidAndIsActive(String deptId, Long pid, byte isActive);
+    long countByIdAndMarketIdAndIsActive(String id, String marketId, byte isActive);
 
     /**
      * 导出数据
@@ -90,12 +92,12 @@ public interface DeptService {
      */
     void download(List<DeptDto> queryAll, HttpServletResponse response) throws IOException;
 
-    /**
-     * 获取待删除的部门
-     *
-     * @param deptList /
-     * @param deptDtos /
-     * @return /
-     */
-    Set<DeptDto> getDeleteDepts(List<Dept> deptList, Set<DeptDto> deptDtos);
+//    /**
+//     * 获取待删除的部门
+//     *
+//     * @param deptList /
+//     * @param deptDtos /
+//     * @return /
+//     */
+//    Set<DeptDto> getDeleteDepts(List<Dept> deptList, Set<DeptDto> deptDtos);
 }

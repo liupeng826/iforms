@@ -27,8 +27,6 @@ public class User implements Serializable {
     @NotNull(groups = Update.class)
     private Long id;
 
-    private String userId;
-
     @NotBlank
     @Column(name = "user_name")
     private String userName;
@@ -60,11 +58,11 @@ public class User implements Serializable {
 
     private String password;
 
-    @JoinColumn(name = "client")
+    @JoinColumn(name = "client_id")
     @OneToOne
     private Client client;
 
-    @JoinColumn(name = "dept")
+    @JoinColumn(name = "dept_id")
     @OneToOne
     private Dept dept;
 

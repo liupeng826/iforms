@@ -21,9 +21,9 @@ public interface UserService {
      */
     UserDto findById(long id);
 
-    UserDto findByUserId(String id);
+    UserDto findByUserName(String name);
 
-    long countByUserIdAndIsActive(String userId, byte isActive);
+    long countByUserNameAndIsActive(String name, byte isActive);
 
     User createUserAndDept(UserDto resources);
 

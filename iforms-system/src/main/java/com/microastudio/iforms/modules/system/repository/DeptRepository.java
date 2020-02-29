@@ -6,23 +6,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
-
 /**
  * @author peng
  */
 @SuppressWarnings("all")
-public interface DeptRepository extends JpaRepository<Dept, Long>, JpaSpecificationExecutor<Dept> {
+public interface DeptRepository extends JpaRepository<Dept, String>, JpaSpecificationExecutor<Dept> {
 
-    /**
-     * 根据 PID 查询
-     *
-     * @param id pid
-     * @return /
-     */
-    List<Dept> findByPid(Long id);
+//    /**
+//     * 根据 PID 查询
+//     *
+//     * @param id pid
+//     * @return /
+//     */
+//    List<Dept> findByPid(Long id);
 
-    Dept findByDeptIdAndIsActive(String deptId, byte isActive);
+    Dept findByIdAndIsActive(String marketId, byte isActive);
 
     /**
      * 根据ID查询名称
@@ -31,7 +29,7 @@ public interface DeptRepository extends JpaRepository<Dept, Long>, JpaSpecificat
      * @return /
      */
     @Query(value = "select name from dept where id = ?1", nativeQuery = true)
-    String findNameById(Long id);
+    String findNameById(String id);
 
     /**
      * 根据角色ID 查询
@@ -49,5 +47,5 @@ public interface DeptRepository extends JpaRepository<Dept, Long>, JpaSpecificat
      * @param pid    PID
      * @return /
      */
-    long countByDeptIdAndPidAndIsActive(String deptId, Long pid, byte isActive);
+    long countByIdAndMarketIdAndIsActive(String id, String marketId, byte isActive);
 }

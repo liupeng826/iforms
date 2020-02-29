@@ -71,15 +71,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findByUserId(String id) {
-        User user = userRepository.findByUserId(id);
-        ValidationUtil.isNull(user.getId(), "User", "id", id);
+    public UserDto findByUserName(String name) {
+        User user = userRepository.findByUserName(name);
+        ValidationUtil.isNull(user.getId(), "User", "name", name);
         return toDto(user);
     }
 
     @Override
-    public long countByUserIdAndIsActive(String userId, byte isActive) {
-        return userRepository.countByUserIdAndIsActive(userId, isActive);
+    public long countByUserNameAndIsActive(String userName, byte isActive) {
+        return userRepository.countByUserNameAndIsActive(userName, isActive);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public User createUserAndDept(UserDto resources) {
         Dept dept = deptRepository.save(resources.getDept());
-        resources.setDeptId(dept.getId());
+//        resources.setDeptId(dept.getId());
         return userRepository.save(toEntity(resources));
     }
 
@@ -237,7 +237,6 @@ public class UserServiceImpl implements UserService {
         User user = new User();
 
         user.setId(dto.getId());
-        user.setUserId(dto.getUserId());
         user.setUserName(dto.getUserName());
         user.setNickName(dto.getNickName());
         user.setSex(dto.getSex());
@@ -291,7 +290,6 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = new UserDto();
 
         userDto.setId(user.getId());
-        userDto.setUserId(user.getUserId());
         userDto.setUserName(user.getUserName());
         userDto.setNickName(user.getNickName());
         userDto.setSex(user.getSex());

@@ -17,12 +17,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author peng
@@ -48,22 +46,28 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
+    @Cacheable
+    public List<DeptDto> findAll() {
+        return toDto(deptRepository.findAll());
+    }
+
+    @Override
     @Cacheable(key = "#p0")
-    public DeptDto findById(Long id) {
+    public DeptDto findById(String id) {
         Dept dept = deptRepository.findById(id).orElseGet(Dept::new);
         ValidationUtil.isNull(dept.getId(), "Dept", "id", id);
         return toDto(dept);
     }
 
-    @Override
-    @Cacheable
-    public List<Dept> findByPid(long pid) {
-        return deptRepository.findByPid(pid);
-    }
+//    @Override
+//    @Cacheable
+//    public List<Dept> findByPid(long pid) {
+//        return deptRepository.findByPid(pid);
+//    }
 
     @Override
-    public Dept findByDeptIdAndIsActive(String deptId) {
-        return deptRepository.findByDeptIdAndIsActive(deptId, Byte.valueOf("1"));
+    public Dept findByIdAndIsActive(String marketId) {
+        return deptRepository.findByIdAndIsActive(marketId, Byte.valueOf("1"));
     }
 
 //    @Override
@@ -72,49 +76,49 @@ public class DeptServiceImpl implements DeptService {
 //    }
 
     @Override
-    public long countByDeptIdAndPidAndIsActive(String deptId, Long pid, byte isActive) {
-        return deptRepository.countByDeptIdAndPidAndIsActive(deptId, pid, isActive);
+    public long countByIdAndMarketIdAndIsActive(String id, String marketId, byte isActive) {
+        return deptRepository.countByIdAndMarketIdAndIsActive(id, marketId, isActive);
     }
 
-    @Override
-    @Cacheable
-    public Object buildTree(List<DeptDto> deptDtos) {
-        Set<DeptDto> trees = new LinkedHashSet<>();
-        Set<DeptDto> depts = new LinkedHashSet<>();
-        List<String> deptNames = deptDtos.stream().map(DeptDto::getName).collect(Collectors.toList());
-        boolean isChild;
-        for (DeptDto deptDTO : deptDtos) {
-            isChild = false;
-            if ("0".equals(deptDTO.getPid().toString())) {
-                trees.add(deptDTO);
-            }
-            for (DeptDto it : deptDtos) {
-                if (it.getPid().equals(deptDTO.getId())) {
-                    isChild = true;
-                    if (deptDTO.getChildren() == null) {
-                        deptDTO.setChildren(new ArrayList<>());
-                    }
-                    deptDTO.getChildren().add(it);
-                }
-            }
-            if (isChild) {
-                depts.add(deptDTO);
-            } else if (!deptNames.contains(deptRepository.findNameById(deptDTO.getPid()))) {
-                depts.add(deptDTO);
-            }
-        }
-
-        if (CollectionUtils.isEmpty(trees)) {
-            trees = depts;
-        }
-
-        Integer totalElements = deptDtos.size();
-
-        Map<String, Object> map = new HashMap<>(2);
-        map.put("totalElements", totalElements);
-        map.put("content", CollectionUtils.isEmpty(trees) ? deptDtos : trees);
-        return map;
-    }
+//    @Override
+//    @Cacheable
+//    public Object buildTree(List<DeptDto> deptDtos) {
+//        Set<DeptDto> trees = new LinkedHashSet<>();
+//        Set<DeptDto> depts = new LinkedHashSet<>();
+//        List<String> deptNames = deptDtos.stream().map(DeptDto::getName).collect(Collectors.toList());
+//        boolean isChild;
+//        for (DeptDto deptDTO : deptDtos) {
+//            isChild = false;
+//            if ("0".equals(deptDTO.getMarketId().toString())) {
+//                trees.add(deptDTO);
+//            }
+//            for (DeptDto it : deptDtos) {
+//                if (it.getMarketId().equals(deptDTO.getId())) {
+//                    isChild = true;
+//                    if (deptDTO.getChildren() == null) {
+//                        deptDTO.setChildren(new ArrayList<>());
+//                    }
+//                    deptDTO.getChildren().add(it);
+//                }
+//            }
+//            if (isChild) {
+//                depts.add(deptDTO);
+//            } else if (!deptNames.contains(deptRepository.findNameById(deptDTO.getId()))) {
+//                depts.add(deptDTO);
+//            }
+//        }
+//
+//        if (CollectionUtils.isEmpty(trees)) {
+//            trees = depts;
+//        }
+//
+//        Integer totalElements = deptDtos.size();
+//
+//        Map<String, Object> map = new HashMap<>(2);
+//        map.put("totalElements", totalElements);
+//        map.put("content", CollectionUtils.isEmpty(trees) ? deptDtos : trees);
+//        return map;
+//    }
 
     @Override
     @CacheEvict(allEntries = true)
@@ -127,7 +131,7 @@ public class DeptServiceImpl implements DeptService {
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(Dept resources) {
-        if (resources.getId().equals(resources.getPid())) {
+        if (resources.getId().equals(resources.getMarketId())) {
             throw new BadRequestException("上级不能为自己");
         }
         Dept dept = deptRepository.findById(resources.getId()).orElseGet(Dept::new);
@@ -158,17 +162,17 @@ public class DeptServiceImpl implements DeptService {
         FileUtil.downloadExcel(list, response);
     }
 
-    @Override
-    public Set<DeptDto> getDeleteDepts(List<Dept> menuList, Set<DeptDto> deptDtos) {
-        for (Dept dept : menuList) {
-            deptDtos.add(toDto(dept));
-            List<Dept> depts = deptRepository.findByPid(dept.getId());
-            if (depts != null && depts.size() != 0) {
-                getDeleteDepts(depts, deptDtos);
-            }
-        }
-        return deptDtos;
-    }
+//    @Override
+//    public Set<DeptDto> getDeleteDepts(List<Dept> menuList, Set<DeptDto> deptDtos) {
+//        for (Dept dept : menuList) {
+//            deptDtos.add(toDto(dept));
+//            List<Dept> depts = deptRepository.findByPid(dept.getId());
+//            if (depts != null && depts.size() != 0) {
+//                getDeleteDepts(depts, deptDtos);
+//            }
+//        }
+//        return deptDtos;
+//    }
 
     public Dept toEntity(DeptDto dto) {
         if (dto == null) {
@@ -178,9 +182,8 @@ public class DeptServiceImpl implements DeptService {
         Dept dept = new Dept();
 
         dept.setId(dto.getId());
-        dept.setDeptId(dto.getDeptId());
         dept.setName(dto.getName());
-        dept.setPid(dto.getPid());
+        dept.setMarketId(dto.getMarketId());
         dept.setIsActive(dto.getIsActive());
         dept.setCreatedDate(dto.getCreatedDate());
 
@@ -195,10 +198,9 @@ public class DeptServiceImpl implements DeptService {
         DeptDto deptDto = new DeptDto();
 
         deptDto.setId(entity.getId());
-        deptDto.setDeptId(entity.getDeptId());
         deptDto.setName(entity.getName());
         deptDto.setIsActive(entity.getIsActive());
-        deptDto.setPid(entity.getPid());
+        deptDto.setMarketId(entity.getMarketId());
         deptDto.setCreatedDate(entity.getCreatedDate());
 
         return deptDto;

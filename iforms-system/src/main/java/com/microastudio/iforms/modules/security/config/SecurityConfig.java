@@ -115,7 +115,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/form/answer").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/form/answersWithForm").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/form/registerDealer").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/dept/checkDeptByDeptIdAndPid").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/dept/checkDeptById").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/market/allActive").permitAll()
                 // 文件
                 .antMatchers("/avatar/**").permitAll()
                 .antMatchers("/file/**").permitAll()

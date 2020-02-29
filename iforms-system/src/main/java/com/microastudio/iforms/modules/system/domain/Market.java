@@ -2,13 +2,11 @@ package com.microastudio.iforms.modules.system.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
@@ -17,10 +15,10 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@Table(name = "dept")
-public class Dept implements Serializable {
+@Table(name = "market")
+public class Market implements Serializable {
 
-    private static final long serialVersionUID = -1287039399523002080L;
+    private static final long serialVersionUID = -8475008307861568155L;
 
     @Id
     @Column(name = "id")
@@ -31,25 +29,9 @@ public class Dept implements Serializable {
     @NotBlank
     private String name;
 
-    @Column(name = "market_id", nullable = false)
-    @NotNull
-    private String marketId;
-
-    private String contactNo;
-    private String email;
-    private String address;
-
+    @Column(name = "is_active", nullable = false)
     @NotNull
     private byte isActive;
-
-    private String createdBy;
-
-    @Column(name = "created_date")
-    @CreationTimestamp
-    private Timestamp createdDate;
-
-    private String modifiedBy;
-    private Timestamp modifiedDate;
 
     public @interface Update {
     }
@@ -62,7 +44,7 @@ public class Dept implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Dept dept = (Dept) o;
+        Market dept = (Market) o;
         return Objects.equals(id, dept.id) &&
                 Objects.equals(name, dept.name);
     }

@@ -17,8 +17,6 @@ public class UserDto implements Serializable {
     @ApiModelProperty(hidden = true)
     private Long id;
 
-    private String userId;
-
     private String userName;
 
     private String nickName;
@@ -39,10 +37,8 @@ public class UserDto implements Serializable {
 
     private byte isActive;
 
-//    @JsonIgnore
+    //    @JsonIgnore
     private String password;
-
-    private Long deptId;
 
     private String createdBy;
     private Timestamp createdDate;

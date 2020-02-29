@@ -21,9 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      */
     User findByUserName(String username);
 
-    User findByUserId(String id);
-
-    long countByUserIdAndIsActive(String id, byte isActive);
+    long countByUserNameAndIsActive(String userName, byte isActive);
 
     /**
      * 根据邮箱查询

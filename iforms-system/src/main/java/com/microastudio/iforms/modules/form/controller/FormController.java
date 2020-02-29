@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -200,11 +201,11 @@ public class FormController {
             clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
 
             String deptId = user.getDept().getId().toString();
-            String parentId = user.getDept().getPid().toString();
+            String marketId = user.getDept().getMarketId().toString();
             List<FormDto> forms = formService.getFormsByDeptId(clientToken, deptId);
 
             if (forms == null || forms.size() <= 0) {
-                forms = formService.getFormsByMarketId(clientToken, parentId);
+                forms = formService.getFormsByMarketId(clientToken, marketId);
             }
 
             resultResponse.ok(forms);
@@ -458,7 +459,7 @@ public class FormController {
 
         ResultResponse resultResponse = new ResultResponse();
         try {
-            if (userDto == null || userDto.getDept() == null || StringUtils.isEmpty(userDto.getUserId())) {
+            if (userDto == null || userDto.getDept() == null || StringUtils.isEmpty(userDto.getUserName())) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
 
@@ -468,28 +469,26 @@ public class FormController {
             }
 
             logger.info("registerDealer：DEPT");
+            Timestamp time = new Timestamp(System.currentTimeMillis());
             userDto.getClient().setId(Long.valueOf((String) resultResponse.getData()));
-            Long pid = userDto.getDept().getPid();
-            userDto.getDept().setPid(pid == null ? 0 : pid);
+            String marketId = userDto.getDept().getMarketId();
+            userDto.getDept().setMarketId(StringUtils.isEmpty(marketId) ? "1" : marketId);
+            userDto.getDept().setCreatedBy(userDto.getUserName());
+            userDto.getDept().setCreatedDate(time);
 
-            long countByDeptIdAndPidAndIsActive = deptService.countByDeptIdAndPidAndIsActive(userDto.getDept().getDeptId(), pid, Byte.valueOf("1"));
-            if (countByDeptIdAndPidAndIsActive > 0) {
-                return new ResultResponse(CommonConstants.ERRORS_CODE_EXISTS, CommonConstants.ERRORS_MSG_EXISTS);
-            }
-
-            long countByUserIdAndIsActive = userService.countByUserIdAndIsActive(userDto.getUserId(), Byte.valueOf("1"));
-            if (countByUserIdAndIsActive > 0) {
+            UserDto newUserDto = userService.findByUserName(userDto.getUserName());
+            if (newUserDto != null) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EXISTS, CommonConstants.ERRORS_MSG_EXISTS);
             }
 
             userDto.getDept().setIsActive(Byte.valueOf("0"));
 
             logger.info("registerDealer：USER");
-            userDto.setUserName(userDto.getUserId());
             userDto.setIsActive(Byte.valueOf("0"));
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            userDto.setCreatedBy(userDto.getUserId());
+            userDto.setCreatedBy(userDto.getUserName());
             userDto.setRole(RoleEnum.USER.getValue());
+            userDto.setCreatedDate(time);
             User user = userService.createUserAndDept(userDto);
 
             if (user != null) {

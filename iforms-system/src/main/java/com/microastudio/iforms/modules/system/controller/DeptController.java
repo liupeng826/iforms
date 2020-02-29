@@ -1,6 +1,5 @@
 package com.microastudio.iforms.modules.system.controller;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.bean.ResultResponse;
 import com.microastudio.iforms.common.exception.BadRequestException;
@@ -38,25 +37,17 @@ public class DeptController {
     }
 
     //    @Log("查询部门")
-    @ApiOperation("查询是否部门")
-    @GetMapping("/checkDeptByDeptIdAndPid")
-    public ResultResponse<Object> checkDeptByDeptIdAndPid(String deptId, String parentId) {
+    @ApiOperation("查询部门是否存在")
+    @GetMapping("/checkDeptById")
+    public ResultResponse<Object> checkDeptById(String id) {
 
-        Dept dept = deptService.findByDeptIdAndIsActive(parentId);
-        long pid;
+        Dept dept = deptService.findByIdAndIsActive(id);
         if (dept != null) {
-            pid = dept.getId();
-            long countByDeptIdAndPidAndIsActive = deptService.countByDeptIdAndPidAndIsActive(deptId, pid, Byte.valueOf("1"));
-            if (countByDeptIdAndPidAndIsActive > 0) {
-                return new ResultResponse(CommonConstants.ERRORS_CODE_EXISTS, CommonConstants.ERRORS_MSG_EXISTS);
-            }
-        } else {
-            return new ResultResponse(CommonConstants.ERRORS_CODE_NOT_EXISTS, CommonConstants.ERRORS_MSG_NOT_EXISTS);
+            return new ResultResponse(CommonConstants.ERRORS_CODE_EXISTS, CommonConstants.ERRORS_MSG_EXISTS);
         }
 
         return ResultResponse.success("");
     }
-
 
     //    @Log("导出部门数据")
     @ApiOperation("导出部门数据")
@@ -100,15 +91,12 @@ public class DeptController {
     @ApiOperation("删除部门")
     @DeleteMapping
     @PreAuthorize("hasRole('SuperAdmin')")
-    public ResultResponse<Object> delete(@RequestBody Set<Long> ids) {
+    public ResultResponse<Object> delete(@RequestBody Set<String> ids) {
         Set<DeptDto> deptDtos = new HashSet<>();
-        for (Long id : ids) {
-            List<Dept> deptList = deptService.findByPid(id);
+        for (String id : ids) {
             deptDtos.add(deptService.findById(id));
-            if (CollectionUtil.isNotEmpty(deptList)) {
-                deptDtos = deptService.getDeleteDepts(deptList, deptDtos);
-            }
         }
+
         try {
             deptService.delete(deptDtos);
         } catch (Throwable e) {
