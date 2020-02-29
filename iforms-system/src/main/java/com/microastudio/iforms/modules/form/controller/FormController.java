@@ -3,6 +3,7 @@ package com.microastudio.iforms.modules.form.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.bean.ResultResponse;
+import com.microastudio.iforms.common.utils.RoleEnum;
 import com.microastudio.iforms.common.utils.SecurityUtils;
 import com.microastudio.iforms.modules.form.domain.Form;
 import com.microastudio.iforms.modules.form.domain.Language;
@@ -488,6 +489,7 @@ public class FormController {
             userDto.setIsActive(Byte.valueOf("0"));
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
             userDto.setCreatedBy(userDto.getUserId());
+            userDto.setRole(RoleEnum.USER.getValue());
             User user = userService.createUserAndDept(userDto);
 
             if (user != null) {

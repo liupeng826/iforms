@@ -63,7 +63,7 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public Dept findByDeptIdAndIsActive(String deptId) {
-        return deptRepository.findByDeptIdAndIsActive(deptId, 1);
+        return deptRepository.findByDeptIdAndIsActive(deptId, Byte.valueOf("1"));
     }
 
 //    @Override

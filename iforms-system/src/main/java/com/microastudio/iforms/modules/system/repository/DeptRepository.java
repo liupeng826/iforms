@@ -22,7 +22,7 @@ public interface DeptRepository extends JpaRepository<Dept, Long>, JpaSpecificat
      */
     List<Dept> findByPid(Long id);
 
-    Dept findByDeptIdAndIsActive(String deptId, int isActive);
+    Dept findByDeptIdAndIsActive(String deptId, byte isActive);
 
     /**
      * 根据ID查询名称
