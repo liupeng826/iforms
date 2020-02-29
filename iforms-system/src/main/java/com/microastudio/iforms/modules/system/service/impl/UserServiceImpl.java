@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findByUserName(String name) {
         User user = userRepository.findByUserName(name);
-        ValidationUtil.isNull(user.getId(), "User", "name", name);
+        //ValidationUtil.isNull(user.getId(), "User", "name", name);
         return toDto(user);
     }
 
