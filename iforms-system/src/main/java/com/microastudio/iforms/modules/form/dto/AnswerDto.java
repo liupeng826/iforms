@@ -25,6 +25,7 @@ public class AnswerDto implements Serializable {
     private Timestamp createdDate;
     private String modifiedBy;
     private Timestamp modifiedDate;
+    private boolean needSendEmail;
 
     public Client getClient() {
         return client;
@@ -104,5 +105,13 @@ public class AnswerDto implements Serializable {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public boolean getNeedSendEmail() {
+        return needSendEmail;
+    }
+
+    public void setNeedSendEmail(boolean needSendEmail) {
+        this.needSendEmail = needSendEmail;
     }
 }

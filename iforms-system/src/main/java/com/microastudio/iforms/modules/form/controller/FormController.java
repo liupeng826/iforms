@@ -307,23 +307,28 @@ public class FormController {
             logger.error("answer插入异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+            return resultResponse;
         }
 
-        try {
-            //send email
-            logger.info("开始发送邮件");
-            Map<String, Object> model = new HashMap<>();
-            model.put("username", "username");
-            model.put("templateType", "Freemarker");
-            Template template = freeMarkerConfigurer.getConfiguration().getTemplate("surveyEmailTemplate.html");
-            String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-            mailService.sendHtmlMail("peng.liu@volvo.com", "主题：这是模板邮件", html);
-            resultResponse.ok("");
-            logger.info("成功发送邮件");
-        } catch (IOException | TemplateException e) {
-            logger.error("发送邮件异常：" + e.getMessage(), e);
-            resultResponse.setCode(CommonConstants.ERRORS_CODE_MAIL);
-            resultResponse.setMessage(CommonConstants.ERRORS_MSG_MAIL);
+        if (answerDto != null && answerDto.getNeedSendEmail() && answerDto.getCustomer() != null
+                && !StringUtils.isEmpty(answerDto.getCustomer().getEmail())) {
+            try {
+                //send email
+                logger.info("开始发送邮件");
+                Map<String, Object> model = new HashMap<>();
+                model.put("username", "username");
+                model.put("templateType", "Freemarker");
+                Template template = freeMarkerConfigurer.getConfiguration().getTemplate("surveyEmailTemplate.html");
+                String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+                mailService.sendHtmlMail("peng.liu@volvo.com", "主题：这是模板邮件", html);
+                resultResponse.ok("");
+                logger.info("成功发送邮件");
+            } catch (IOException | TemplateException e) {
+                logger.error("发送邮件异常：" + e.getMessage(), e);
+                resultResponse.setCode(CommonConstants.ERRORS_CODE_MAIL);
+                resultResponse.setMessage(CommonConstants.ERRORS_MSG_MAIL);
+                return resultResponse;
+            }
         }
 
         return resultResponse;
