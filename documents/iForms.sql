@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.25)
 # Database: iForms
-# Generation Time: 2020-02-27 05:47:55 +0000
+# Generation Time: 2020-03-03 08:43:23 +0000
 # ************************************************************
 
 
@@ -60,7 +60,21 @@ VALUES
 	('5b27ffbf53de4bdfabf68d0ff62537f1',4,19,78,'test',NULL,NULL,NULL,'order-10000001','peng','2020-02-24 21:39:14','peng','2020-01-31 23:25:07',102,'en-us'),
 	('5b27ffbf53de4bdfabf68d0ff62537f1',5,19,79,NULL,NULL,'4',5,'order-10000001','peng','2020-02-24 21:39:17','peng','2020-01-31 23:25:07',102,'en-us'),
 	('5b27ffbf53de4bdfabf68d0ff62537f1',6,19,80,'2020-01-01',NULL,NULL,NULL,'order-10000001','peng','2020-02-24 21:39:19','peng','2020-01-31 23:25:07',102,'en-us'),
-	('5b27ffbf53de4bdfabf68d0ff62537f1',7,19,81,NULL,NULL,'6',10,'order-10000001','peng','2020-02-24 21:39:20','peng','2020-01-31 23:25:07',102,'en-us');
+	('5b27ffbf53de4bdfabf68d0ff62537f1',7,19,81,NULL,NULL,'6',10,'order-10000001','peng','2020-02-24 21:39:20','peng','2020-01-31 23:25:07',102,'en-us'),
+	('1e469dc52dbe4777b25855cf5ecf7546',8,19,76,NULL,'1',NULL,NULL,'order-000001','peng','2020-03-02 22:10:13','peng','2020-03-02 22:10:13',103,'en-us'),
+	('1e469dc52dbe4777b25855cf5ecf7546',9,19,77,NULL,'1',NULL,NULL,'order-000001','peng','2020-03-02 22:10:13','peng','2020-03-02 22:10:13',103,'en-us'),
+	('1e469dc52dbe4777b25855cf5ecf7546',10,19,77,NULL,'2',NULL,NULL,'order-000001','peng','2020-03-02 22:10:13','peng','2020-03-02 22:10:13',103,'en-us'),
+	('1e469dc52dbe4777b25855cf5ecf7546',11,19,78,'test',NULL,NULL,NULL,'order-000001','peng','2020-03-02 22:10:13','peng','2020-03-02 22:10:13',103,'en-us'),
+	('1e469dc52dbe4777b25855cf5ecf7546',12,19,79,NULL,NULL,'4',5,'order-000001','peng','2020-03-02 22:10:13','peng','2020-03-02 22:10:13',103,'en-us'),
+	('1e469dc52dbe4777b25855cf5ecf7546',13,19,80,'2020-01-01',NULL,NULL,NULL,'order-000001','peng','2020-03-02 22:10:13','peng','2020-03-02 22:10:13',103,'en-us'),
+	('1e469dc52dbe4777b25855cf5ecf7546',14,19,81,NULL,NULL,'6',10,'order-000001','peng','2020-03-02 22:10:13','peng','2020-03-02 22:10:13',103,'en-us'),
+	('29837e04135d4b1db0651760d9ad638c',15,19,76,NULL,'1',NULL,NULL,'order-000001','peng','2020-03-02 22:20:59','peng','2020-03-02 22:20:59',104,'en-us'),
+	('29837e04135d4b1db0651760d9ad638c',16,19,77,NULL,'1',NULL,NULL,'order-000001','peng','2020-03-02 22:20:59','peng','2020-03-02 22:20:59',104,'en-us'),
+	('29837e04135d4b1db0651760d9ad638c',17,19,77,NULL,'2',NULL,NULL,'order-000001','peng','2020-03-02 22:20:59','peng','2020-03-02 22:20:59',104,'en-us'),
+	('29837e04135d4b1db0651760d9ad638c',18,19,78,'test',NULL,NULL,NULL,'order-000001','peng','2020-03-02 22:20:59','peng','2020-03-02 22:20:59',104,'en-us'),
+	('29837e04135d4b1db0651760d9ad638c',19,19,79,NULL,NULL,'4',5,'order-000001','peng','2020-03-02 22:20:59','peng','2020-03-02 22:20:59',104,'en-us'),
+	('29837e04135d4b1db0651760d9ad638c',20,19,80,'2020-01-01',NULL,NULL,NULL,'order-000001','peng','2020-03-02 22:20:59','peng','2020-03-02 22:20:59',104,'en-us'),
+	('29837e04135d4b1db0651760d9ad638c',21,19,81,NULL,NULL,'6',10,'order-000001','peng','2020-03-02 22:20:59','peng','2020-03-02 22:20:59',104,'en-us');
 
 /*!40000 ALTER TABLE `answer` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -109,7 +123,9 @@ LOCK TABLES `customer` WRITE;
 INSERT INTO `customer` (`id`, `name`, `email`, `contact_no`)
 VALUES
 	(101,'PengLiu','peng.liu@volvo.com','123456789'),
-	(102,'L','L','123');
+	(102,'L','L','123'),
+	(103,'peng','liupeng826@163.com','123456'),
+	(104,'peng','liupeng826@163.com','123456');
 
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -121,27 +137,30 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `dept`;
 
 CREATE TABLE `dept` (
-  `id` bigint(20) NOT NULL,
-  `dept_id` varchar(200) NOT NULL DEFAULT '',
+  `id` varchar(100) NOT NULL DEFAULT '',
   `name` varchar(200) NOT NULL DEFAULT '',
-  `pid` bigint(20) NOT NULL COMMENT '上级部门',
+  `market_id` varchar(100) NOT NULL DEFAULT '' COMMENT '上级部门',
   `contact_no` varchar(100) DEFAULT '1',
-  `email` varchar(100) DEFAULT '1',
+  `email` varchar(300) DEFAULT '1',
   `address` varchar(200) DEFAULT '',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_by` varchar(50) DEFAULT '',
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modified_by` varchar(50) DEFAULT NULL,
   `modified_date` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_dept_market_on_market_id_idx` (`market_id`),
+  CONSTRAINT `fk_dept_market_on_market_id` FOREIGN KEY (`market_id`) REFERENCES `market` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 LOCK TABLES `dept` WRITE;
 /*!40000 ALTER TABLE `dept` DISABLE KEYS */;
 
-INSERT INTO `dept` (`id`, `dept_id`, `name`, `pid`, `contact_no`, `email`, `address`, `is_active`, `created_by`, `created_date`, `modified_by`, `modified_date`)
+INSERT INTO `dept` (`id`, `name`, `market_id`, `contact_no`, `email`, `address`, `is_active`, `created_by`, `created_date`, `modified_by`, `modified_date`)
 VALUES
-	(1,'TJ1','天津',0,'1','1','',1,'','2020-02-23 22:35:35',NULL,NULL);
+	('10086','移动','1','10086','liupeng826@163.com','天津市',0,'10086','2020-02-29 14:51:48',NULL,NULL),
+	('703518','Japan dealer','40','','','',1,'','2020-02-29 14:30:23',NULL,NULL),
+	('v1003','dept','40','123456',NULL,'address',0,'v1003','2020-02-29 10:26:53',NULL,NULL);
 
 /*!40000 ALTER TABLE `dept` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -210,10 +229,10 @@ LOCK TABLES `form` WRITE;
 
 INSERT INTO `form` (`id`, `super_form_id`, `title`, `description`, `level`, `market_id`, `dept_id`, `is_active`, `client`, `send_email`, `type`, `include_section`, `language`, `created_by`, `created_date`, `modified_by`, `modified_date`)
 VALUES
-	(19,'5b27ffbf53de4bdfabf68d0ff62537f1','Survey','test survey','market','10001','',1,1,1,'volvo GTA',1,'en-us','1','2020-02-25 13:01:54','peng','2020-01-31 22:37:20'),
-	(20,'5b27ffbf53de4bdfabf68d0ff62537f0','Survey','test survey','','10001','1',1,1,1,'volvo GTA',1,'en-us','1','2020-02-25 14:53:16','peng','2020-02-11 17:58:08'),
-	(21,'fd0814952fa64940af83d2a80c06de11','Survey','test survey','','10001','1',1,1,1,'volvo GTA',1,'en-us','1','2020-02-27 09:28:41','peng','2020-02-11 17:59:48'),
-	(22,'63fa0da6b4654829968e6380fce17746','Survey','test survey','market','10002','',1,1,1,'volvo GTA',1,'en-us','1','2020-02-25 14:53:18','peng','2020-02-20 10:48:04');
+	(19,'5b27ffbf53de4bdfabf68d0ff62537f1','Survey','test survey','market','40','',1,1,1,'volvo GTA',1,'en-us','1','2020-02-29 14:34:21','peng','2020-01-31 22:37:20'),
+	(20,'5b27ffbf53de4bdfabf68d0ff62537f0','Survey','test survey','','40','703518',1,1,1,'volvo GTA',1,'en-us','1','2020-02-29 14:34:24','peng','2020-02-11 17:58:08'),
+	(21,'fd0814952fa64940af83d2a80c06de11','Survey','test survey','','40','703518',1,1,1,'volvo GTA',1,'en-us','1','2020-02-29 14:34:27','peng','2020-02-11 17:59:48'),
+	(22,'63fa0da6b4654829968e6380fce17746','Survey','test survey','market','40','',1,1,1,'volvo GTA',1,'en-us','1','2020-02-29 14:34:28','peng','2020-02-20 10:48:04');
 
 /*!40000 ALTER TABLE `form` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -256,9 +275,8 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `market`;
 
 CREATE TABLE `market` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `market_id` varchar(100) NOT NULL DEFAULT '',
-  `description` varchar(100) NOT NULL DEFAULT '',
+  `id` varchar(100) NOT NULL DEFAULT '',
+  `name` varchar(100) NOT NULL DEFAULT '',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -266,9 +284,10 @@ CREATE TABLE `market` (
 LOCK TABLES `market` WRITE;
 /*!40000 ALTER TABLE `market` DISABLE KEYS */;
 
-INSERT INTO `market` (`id`, `market_id`, `description`, `is_active`)
+INSERT INTO `market` (`id`, `name`, `is_active`)
 VALUES
-	(1,'CN','中国',1);
+	('1','中国',1),
+	('40','Japan',1);
 
 /*!40000 ALTER TABLE `market` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -485,8 +504,8 @@ LOCK TABLES `section` WRITE;
 
 INSERT INTO `section` (`id`, `form_id`, `title`, `description`, `sequence`, `is_active`, `language`)
 VALUES
-	(3,19,'section1','test section1',0,1,'en-us'),
-	(4,19,'section2','test section2',0,1,'en-us'),
+	(3,19,'section1','test section1',1,1,'en-us'),
+	(4,19,'section2','test section2',2,1,'en-us'),
 	(5,20,'section1','test section1',0,1,'en-us'),
 	(6,20,'section2','test section2',0,1,'en-us'),
 	(7,21,'section1','test section1',0,1,'en-us'),
@@ -505,38 +524,39 @@ DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `user_id` varchar(200) NOT NULL DEFAULT '' COMMENT '用户id',
   `user_name` varchar(200) NOT NULL DEFAULT '' COMMENT '用户名',
   `nick_name` varchar(255) DEFAULT NULL COMMENT '昵称',
   `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码',
-  `email` varchar(255) DEFAULT NULL COMMENT '邮箱',
-  `dept` bigint(20) DEFAULT NULL COMMENT '部门名称',
+  `email` varchar(190) DEFAULT '' COMMENT '邮箱',
   `phone` varchar(255) DEFAULT NULL COMMENT '手机号码',
   `job_id` bigint(20) DEFAULT NULL COMMENT '岗位名称',
-  `sex` varchar(255) DEFAULT NULL COMMENT '性别',
-  `role` varchar(50) NOT NULL DEFAULT '' COMMENT '职责(10：管理员，20：普通用户)',
-  `client` int(11) NOT NULL COMMENT '客户端',
+  `sex` tinyint(1) NOT NULL DEFAULT '1' COMMENT '性别',
+  `role` varchar(10) NOT NULL DEFAULT '' COMMENT '职责(10：管理员，20：管理员，30：普通用户)',
+  `dept_id` varchar(100) NOT NULL DEFAULT '' COMMENT '部门ID',
+  `client_id` int(11) NOT NULL COMMENT '客户端',
   `is_active` tinyint(1) NOT NULL COMMENT '状态：1启用、0禁用',
   `created_by` varchar(50) NOT NULL DEFAULT '',
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modified_by` varchar(50) DEFAULT NULL,
   `modified_date` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `UK_user_email` (`email`) USING BTREE,
-  KEY `idx_user_client` (`client`),
-  KEY `fk_user_client_on_client_id_idx` (`client`),
-  KEY `fk_user_deptId_on_dept_id_idx` (`dept`),
-  CONSTRAINT `fk_user_client_on_client_id` FOREIGN KEY (`client`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_user_deptId_on_dept_id` FOREIGN KEY (`dept`) REFERENCES `dept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统用户';
+  PRIMARY KEY (`id`),
+  KEY `fk_user_client_on_client_id_idx` (`client_id`),
+  KEY `fk_dept_id_on_dept_id` (`dept_id`),
+  CONSTRAINT `fk_dept_id_on_dept_id` FOREIGN KEY (`dept_id`) REFERENCES `dept` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_client_on_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='系统用户';
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 
-INSERT INTO `user` (`id`, `user_id`, `user_name`, `nick_name`, `password`, `email`, `dept`, `phone`, `job_id`, `sex`, `role`, `client`, `is_active`, `created_by`, `created_date`, `modified_by`, `modified_date`)
+INSERT INTO `user` (`id`, `user_name`, `nick_name`, `password`, `email`, `phone`, `job_id`, `sex`, `role`, `dept_id`, `client_id`, `is_active`, `created_by`, `created_date`, `modified_by`, `modified_date`)
 VALUES
-	(1,'v1000','admin','管理员','$2a$10$HD6MPf1f8jml178PENbkzux4RCykd5ZmCikyWCgmor.t.EUCX8Nnu','liupeng826@hotmail.com',1,'18888888888',11,'0','10',1,1,'peng','2020-02-25 14:59:32','peng','2020-02-25 06:59:32'),
-	(3,'v1001','test','测试','$2a$10$ITmQ9UJaTmvwSxB/KT2J9eTl6MRk/B9fX1n9SrchbOKh8/Qp8c4C.','peng.liu@volvo.com',1,'17777777777',12,'1','20',1,1,'peng','2020-02-23 22:17:46','peng','2020-02-23 06:09:35');
+	(1,'v0001','super admin','$2a$10$HhxyGZy.ulf3RvAwaHUGb.k.2i9PBpv4YbLMJWp8pES7pPhTyRCF.','liupeng826@hotmail.com','18888888888',11,0,'10','703518',1,1,'peng','2020-02-29 21:48:21','peng','2020-02-25 06:59:32'),
+	(2,'v1000','admin','$2a$10$HhxyGZy.ulf3RvAwaHUGb.k.2i9PBpv4YbLMJWp8pES7pPhTyRCF.','liupeng826@163.com','17777777777',12,1,'20','703518',1,1,'peng','2020-02-29 21:47:17','peng','2020-02-23 06:09:35'),
+	(3,'v1001','tester','$2a$10$HhxyGZy.ulf3RvAwaHUGb.k.2i9PBpv4YbLMJWp8pES7pPhTyRCF.','peng.liu@volvo.com','17777777777',12,1,'30','703518',1,1,'peng','2020-02-29 21:48:23','peng','2020-02-23 06:09:35'),
+	(4,'v1002','nickName','$2a$10$HhxyGZy.ulf3RvAwaHUGb.k.2i9PBpv4YbLMJWp8pES7pPhTyRCF.',NULL,'12345',NULL,0,'30','703518',1,0,'v1002','2020-02-29 21:48:24',NULL,NULL),
+	(5,'v1003','peng','$2a$10$HhxyGZy.ulf3RvAwaHUGb.k.2i9PBpv4YbLMJWp8pES7pPhTyRCF.',NULL,'string',NULL,0,'30','v1003',1,0,'v1003','2020-02-29 21:48:25',NULL,NULL),
+	(8,'10086','移动','$2a$10$kv8wBGUejAnnaRG4giyhr.T2CY0NSksU46NyJlqr4FzXw5txjyWJ2','liupeng826@163.com','10086',NULL,0,'30','10086',1,0,'10086','2020-02-29 14:51:48',NULL,NULL);
 
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
