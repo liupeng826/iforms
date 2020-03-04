@@ -32,6 +32,7 @@
         <result column="created_by" property="createdBy" jdbcType="VARCHAR"/>
         <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP"/>
         <result column="modified_by" property="modifiedBy" jdbcType="VARCHAR"/>
+        <result column="language_description" property="languageDescription" jdbcType="VARCHAR"/>
         <collection property="sections" ofType="com.microastudio.iforms.modules.form.dto.SectionDto">
             <id column="section.id" property="id"/>
             <result column="section.form_id" property="formId"/>
@@ -119,8 +120,10 @@
         `question_option`.`total_value` as `question_option.total_value`,
         `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
         `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
-        `question_option`.`is_active` as `question_option.is_active`
-        FROM form, section, client, question
+        `question_option`.`is_active` as `question_option.is_active`,
+        T1.description as `language_description`
+        FROM form LEFT JOIN `language` T1 ON `form`.`language` = T1.`code`,
+         section, client, question
         LEFT JOIN question_option
         ON (question.id = question_option.question_id AND question_option.is_active = 1)
         WHERE section.form_id = form.id
@@ -162,8 +165,10 @@
         `question_option`.`total_value` as `question_option.total_value`,
         `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
         `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
-        `question_option`.`is_active` as `question_option.is_active`
-        FROM form, section, client, question
+        `question_option`.`is_active` as `question_option.is_active`,
+        T1.description as `language_description`
+        FROM form LEFT JOIN `language` T1 ON `form`.`language` = T1.`code`,
+        section, client, question
         LEFT JOIN question_option
         ON (question.id = question_option.question_id AND question_option.is_active = 1)
         WHERE section.form_id = form.id
@@ -203,12 +208,14 @@
         `question_option`.`total_value` as `question_option.total_value`,
         `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
         `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
-        `question_option`.`is_active` as `question_option.is_active`
-        FROM form, section, client, question
+        `question_option`.`is_active` as `question_option.is_active`,
+         T1.description as `language_description`
+        FROM form LEFT JOIN `language` T1 ON `form`.`language` = T1.`code`,
+        `section`, client, question
         LEFT JOIN question_option
         ON (question.id = question_option.question_id AND question_option.is_active = 1)
-        WHERE section.form_id = form.id
-        AND question.section_id = section.id
+        WHERE `section`.form_id = form.id
+        AND question.section_id = `section`.id
         And form.client = client.id
         <if test="clientToken != null and clientToken != '' ">
             AND client.token = #{clientToken}
@@ -246,8 +253,10 @@
         `question_option`.`total_value` as `question_option.total_value`,
         `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
         `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
-        `question_option`.`is_active` as `question_option.is_active`
-        FROM form, section, client, question
+        `question_option`.`is_active` as `question_option.is_active`,
+        T1.description as `language_description`
+        FROM form LEFT JOIN `language` T1 ON `form`.`language` = T1.`code`,
+        section, client, question
         LEFT JOIN question_option
         ON (question.id = question_option.question_id AND question_option.is_active = 1)
         WHERE section.form_id = form.id

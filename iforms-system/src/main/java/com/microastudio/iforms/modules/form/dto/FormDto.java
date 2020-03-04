@@ -30,6 +30,7 @@ public class FormDto implements Serializable {
     private String modifiedBy;
     private Timestamp modifiedDate;
     private String language;
+    private String languageDescription;
     private Timestamp deadline;
 
     private byte includeSection;
@@ -161,6 +162,14 @@ public class FormDto implements Serializable {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getLanguageDescription() {
+        return languageDescription;
+    }
+
+    public void setLanguageDescription(String languageDescription) {
+        this.languageDescription = languageDescription;
     }
 
     public byte getIncludeSection() {
