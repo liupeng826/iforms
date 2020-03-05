@@ -24,6 +24,7 @@ public class Answer implements Serializable {
     private String modifiedBy;
     private Timestamp modifiedDate;
     private Long customerId;
+    private Customer customer;
     private String language;
 
     public String getAnswerId() {
@@ -144,5 +145,13 @@ public class Answer implements Serializable {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

@@ -165,6 +165,11 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
+    public FormDto getForm(String clientToken, String id) {
+        return formMapper.selectFormById(clientToken, id);
+    }
+
+    @Override
     public List<FormDto> getFormsByUserId(String clientToken, String userId) {
         return formMapper.selectAllFormsByUserId(clientToken, userId);
     }
@@ -180,7 +185,7 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<AnswerDto> getAllAnswers(String clientToken, String answerId) {
+    public List<Answer> getAllAnswers(String clientToken, String answerId) {
         return formMapper.selectAllAnswersByKey(clientToken, answerId);
     }
 

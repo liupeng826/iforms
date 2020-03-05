@@ -5,6 +5,7 @@ import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.bean.ResultResponse;
 import com.microastudio.iforms.common.utils.RoleEnum;
 import com.microastudio.iforms.common.utils.SecurityUtils;
+import com.microastudio.iforms.modules.form.domain.Answer;
 import com.microastudio.iforms.modules.form.domain.Form;
 import com.microastudio.iforms.modules.form.domain.Language;
 import com.microastudio.iforms.modules.form.domain.QuestionType;
@@ -345,7 +346,7 @@ public class FormController {
             }
 
             logger.info("getAnswer入参：" + answerId);
-            List<AnswerDto> answers = formService.getAllAnswers("", answerId);
+            List<Answer> answers = formService.getAllAnswers("", answerId);
 
             resultResponse.ok(answers);
         } catch (Exception e) {
@@ -369,15 +370,15 @@ public class FormController {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
 
-            List<AnswerDto> answers = formService.getAllAnswers("", answerId);
+            List<Answer> answers = formService.getAllAnswers("", answerId);
             if (answers != null && answers.size() > 0) {
-                Long superId = answers.get(0).getFormId();
+                Long id = answers.get(0).getFormId();
 
                 // get form
-                List<FormDto> forms = formService.getForms("", superId.toString());
+                FormDto form = formService.getForm("", id.toString());
 
-                if (forms != null && forms.size() > 0) {
-                    resultResponse.ok(new AnswerWithFormDto(forms.get(0), answers));
+                if (form != null) {
+                    resultResponse.ok(new AnswerWithFormDto(form, answers));
                 }
             }
         } catch (Exception e) {
@@ -391,7 +392,53 @@ public class FormController {
 
 //    @GetMapping("/answers")
 //    public ResultResponse getAllAnswers(@RequestBody FormRequestDto dto) {
-//        logger.info("getAllAnswers");
+//        logger.info("geAnswers");
+//        UserDto user = userService.findByName(SecurityUtils.getUsername());
+//
+//        ResultResponse resultResponse = new ResultResponse();
+//
+//        try {
+//            if (dto == null
+//                    || dto.getClient() == null
+//                    || StringUtils.isEmpty(dto.getClient().getName())
+//                    || StringUtils.isEmpty(dto.getClient().getToken())
+//                    || user == null
+//                    || user.getDept() == null) {
+//                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+//            }
+//
+//            // validateToken
+//            if (dto.getClient() != null
+//                    && !StringUtils.isEmpty(dto.getClient().getName())
+//                    && !StringUtils.isEmpty(dto.getClient().getToken())) {
+//                resultResponse = getClient(dto.getClient());
+//                if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+//                    return resultResponse;
+//                }
+//            }
+//
+//            logger.info("getFormsByLevel 入参：" + JSONObject.toJSONString(dto));
+//            // get form
+//            String clientToken = dto.getClient().getToken();
+//            clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
+//
+//            String deptId = user.getDept().getId().toString();
+//            String marketId = user.getDept().getMarketId().toString();
+//            List<FormDto> forms = formService.getFormsByDeptId(clientToken, deptId);
+//
+//            if (forms == null || forms.size() <= 0) {
+//                forms = formService.getFormsByMarketId(clientToken, marketId);
+//            }
+//
+//            resultResponse.ok(forms);
+//
+//
+//
+//
+//
+//
+//
+//
 //        ResultResponse resultResponse = new ResultResponse();
 //        try {
 //            if (dto == null || (StringUtils.isEmpty(dto.getSuperFormId())
