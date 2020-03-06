@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @SpringBootApplication
 @EnableTransactionManagement
-@MapperScan("com.microastudio.iforms.*.*.mapper")
+@MapperScan("com.microastudio.iforms.modules.form.mapper")
 public class Application {
 
     public static void main(String[] args) {

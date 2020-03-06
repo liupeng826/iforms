@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -40,31 +39,31 @@ public class MarketServiceImpl implements MarketService {
     public MarketDto findById(String id) {
         Market market = marketRepository.findById(id).orElseGet(Market::new);
         ValidationUtil.isNull(market.getId(), "Market", "id", id);
-        return toDto(market);
+        return marketMapper.toDto(market);
     }
 
     @Override
     @Cacheable
     public List<MarketDto> findAll() {
-        return toDto(marketRepository.findAll());
+        return marketMapper.toDto(marketRepository.findAll());
     }
 
     @Override
     @Cacheable
     public List<MarketDto> findAllActive(byte isActive) {
-        return toDto(marketRepository.findByIsActive(isActive));
+        return marketMapper.toDto(marketRepository.findByIsActive(isActive));
     }
 
     @Override
     public MarketDto findByIdAndIsActive(String marketId) {
-        return toDto(marketRepository.findByIdAndIsActive(marketId, Byte.valueOf("1")));
+        return marketMapper.toDto(marketRepository.findByIdAndIsActive(marketId, Byte.valueOf("1")));
     }
 
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public MarketDto create(Market resources) {
-        return toDto(marketRepository.save(resources));
+        return marketMapper.toDto(marketRepository.save(resources));
     }
 
     @Override
@@ -84,60 +83,5 @@ public class MarketServiceImpl implements MarketService {
         for (MarketDto marketDto : marketDtos) {
             marketRepository.deleteById(marketDto.getId());
         }
-    }
-
-
-    public Market toEntity(MarketDto dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        Market market = new Market();
-
-        market.setId(dto.getId());
-        market.setName(dto.getName());
-        market.setIsActive(dto.getIsActive());
-
-        return market;
-    }
-
-    public MarketDto toDto(Market entity) {
-        if (entity == null) {
-            return null;
-        }
-
-        MarketDto marketDto = new MarketDto();
-
-        marketDto.setId(entity.getId());
-        marketDto.setName(entity.getName());
-        marketDto.setIsActive(entity.getIsActive());
-
-        return marketDto;
-    }
-
-    public List<Market> toEntity(List<MarketDto> dtoList) {
-        if (dtoList == null) {
-            return null;
-        }
-
-        List<Market> list = new ArrayList<Market>(dtoList.size());
-        for (MarketDto marketDto : dtoList) {
-            list.add(toEntity(marketDto));
-        }
-
-        return list;
-    }
-
-    public List<MarketDto> toDto(List<Market> entityList) {
-        if (entityList == null) {
-            return null;
-        }
-
-        List<MarketDto> list = new ArrayList<MarketDto>(entityList.size());
-        for (Market market : entityList) {
-            list.add(toDto(market));
-        }
-
-        return list;
     }
 }

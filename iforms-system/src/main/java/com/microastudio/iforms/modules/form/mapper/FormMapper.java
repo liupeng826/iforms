@@ -30,11 +30,17 @@ public interface FormMapper {
 
     List<FormDto> selectAllFormsByUserId(String clientToken, String userId);
 
+    List<FormDto> selectAllFormsByDeptAndMarket(String clientToken, String deptId, String marketId);
+
     List<FormDto> selectAllFormsByDept(String clientToken, String deptId);
 
     List<FormDto> selectAllFormsByMarket(String clientToken, String marketId);
 
-    List<Answer> selectAllAnswersByKey(String clientToken, String answerId);
+    FormDto selectAnswersWithFormByAnswerId(String clientToken, String answerId);
+
+    List<Answer> selectAnswersByAnswerId(String clientToken, String answerId);
+
+    List<FormDto> selectAnswers(String clientToken, Integer formId, String marketId, String deptId, String month, String from, String to);
 
     int insertAnswer(List<Answer> answers);
 

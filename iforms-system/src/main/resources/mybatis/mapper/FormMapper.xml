@@ -175,9 +175,49 @@
         <if test="clientToken != null and clientToken != '' ">
             AND client.token = #{clientToken}
         </if>
-        <if test="superFormId != null and superFormId != '' ">
-            AND form.super_form_id = #{superFormId,jdbcType=VARCHAR}
-        </if>
+        AND form.super_form_id = #{superFormId,jdbcType=VARCHAR}
+        AND form.is_active = 1
+        AND section.is_active = 1
+        AND question.is_active = 1
+        And client.is_active = 1
+        ORDER BY form.id, question.section_id, question.sequence, question_option.sequence
+    </select>
+
+    <select id="selectAllFormsByDeptAndMarket" parameterType="java.lang.String" resultMap="FormResultMap">
+        SELECT form.*,
+        `section`.`id` as `section.id`,
+        `section`.`form_id` as `section.form_id`,
+        `section`.`title` as `section.title`,
+        `section`.`description` as `section.description`,
+        `section`.`sequence` as `section.sequence`,
+        `section`.`is_active` as `section.is_active`,
+        `question`.`id` as `question.id`,
+        `question`.`section_id` as `question.section_id`,
+        `question`.`title` as `question.title`,
+        `question`.`subtitle` as `question.subtitle`,
+        `question`.`question_type_id` as `question.question_type_id`,
+        `question`.`is_active` as `question.is_active`,
+        `question`.`mandatory` as `question.mandatory`,
+        `question`.`sequence` as `question.sequence`,
+        `question_option`.`id` as `question_option.id`,
+        `question_option`.`question_id` as `question_option.question_id`,
+        `question_option`.`description` as `question_option.description`,
+        `question_option`.`sequence` as `question_option.sequence`,
+        `question_option`.`total_value` as `question_option.total_value`,
+        `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
+        `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
+        `question_option`.`is_active` as `question_option.is_active`,
+        T1.description as `language_description`
+        FROM form LEFT JOIN `language` T1 ON `form`.`language` = T1.`code`,
+        `section`, client, question
+        LEFT JOIN question_option
+        ON (question.id = question_option.question_id AND question_option.is_active = 1)
+        WHERE `section`.form_id = form.id
+        AND question.section_id = `section`.id
+        And form.client = client.id
+        AND client.token = #{clientToken}
+        AND form.`market_id` = #{marketId}
+        AND (form.dept_id = #{deptId} OR (form.`level` = 'market' AND form.`dept_id` = ''))
         AND form.is_active = 1
         AND section.is_active = 1
         AND question.is_active = 1
@@ -260,12 +300,8 @@
         WHERE `section`.form_id = form.id
         AND question.section_id = `section`.id
         And form.client = client.id
-        <if test="clientToken != null and clientToken != '' ">
-            AND client.token = #{clientToken}
-        </if>
-        <if test="deptId != null and deptId != '' ">
-            AND form.dept_id = #{deptId,jdbcType=VARCHAR}
-        </if>
+        AND client.token = #{clientToken}
+        AND form.dept_id = #{deptId,jdbcType=VARCHAR}
         AND form.is_active = 1
         AND section.is_active = 1
         AND question.is_active = 1
@@ -305,13 +341,9 @@
         WHERE section.form_id = form.id
         AND question.section_id = section.id
         And form.client = client.id
-        <if test="clientToken != null and clientToken != '' ">
-            AND client.token = #{clientToken}
-        </if>
-        <if test="marketId != null and marketId != '' ">
-            AND form.level = 'market'
-            AND form.market_id = #{marketId,jdbcType=VARCHAR}
-        </if>
+        AND client.token = #{clientToken}
+        AND form.level = 'market'
+        AND form.market_id = #{marketId,jdbcType=VARCHAR}
         AND form.is_active = 1
         AND section.is_active = 1
         AND question.is_active = 1
@@ -319,7 +351,7 @@
         ORDER BY form.id, question.section_id, question.sequence, question_option.sequence
     </select>
 
-    <select id="selectAllAnswersByKey" parameterType="java.lang.String" resultMap="AnswerResultMap">
+    <select id="selectAnswersByAnswerId" parameterType="java.lang.String" resultMap="AnswerResultMap">
         SELECT `answer`.`answer_id`,
             `answer`.`id`,
             `answer`.`form_id`,
@@ -342,6 +374,178 @@
         LEFT JOIN `iForms`.`customer`
         ON `customer`.`id` = `answer`.`customer_id`
         WHERE `answer`.`answer_id` = #{answerId};
+    </select>
+
+    <resultMap id="AnswerWithFormResultMap" type="com.microastudio.iforms.modules.form.dto.FormDto">
+        <id column="id" property="id"/>
+        <result column="super_form_id" property="superFormId" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="level" property="level" jdbcType="VARCHAR"/>
+        <result column="market_id" property="marketId" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR"/>
+        <result column="language" property="language" jdbcType="VARCHAR"/>
+        <result column="send_email" property="sendEmail" jdbcType="TINYINT"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="is_active" property="isActive" jdbcType="TINYINT"/>
+        <result column="include_section" property="includeSection" jdbcType="TINYINT"/>
+        <result column="created_date" property="createdDate" jdbcType="TIMESTAMP"/>
+        <result column="created_by" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP"/>
+        <result column="modified_by" property="modifiedBy" jdbcType="VARCHAR"/>
+        <result column="language_description" property="languageDescription" jdbcType="VARCHAR"/>
+        <collection property="sections" ofType="com.microastudio.iforms.modules.form.dto.SectionDto">
+            <id column="section.id" property="id"/>
+            <result column="section.form_id" property="formId"/>
+            <result column="section.title" property="title"/>
+            <result column="section.description" property="description"/>
+            <result column="section.sequence" property="sequence"/>
+            <collection property="questions" ofType="com.microastudio.iforms.modules.form.domain.Question">
+                <id column="question.id" property="id"/>
+                <result column="question.section_id" property="sectionId"/>
+                <result column="question.title" property="title"/>
+                <result column="question.subtitle" property="subtitle"/>
+                <result column="question.question_type_id" property="questionTypeId"/>
+                <result column="question.mandatory" property="mandatory"/>
+                <result column="question.sequence" property="sequence"/>
+                <collection property="questionOptions"
+                            ofType="com.microastudio.iforms.modules.form.domain.QuestionOption">
+                    <id column="question_option.id" property="id"/>
+                    <result column="question_option.question_id" property="questionId"/>
+                    <result column="question_option.description" property="description"/>
+                    <result column="question_option.sequence" property="sequence"/>
+                    <result column="question_option.total_value" property="totalValue"/>
+                    <result column="question_option.net_promoter_from" property="netPromoterFrom"/>
+                    <result column="question_option.net_promoter_to" property="netPromoterTo"/>
+                    <result column="question_option.is_active" property="isActive"/>
+                </collection>
+            </collection>
+        </collection>
+        <collection property="answers" ofType="com.microastudio.iforms.modules.form.domain.Answer">
+            <id column="answer.id" property="id"/>
+            <result column="answer.answer_id" property="answerId"/>
+            <result column="answer.form_id" property="formId"/>
+            <result column="answer.question_id" property="questionId"/>
+            <result column="answer.answer_description" property="answerDescription"/>
+            <result column="answer.answer_option_id" property="answerOptionId"/>
+            <result column="answer.answer_value" property="answerValue"/>
+            <result column="answer.total_value" property="totalValue"/>
+            <result column="answer.reference" property="reference"/>
+            <result column="answer.customer_id" property="customerId"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectAnswersWithFormByAnswerId" resultMap="AnswerWithFormResultMap">
+        SELECT form.*,
+        `section`.`id` as `section.id`,
+        `section`.`form_id` as `section.form_id`,
+        `section`.`title` as `section.title`,
+        `section`.`description` as `section.description`,
+        `section`.`sequence` as `section.sequence`,
+        `section`.`is_active` as `section.is_active`,
+        `question`.`id` as `question.id`,
+        `question`.`section_id` as `question.section_id`,
+        `question`.`title` as `question.title`,
+        `question`.`subtitle` as `question.subtitle`,
+        `question`.`question_type_id` as `question.question_type_id`,
+        `question`.`is_active` as `question.is_active`,
+        `question`.`mandatory` as `question.mandatory`,
+        `question`.`sequence` as `question.sequence`,
+        `question_option`.`id` as `question_option.id`,
+        `question_option`.`question_id` as `question_option.question_id`,
+        `question_option`.`description` as `question_option.description`,
+        `question_option`.`sequence` as `question_option.sequence`,
+        `question_option`.`total_value` as `question_option.total_value`,
+        `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
+        `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
+        `question_option`.`is_active` as `question_option.is_active`,
+        T1.description as `language_description`,
+        `answer`.`answer_id` as `answer.answer_id`,
+        `answer`.`id` as `answer.id`,
+        `answer`.`form_id` as `answer.form_id`,
+        `answer`.`question_id` as `answer.question_id`,
+        `answer`.`answer_description` as `answer.answer_description`,
+        `answer`.`answer_option_id` as `answer.answer_option_id`,
+        `answer`.`answer_value` as `answer.answer_value`,
+        `answer`.`total_value` as `answer.total_value`,
+        `answer`.`reference` as `answer.reference`,
+        `answer`.`customer_id` as `answer.customer_id`
+        FROM form
+        LEFT JOIN `language` T1 ON `form`.`language` = T1.`code`
+        INNER JOIN answer ON form.id = answer.form_id AND `answer`.`answer_id` = #{answerId},
+        section, client, question
+        LEFT JOIN question_option
+        ON (question.id = question_option.question_id AND question_option.is_active = 1)
+        WHERE section.form_id = form.id
+        AND question.section_id = section.id
+        AND form.is_active = 1
+        AND section.is_active = 1
+        AND question.is_active = 1
+        And client.is_active = 1
+        ORDER BY form.id, question.section_id, question.sequence, question_option.sequence, answer.id;
+    </select>
+
+    <select id="selectAnswers" resultMap="AnswerWithFormResultMap">
+        SELECT form.*,
+        `section`.`id` as `section.id`,
+        `section`.`form_id` as `section.form_id`,
+        `section`.`title` as `section.title`,
+        `section`.`description` as `section.description`,
+        `section`.`sequence` as `section.sequence`,
+        `section`.`is_active` as `section.is_active`,
+        `question`.`id` as `question.id`,
+        `question`.`section_id` as `question.section_id`,
+        `question`.`title` as `question.title`,
+        `question`.`subtitle` as `question.subtitle`,
+        `question`.`question_type_id` as `question.question_type_id`,
+        `question`.`is_active` as `question.is_active`,
+        `question`.`mandatory` as `question.mandatory`,
+        `question`.`sequence` as `question.sequence`,
+        `question_option`.`id` as `question_option.id`,
+        `question_option`.`question_id` as `question_option.question_id`,
+        `question_option`.`description` as `question_option.description`,
+        `question_option`.`sequence` as `question_option.sequence`,
+        `question_option`.`total_value` as `question_option.total_value`,
+        `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
+        `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
+        `question_option`.`is_active` as `question_option.is_active`,
+        T1.description as `language_description`,
+        `answer`.`answer_id` as `answer.answer_id`,
+        `answer`.`id` as `answer.id`,
+        `answer`.`form_id` as `answer.form_id`,
+        `answer`.`question_id` as `answer.question_id`,
+        `answer`.`answer_description` as `answer.answer_description`,
+        `answer`.`answer_option_id` as `answer.answer_option_id`,
+        `answer`.`answer_value` as `answer.answer_value`,
+        `answer`.`total_value` as `answer.total_value`,
+        `answer`.`reference` as `answer.reference`,
+        `answer`.`customer_id` as `answer.customer_id`
+        FROM form
+        LEFT JOIN `language` T1 ON `form`.`language` = T1.`code`
+        INNER JOIN answer ON form.id = answer.form_id
+        <if test="month != null and month != '' ">
+            AND date_format(answer.created_date,'%Y-%m') = #{month}
+        </if>
+        <if test="month == '' and from != null and from != '' ">
+            AND date_format(answer.created_date,'%Y-%m-%d') BETWEEN #{from} AND #{to}
+        </if>
+        ,section, client, question
+        LEFT JOIN question_option
+        ON (question.id = question_option.question_id AND question_option.is_active = 1)
+        WHERE section.form_id = form.id
+        AND question.section_id = section.id
+        And form.client = client.id
+        AND client.token = #{clientToken}
+        AND form.`market_id` = #{marketId}
+        AND (form.dept_id = #{deptId} OR (form.`level` = 'market' AND form.`dept_id` = ''))
+        <if test="formId != null and formId != '' ">
+            AND form.id = #{formId,jdbcType=VARCHAR}
+        </if>
+        AND form.is_active = 1
+        AND section.is_active = 1
+        AND question.is_active = 1
+        And client.is_active = 1
+        ORDER BY form.id, question.section_id, question.sequence, question_option.sequence, answer.id;
     </select>
 
     <insert id="insertQuestion" parameterType="com.microastudio.iforms.modules.form.domain.Question"

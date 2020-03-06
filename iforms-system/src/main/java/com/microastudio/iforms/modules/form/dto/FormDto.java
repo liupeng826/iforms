@@ -1,5 +1,6 @@
 package com.microastudio.iforms.modules.form.dto;
 
+import com.microastudio.iforms.modules.form.domain.Answer;
 import com.microastudio.iforms.modules.system.domain.Client;
 
 import java.io.Serializable;
@@ -34,7 +35,8 @@ public class FormDto implements Serializable {
     private Timestamp deadline;
 
     private byte includeSection;
-    List<SectionDto> sections;
+    private List<SectionDto> sections;
+    private List<Answer> answers;
 
     public String getSuperFormId() {
         return superFormId;
@@ -202,5 +204,13 @@ public class FormDto implements Serializable {
 
     public void setPublishStatus(byte publishStatus) {
         this.publishStatus = publishStatus;
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
     }
 }

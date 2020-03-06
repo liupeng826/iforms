@@ -42,13 +42,13 @@ public class DeptServiceImpl implements DeptService {
     @Override
     @Cacheable
     public List<DeptDto> queryAll(DeptQueryCriteria criteria) {
-        return toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
+        return deptMapper.toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
     }
 
     @Override
     @Cacheable
     public List<DeptDto> findAll() {
-        return toDto(deptRepository.findAll());
+        return deptMapper.toDto(deptRepository.findAll());
     }
 
     @Override
@@ -56,7 +56,7 @@ public class DeptServiceImpl implements DeptService {
     public DeptDto findById(String id) {
         Dept dept = deptRepository.findById(id).orElseGet(Dept::new);
         ValidationUtil.isNull(dept.getId(), "Dept", "id", id);
-        return toDto(dept);
+        return deptMapper.toDto(dept);
     }
 
 //    @Override
@@ -66,8 +66,8 @@ public class DeptServiceImpl implements DeptService {
 //    }
 
     @Override
-    public Dept findByIdAndIsActive(String marketId) {
-        return deptRepository.findByIdAndIsActive(marketId, Byte.valueOf("1"));
+    public Dept findByIdAndIsActive(String id) {
+        return deptRepository.findByIdAndIsActive(id, Byte.valueOf("1"));
     }
 
 //    @Override
@@ -124,7 +124,7 @@ public class DeptServiceImpl implements DeptService {
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public DeptDto create(Dept resources) {
-        return toDto(deptRepository.save(resources));
+        return deptMapper.toDto(deptRepository.save(resources));
     }
 
     @Override
@@ -173,62 +173,4 @@ public class DeptServiceImpl implements DeptService {
 //        }
 //        return deptDtos;
 //    }
-
-    public Dept toEntity(DeptDto dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        Dept dept = new Dept();
-
-        dept.setId(dto.getId());
-        dept.setName(dto.getName());
-        dept.setMarketId(dto.getMarketId());
-        dept.setIsActive(dto.getIsActive());
-        dept.setCreatedDate(dto.getCreatedDate());
-
-        return dept;
-    }
-
-    public DeptDto toDto(Dept entity) {
-        if (entity == null) {
-            return null;
-        }
-
-        DeptDto deptDto = new DeptDto();
-
-        deptDto.setId(entity.getId());
-        deptDto.setName(entity.getName());
-        deptDto.setIsActive(entity.getIsActive());
-        deptDto.setMarketId(entity.getMarketId());
-        deptDto.setCreatedDate(entity.getCreatedDate());
-
-        return deptDto;
-    }
-
-    public List<Dept> toEntity(List<DeptDto> dtoList) {
-        if (dtoList == null) {
-            return null;
-        }
-
-        List<Dept> list = new ArrayList<Dept>(dtoList.size());
-        for (DeptDto deptDto : dtoList) {
-            list.add(toEntity(deptDto));
-        }
-
-        return list;
-    }
-
-    public List<DeptDto> toDto(List<Dept> entityList) {
-        if (entityList == null) {
-            return null;
-        }
-
-        List<DeptDto> list = new ArrayList<DeptDto>(entityList.size());
-        for (Dept dept : entityList) {
-            list.add(toDto(dept));
-        }
-
-        return list;
-    }
 }

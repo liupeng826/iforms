@@ -10,7 +10,7 @@ import com.microastudio.iforms.modules.form.domain.Form;
 import com.microastudio.iforms.modules.form.domain.Language;
 import com.microastudio.iforms.modules.form.domain.QuestionType;
 import com.microastudio.iforms.modules.form.dto.AnswerDto;
-import com.microastudio.iforms.modules.form.dto.AnswerWithFormDto;
+import com.microastudio.iforms.modules.form.dto.AnswerRequestDto;
 import com.microastudio.iforms.modules.form.dto.FormDto;
 import com.microastudio.iforms.modules.form.dto.FormRequestDto;
 import com.microastudio.iforms.modules.form.service.FormService;
@@ -36,9 +36,8 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author peng
@@ -172,9 +171,8 @@ public class FormController {
     public ResultResponse getFormsByLevel(@RequestBody FormRequestDto dto) {
         logger.info("getFormsByLevel");
 
-        UserDto user = userService.findByName(SecurityUtils.getUsername());
-
         ResultResponse resultResponse = new ResultResponse();
+        UserDto user = userService.findByName(SecurityUtils.getUsername());
 
         try {
             if (dto == null
@@ -187,23 +185,17 @@ public class FormController {
             }
 
             // validateToken
-            if (dto.getClient() != null
-                    && !StringUtils.isEmpty(dto.getClient().getName())
-                    && !StringUtils.isEmpty(dto.getClient().getToken())) {
-                resultResponse = getClient(dto.getClient());
-                if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
-                    return resultResponse;
-                }
+            resultResponse = getClient(dto.getClient());
+            if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+                return resultResponse;
             }
 
             logger.info("getFormsByLevel 入参：" + JSONObject.toJSONString(dto));
             // get form
             String clientToken = dto.getClient().getToken();
-            clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
-
             String deptId = user.getDept().getId().toString();
             String marketId = user.getDept().getMarketId().toString();
-            List<FormDto> forms = formService.getFormsByDeptId(clientToken, deptId);
+            List<FormDto> forms = formService.getFormsByDeptAndMarket(clientToken, deptId, marketId);
 
             if (forms == null || forms.size() <= 0) {
                 forms = formService.getFormsByMarketId(clientToken, marketId);
@@ -219,9 +211,12 @@ public class FormController {
     }
 
     @PostMapping("/getForms")
-    public ResultResponse getForms(@RequestBody FormRequestDto dto) {
+    public ResultResponse getAllFormsByClient(@RequestBody FormRequestDto dto) {
         logger.info("getForms");
         ResultResponse resultResponse = new ResultResponse();
+
+        // SuperFormId为空,必须要验证client token,取所有数据
+        // SuperFormId不为空,不验证client token,只取一个form的数据
         try {
             if (dto == null || (StringUtils.isEmpty(dto.getSuperFormId())
                     && (dto.getClient() == null
@@ -346,7 +341,7 @@ public class FormController {
             }
 
             logger.info("getAnswer入参：" + answerId);
-            List<Answer> answers = formService.getAllAnswers("", answerId);
+            List<Answer> answers = formService.getAnswersByAnswerId("", answerId);
 
             resultResponse.ok(answers);
         } catch (Exception e) {
@@ -357,7 +352,7 @@ public class FormController {
         return resultResponse;
     }
 
-    @ApiOperation("免授权：获取单个反馈和问卷")
+    @ApiOperation("免授权：获取单个反馈和其问卷")
     @GetMapping("/answersWithForm")
     public ResultResponse getAnswersWithForm(@RequestParam String answerId) {
         logger.info("getAnswersWithForm 入参：" + answerId);
@@ -370,17 +365,8 @@ public class FormController {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
 
-            List<Answer> answers = formService.getAllAnswers("", answerId);
-            if (answers != null && answers.size() > 0) {
-                Long id = answers.get(0).getFormId();
-
-                // get form
-                FormDto form = formService.getForm("", id.toString());
-
-                if (form != null) {
-                    resultResponse.ok(new AnswerWithFormDto(form, answers));
-                }
-            }
+            FormDto form = formService.getAnswersWithFormByAnswerId("", answerId);
+            resultResponse.ok(form);
         } catch (Exception e) {
             logger.error("getAnswersWithForm 异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
@@ -390,90 +376,70 @@ public class FormController {
         return resultResponse;
     }
 
-//    @GetMapping("/answers")
-//    public ResultResponse getAllAnswers(@RequestBody FormRequestDto dto) {
-//        logger.info("geAnswers");
-//        UserDto user = userService.findByName(SecurityUtils.getUsername());
-//
-//        ResultResponse resultResponse = new ResultResponse();
-//
-//        try {
-//            if (dto == null
-//                    || dto.getClient() == null
-//                    || StringUtils.isEmpty(dto.getClient().getName())
-//                    || StringUtils.isEmpty(dto.getClient().getToken())
-//                    || user == null
-//                    || user.getDept() == null) {
-//                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
-//            }
-//
-//            // validateToken
-//            if (dto.getClient() != null
-//                    && !StringUtils.isEmpty(dto.getClient().getName())
-//                    && !StringUtils.isEmpty(dto.getClient().getToken())) {
-//                resultResponse = getClient(dto.getClient());
-//                if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
-//                    return resultResponse;
-//                }
-//            }
-//
-//            logger.info("getFormsByLevel 入参：" + JSONObject.toJSONString(dto));
-//            // get form
-//            String clientToken = dto.getClient().getToken();
-//            clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
-//
-//            String deptId = user.getDept().getId().toString();
-//            String marketId = user.getDept().getMarketId().toString();
-//            List<FormDto> forms = formService.getFormsByDeptId(clientToken, deptId);
-//
-//            if (forms == null || forms.size() <= 0) {
-//                forms = formService.getFormsByMarketId(clientToken, marketId);
-//            }
-//
-//            resultResponse.ok(forms);
-//
-//
-//
-//
-//
-//
-//
-//
-//        ResultResponse resultResponse = new ResultResponse();
-//        try {
-//            if (dto == null || (StringUtils.isEmpty(dto.getSuperFormId())
-//                    && (dto.getClient() == null
-//                    || StringUtils.isEmpty(dto.getClient().getName())
-//                    || StringUtils.isEmpty(dto.getClient().getToken())))) {
-//                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
-//            }
-//
-//            // validateToken
-//            if (dto.getClient() != null
-//                    && !StringUtils.isEmpty(dto.getClient().getName())
-//                    && !StringUtils.isEmpty(dto.getClient().getToken())) {
-//
-//                resultResponse = getClient(dto.getClient());
-//                if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
-//                    return resultResponse;
-//                }
-//            }
-//
-//            logger.info("getAllAnswers入参：" + JSONObject.toJSONString(dto));
-//            // get AllAnswers
-//            String clientToken = dto.getClient().getToken();
-//            clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
-//
-//            List<FormDto> forms = formService.getAllForms(clientToken, dto.getSuperFormId());
-//
-//            resultResponse.ok(forms);
-//        } catch (Exception e) {
-//            logger.error("getAllAnswers异常：" + e.getMessage(), e);
-//            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
-//            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
-//        }
-//        return resultResponse;
-//    }
+    @ApiOperation("统计：获取反馈和其问卷")
+    @PostMapping("/answersForMarket")
+    public ResultResponse getAnswersForMarket(@RequestBody AnswerRequestDto dto) {
+        logger.info("get answers For Market");
+        ResultResponse resultResponse = new ResultResponse();
+
+        UserDto user = userService.findByName(SecurityUtils.getUsername());
+        String userMarketId = user.getDept().getMarketId();
+
+        // FormId为空，取所有数据
+        if (dto == null
+                || (dto.getMonth() != null && (dto.getMonth() < 1 || dto.getMonth() > 12))
+                || dto.getClient() == null
+                || StringUtils.isEmpty(dto.getClient().getName())
+                || StringUtils.isEmpty(dto.getClient().getToken())) {
+            return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+        }
+
+        // validateToken
+        resultResponse = getClient(dto.getClient());
+        if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+            return resultResponse;
+        }
+
+        // super admin: get all
+        // admin: get market level
+        try {
+            if (user == null || user.getRole() > RoleEnum.ADMIN.getValue()
+                    || (user.getRole() == RoleEnum.ADMIN.getValue() && !userMarketId.equals(dto.getMarketId()))) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_SYSTEM, CommonConstants.ERRORS_CODE_SYSTEM);
+            }
+
+            String clientToken = dto.getClient().getToken();
+            clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
+            String yearMonth = "";
+            String from = "";
+            String to = "";
+            if (dto.getMonth() != null && dto.getMonth() > 0) {
+                yearMonth = String.valueOf(Calendar.getInstance().get(Calendar.YEAR)) + "-" + String.format("%2d", dto.getMonth()).replace(" ", "0");
+            }
+            if (dto.getFrom() != null && dto.getTo() != null) {
+                from = new SimpleDateFormat("yyyy-MM-dd").format(dto.getFrom());
+                to = new SimpleDateFormat("yyyy-MM-dd").format(dto.getTo());
+            }
+
+            if (StringUtils.isEmpty(yearMonth) && StringUtils.isEmpty(from) && StringUtils.isEmpty(to)) {
+                to = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+                Calendar c = Calendar.getInstance();
+                c.setTime(new Date());
+                c.add(Calendar.YEAR, -1);
+                from = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+            }
+            List<FormDto> answers = formService.getAnswers(clientToken, dto.getFormId(), userMarketId, dto.getDealerId(), yearMonth, from, to);
+            resultResponse.ok(answers);
+
+        } catch (Exception e) {
+            logger.error("getAllAnswers异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+
+        return resultResponse;
+    }
 
     @GetMapping("/questionType")
     public ResultResponse getQuestionType() {

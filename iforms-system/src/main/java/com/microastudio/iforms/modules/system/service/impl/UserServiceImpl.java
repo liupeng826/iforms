@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         List<User> users = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder));
         List<UserDto> userDtos = new ArrayList<>();
         for (User user : users) {
-            userDtos.add(toDto(user));
+            userDtos.add(userMapper.toDto(user));
         }
         return userDtos;
     }
@@ -67,14 +67,14 @@ public class UserServiceImpl implements UserService {
     public UserDto findById(long id) {
         User user = userRepository.findById(id).orElseGet(User::new);
         ValidationUtil.isNull(user.getId(), "User", "id", id);
-        return toDto(user);
+        return userMapper.toDto(user);
     }
 
     @Override
     public UserDto findByUserName(String name) {
         User user = userRepository.findByUserName(name);
         //ValidationUtil.isNull(user.getId(), "User", "name", name);
-        return toDto(user);
+        return userMapper.toDto(user);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
     public User createUserAndDept(UserDto resources) {
         Dept dept = deptRepository.save(resources.getDept());
 //        resources.setDeptId(dept.getId());
-        return userRepository.save(toEntity(resources));
+        return userRepository.save(userMapper.toEntity(resources));
     }
 
     //    @Override
@@ -170,7 +170,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new EntityNotFoundException(User.class, "name", username);
         } else {
-            return toDto(user);
+            return userMapper.toDto(user);
         }
     }
 
@@ -228,84 +228,4 @@ public class UserServiceImpl implements UserService {
 //        }
 //        FileUtil.downloadExcel(list, response);
 //    }
-
-    public User toEntity(UserDto dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        User user = new User();
-
-        user.setId(dto.getId());
-        user.setUserName(dto.getUserName());
-        user.setNickName(dto.getNickName());
-        user.setSex(dto.getSex());
-        user.setRole(dto.getRole());
-        user.setEmail(dto.getEmail());
-        user.setPhone(dto.getPhone());
-        user.setJobId(dto.getJobId());
-        user.setIsActive(dto.getIsActive());
-        user.setPassword(dto.getPassword());
-        user.setClient(dto.getClient());
-        user.setDept(dto.getDept());
-        user.setCreatedBy(dto.getCreatedBy());
-        user.setCreatedDate(dto.getCreatedDate());
-        user.setModifiedBy(dto.getModifiedBy());
-        user.setModifiedDate(dto.getModifiedDate());
-
-        return user;
-    }
-
-    public List<User> toEntity(List<UserDto> dtoList) {
-        if (dtoList == null) {
-            return null;
-        }
-
-        List<User> list = new ArrayList<User>(dtoList.size());
-        for (UserDto userDto : dtoList) {
-            list.add(toEntity(userDto));
-        }
-
-        return list;
-    }
-
-    public List<UserDto> toDto(List<User> entityList) {
-        if (entityList == null) {
-            return null;
-        }
-
-        List<UserDto> list = new ArrayList<UserDto>(entityList.size());
-        for (User user : entityList) {
-            list.add(toDto(user));
-        }
-
-        return list;
-    }
-
-    public UserDto toDto(User user) {
-        if (user == null) {
-            return null;
-        }
-
-        UserDto userDto = new UserDto();
-
-        userDto.setId(user.getId());
-        userDto.setUserName(user.getUserName());
-        userDto.setNickName(user.getNickName());
-        userDto.setSex(user.getSex());
-        userDto.setRole(user.getRole());
-        userDto.setEmail(user.getEmail());
-        userDto.setPhone(user.getPhone());
-        userDto.setJobId(user.getJobId());
-        userDto.setClient(user.getClient());
-        userDto.setDept(user.getDept());
-        userDto.setIsActive(user.getIsActive());
-        userDto.setPassword(user.getPassword());
-        userDto.setCreatedBy(user.getCreatedBy());
-        userDto.setCreatedDate(user.getCreatedDate());
-        userDto.setModifiedBy(user.getModifiedBy());
-        userDto.setModifiedDate(user.getModifiedDate());
-
-        return userDto;
-    }
 }

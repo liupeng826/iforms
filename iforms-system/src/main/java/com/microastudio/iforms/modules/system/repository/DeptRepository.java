@@ -20,7 +20,7 @@ public interface DeptRepository extends JpaRepository<Dept, String>, JpaSpecific
 //     */
 //    List<Dept> findByPid(Long id);
 
-    Dept findByIdAndIsActive(String marketId, byte isActive);
+    Dept findByIdAndIsActive(String id, byte isActive);
 
     /**
      * 根据ID查询名称

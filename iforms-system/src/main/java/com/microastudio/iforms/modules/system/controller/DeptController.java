@@ -37,7 +37,7 @@ public class DeptController {
     }
 
     //    @Log("查询部门")
-    @ApiOperation("查询部门是否存在")
+    @ApiOperation("免授权：查询部门是否不存在")
     @GetMapping("/checkDeptById")
     public ResultResponse<Object> checkDeptById(String id) {
 

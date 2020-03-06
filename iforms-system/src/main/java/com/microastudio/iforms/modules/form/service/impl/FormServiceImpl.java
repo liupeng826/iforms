@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -175,6 +176,11 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
+    public List<FormDto> getFormsByDeptAndMarket(String clientToken, String deptId, String marketId) {
+        return formMapper.selectAllFormsByDeptAndMarket(clientToken, deptId, marketId);
+    }
+
+    @Override
     public List<FormDto> getFormsByDeptId(String clientToken, String deptId) {
         return formMapper.selectAllFormsByDept(clientToken, deptId);
     }
@@ -185,8 +191,18 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<Answer> getAllAnswers(String clientToken, String answerId) {
-        return formMapper.selectAllAnswersByKey(clientToken, answerId);
+    public List<Answer> getAnswersByAnswerId(String clientToken, String answerId) {
+        return formMapper.selectAnswersByAnswerId(clientToken, answerId);
+    }
+
+    @Override
+    public List<FormDto> getAnswers(String clientToken, Integer formId, String marketId, String deptId, String month, String from, String to) {
+        return formMapper.selectAnswers(clientToken, formId, marketId, deptId, month, from, to);
+    }
+
+    @Override
+    public FormDto getAnswersWithFormByAnswerId(String clientToken, String answerId) {
+        return formMapper.selectAnswersWithFormByAnswerId(clientToken, answerId);
     }
 
     @Override

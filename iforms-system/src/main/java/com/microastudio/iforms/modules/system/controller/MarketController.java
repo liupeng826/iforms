@@ -23,7 +23,7 @@ public class MarketController {
     }
 
     //        @Log("查询用户")
-    @ApiOperation("查询所有激活市场")
+    @ApiOperation("免授权：查询所有激活市场")
     @GetMapping(value = "/allActive")
     public ResultResponse<Object> getMarkets() {
         Object data = marketService.findAllActive(Byte.valueOf("1"));
