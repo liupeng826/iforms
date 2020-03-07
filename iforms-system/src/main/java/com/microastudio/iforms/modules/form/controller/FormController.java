@@ -1,5 +1,6 @@
 package com.microastudio.iforms.modules.form.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.bean.ResultResponse;
@@ -36,7 +37,6 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -193,8 +193,8 @@ public class FormController {
             logger.info("getFormsByLevel 入参：" + JSONObject.toJSONString(dto));
             // get form
             String clientToken = dto.getClient().getToken();
-            String deptId = user.getDept().getId().toString();
-            String marketId = user.getDept().getMarketId().toString();
+            String deptId = user.getDept().getId();
+            String marketId = user.getDept().getMarketId();
             List<FormDto> forms = formService.getFormsByDeptAndMarket(clientToken, deptId, marketId);
 
             if (forms == null || forms.size() <= 0) {
@@ -376,7 +376,7 @@ public class FormController {
         return resultResponse;
     }
 
-    @ApiOperation("统计：获取反馈和其问卷")
+    @ApiOperation("统计：获取反馈和其问卷(month不为空则优先查询)")
     @PostMapping("/answersForMarket")
     public ResultResponse getAnswersForMarket(@RequestBody AnswerRequestDto dto) {
         logger.info("get answers For Market");
@@ -413,21 +413,19 @@ public class FormController {
             String yearMonth = "";
             String from = "";
             String to = "";
+            Date date = DateUtil.date();
+
             if (dto.getMonth() != null && dto.getMonth() > 0) {
-                yearMonth = String.valueOf(Calendar.getInstance().get(Calendar.YEAR)) + "-" + String.format("%2d", dto.getMonth()).replace(" ", "0");
+                yearMonth = DateUtil.year(date) + "-" + String.format("%2d", dto.getMonth()).replace(" ", "0");
             }
             if (dto.getFrom() != null && dto.getTo() != null) {
-                from = new SimpleDateFormat("yyyy-MM-dd").format(dto.getFrom());
-                to = new SimpleDateFormat("yyyy-MM-dd").format(dto.getTo());
+                from = DateUtil.format(dto.getFrom(), "yyyy-MM-dd");
+                to = DateUtil.format(dto.getTo(), "yyyy-MM-dd");
             }
 
             if (StringUtils.isEmpty(yearMonth) && StringUtils.isEmpty(from) && StringUtils.isEmpty(to)) {
-                to = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.YEAR, -1);
-                from = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+                to = DateUtil.format(date, "yyyy-MM-dd");
+                from = DateUtil.format(DateUtil.offsetMonth(date, -12), "yyyy-MM-dd");
             }
             List<FormDto> answers = formService.getAnswers(clientToken, dto.getFormId(), userMarketId, dto.getDealerId(), yearMonth, from, to);
             resultResponse.ok(answers);
