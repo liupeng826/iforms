@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Api(tags = "User")
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     @Value("${rsa.private_key}")

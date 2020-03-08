@@ -45,7 +45,7 @@ import java.util.*;
  */
 @Api(tags = "Form")
 @RestController
-@RequestMapping("/api/form")
+@RequestMapping("/api/v1/form")
 public class FormController {
     private final static Logger logger = LoggerFactory.getLogger(FormController.class);
 

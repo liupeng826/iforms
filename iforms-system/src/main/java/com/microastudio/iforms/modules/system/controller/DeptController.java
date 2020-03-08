@@ -25,7 +25,7 @@ import java.util.Set;
  */
 @RestController
 @Api(tags = "Dept")
-@RequestMapping("/api/dept")
+@RequestMapping("/api/v1/dept")
 public class DeptController {
 
     private final DeptService deptService;

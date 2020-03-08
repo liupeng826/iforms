@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 @Api(tags = "Auth")
 public class AuthController {
 

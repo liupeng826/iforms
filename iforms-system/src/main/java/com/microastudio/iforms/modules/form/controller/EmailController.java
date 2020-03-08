@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Api(tags = "Email")
 @RestController
-@RequestMapping("/api/email")
+@RequestMapping("/api/v1/email")
 public class EmailController {
     private final static Logger logger = LoggerFactory.getLogger(EmailController.class);
 

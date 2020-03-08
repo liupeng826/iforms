@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(tags = "Market")
 @RestController
-@RequestMapping("/api/market")
+@RequestMapping("/api/v1/market")
 public class MarketController {
 
     private final MarketService marketService;
