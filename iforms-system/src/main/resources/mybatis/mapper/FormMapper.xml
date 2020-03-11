@@ -370,8 +370,8 @@
             `customer`.`name`,
             `customer`.`email`,
             `customer`.`contact_no`
-        FROM `iForms`.`answer`
-        LEFT JOIN `iForms`.`customer`
+        FROM `answer`
+        LEFT JOIN `customer`
         ON `customer`.`id` = `answer`.`customer_id`
         WHERE `answer`.`answer_id` = #{answerId};
     </select>
@@ -459,7 +459,7 @@
         `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
         `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
         `question_option`.`is_active` as `question_option.is_active`,
-        T1.description as `language_description`,
+         T1.description as `language_description`,
         `answer`.`answer_id` as `answer.answer_id`,
         `answer`.`id` as `answer.id`,
         `answer`.`form_id` as `answer.form_id`,
@@ -474,13 +474,9 @@
         LEFT JOIN `language` T1 ON `form`.`language` = T1.`code`
         INNER JOIN answer ON form.id = answer.form_id AND `answer`.`answer_id` = #{answerId},
         section, client, question
-        LEFT JOIN question_option
-        ON (question.id = question_option.question_id AND question_option.is_active = 1)
+        LEFT JOIN question_option ON question.id = question_option.question_id
         WHERE section.form_id = form.id
         AND question.section_id = section.id
-        AND form.is_active = 1
-        AND section.is_active = 1
-        AND question.is_active = 1
         And client.is_active = 1
         ORDER BY form.id, question.section_id, question.sequence, question_option.sequence, answer.id;
     </select>
@@ -509,7 +505,7 @@
         `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
         `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
         `question_option`.`is_active` as `question_option.is_active`,
-        T1.description as `language_description`,
+         T1.description as `language_description`,
         `answer`.`answer_id` as `answer.answer_id`,
         `answer`.`id` as `answer.id`,
         `answer`.`form_id` as `answer.form_id`,
@@ -530,8 +526,7 @@
             AND date_format(answer.created_date,'%Y-%m-%d') BETWEEN #{from} AND #{to}
         </if>
         ,section, client, question
-        LEFT JOIN question_option
-        ON (question.id = question_option.question_id AND question_option.is_active = 1)
+        LEFT JOIN question_option ON question.id = question_option.question_id
         WHERE section.form_id = form.id
         AND question.section_id = section.id
         And form.client = client.id
@@ -541,9 +536,6 @@
         <if test="formId != null and formId != '' ">
             AND form.id = #{formId,jdbcType=VARCHAR}
         </if>
-        AND form.is_active = 1
-        AND section.is_active = 1
-        AND question.is_active = 1
         And client.is_active = 1
         ORDER BY form.id, question.section_id, question.sequence, question_option.sequence, answer.id;
     </select>
