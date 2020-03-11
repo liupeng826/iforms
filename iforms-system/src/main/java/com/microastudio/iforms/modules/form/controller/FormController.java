@@ -103,6 +103,7 @@ public class FormController {
                 return resultResponse;
             }
 
+            formParam.getClient().setId(Long.valueOf((String) resultResponse.getData()));
             // generate form
             Form form = formService.generateForm(formParam);
 

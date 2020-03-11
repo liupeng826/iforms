@@ -13,7 +13,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -75,7 +74,7 @@ public class FormServiceImpl implements FormService {
         form.setLevel(formDto.getLevel());
         form.setMarketId(formDto.getMarketId());
         form.setDeptId(formDto.getDeptId());
-        form.setClient(formDto.getClient().getToken());
+        form.setClient(formDto.getClient().getId().toString());
         form.setSendEmail(formDto.getSendEmail());
         form.setType(formDto.getType());
         form.setCreatedBy(formDto.getCreatedBy());
