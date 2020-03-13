@@ -10,6 +10,7 @@ public class QuestionOption implements Serializable {
     private static final long serialVersionUID = 948689731410646125L;
 
     private Long id;
+    private String superOptionId;
     private Long questionId;
     private String description;
     private int sequence;
@@ -25,6 +26,14 @@ public class QuestionOption implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getSuperOptionId() {
+        return superOptionId;
+    }
+
+    public void setSuperOptionId(String superOptionId) {
+        this.superOptionId = superOptionId;
     }
 
     public Long getQuestionId() {

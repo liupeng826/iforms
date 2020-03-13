@@ -35,12 +35,14 @@
         <result column="language_description" property="languageDescription" jdbcType="VARCHAR"/>
         <collection property="sections" ofType="com.microastudio.iforms.modules.form.dto.SectionDto">
             <id column="section.id" property="id"/>
+            <result column="section.super_section_id" property="superSectionId" jdbcType="VARCHAR"/>
             <result column="section.form_id" property="formId"/>
             <result column="section.title" property="title"/>
             <result column="section.description" property="description"/>
             <result column="section.sequence" property="sequence"/>
             <collection property="questions" ofType="com.microastudio.iforms.modules.form.domain.Question">
                 <id column="question.id" property="id"/>
+                <result column="question.super_question_id" property="superQuestionId" jdbcType="VARCHAR"/>
                 <result column="question.section_id" property="sectionId"/>
                 <result column="question.title" property="title"/>
                 <result column="question.subtitle" property="subtitle"/>
@@ -50,6 +52,7 @@
                 <collection property="questionOptions"
                             ofType="com.microastudio.iforms.modules.form.domain.QuestionOption">
                     <id column="question_option.id" property="id"/>
+                    <result column="question_option.super_option_id" property="superOptionId" jdbcType="VARCHAR"/>
                     <result column="question_option.question_id" property="questionId"/>
                     <result column="question_option.description" property="description"/>
                     <result column="question_option.sequence" property="sequence"/>
@@ -100,12 +103,14 @@
     <select id="selectFormById" parameterType="java.lang.String" resultMap="FormResultMap">
         SELECT form.*,
         `section`.`id` as `section.id`,
+        `section`.`super_section_id` as `section.super_section_id`,
         `section`.`form_id` as `section.form_id`,
         `section`.`title` as `section.title`,
         `section`.`description` as `section.description`,
         `section`.`sequence` as `section.sequence`,
         `section`.`is_active` as `section.is_active`,
         `question`.`id` as `question.id`,
+        `question`.`super_question_id` as `question.super_question_id`,
         `question`.`section_id` as `question.section_id`,
         `question`.`title` as `question.title`,
         `question`.`subtitle` as `question.subtitle`,
@@ -114,6 +119,7 @@
         `question`.`mandatory` as `question.mandatory`,
         `question`.`sequence` as `question.sequence`,
         `question_option`.`id` as `question_option.id`,
+        `question_option`.`super_option_id` as `question_option.super_option_id`,
         `question_option`.`question_id` as `question_option.question_id`,
         `question_option`.`description` as `question_option.description`,
         `question_option`.`sequence` as `question_option.sequence`,
@@ -143,12 +149,14 @@
     <select id="selectAllFormsByKey" parameterType="java.lang.String" resultMap="FormResultMap">
         SELECT form.*,
         `section`.`id` as `section.id`,
+        `section`.`super_section_id` as `section.super_section_id`,
         `section`.`form_id` as `section.form_id`,
         `section`.`title` as `section.title`,
         `section`.`description` as `section.description`,
         `section`.`sequence` as `section.sequence`,
         `section`.`is_active` as `section.is_active`,
         `question`.`id` as `question.id`,
+        `question`.`super_question_id` as `question.super_question_id`,
         `question`.`section_id` as `question.section_id`,
         `question`.`title` as `question.title`,
         `question`.`subtitle` as `question.subtitle`,
@@ -157,6 +165,7 @@
         `question`.`mandatory` as `question.mandatory`,
         `question`.`sequence` as `question.sequence`,
         `question_option`.`id` as `question_option.id`,
+        `question_option`.`super_option_id` as `question_option.super_option_id`,
         `question_option`.`question_id` as `question_option.question_id`,
         `question_option`.`description` as `question_option.description`,
         `question_option`.`sequence` as `question_option.sequence`,
@@ -186,12 +195,14 @@
     <select id="selectAllFormsByDeptAndMarket" parameterType="java.lang.String" resultMap="FormResultMap">
         SELECT form.*,
         `section`.`id` as `section.id`,
+        `section`.`super_section_id` as `section.super_section_id`,
         `section`.`form_id` as `section.form_id`,
         `section`.`title` as `section.title`,
         `section`.`description` as `section.description`,
         `section`.`sequence` as `section.sequence`,
         `section`.`is_active` as `section.is_active`,
         `question`.`id` as `question.id`,
+        `question`.`super_question_id` as `question.super_question_id`,
         `question`.`section_id` as `question.section_id`,
         `question`.`title` as `question.title`,
         `question`.`subtitle` as `question.subtitle`,
@@ -200,6 +211,7 @@
         `question`.`mandatory` as `question.mandatory`,
         `question`.`sequence` as `question.sequence`,
         `question_option`.`id` as `question_option.id`,
+        `question_option`.`super_option_id` as `question_option.super_option_id`,
         `question_option`.`question_id` as `question_option.question_id`,
         `question_option`.`description` as `question_option.description`,
         `question_option`.`sequence` as `question_option.sequence`,
@@ -228,12 +240,14 @@
     <select id="selectAllFormsByUserId" parameterType="java.lang.String" resultMap="FormResultMap">
         SELECT form.*,
         `section`.`id` as `section.id`,
+        `section`.`super_section_id` as `section.super_section_id`,
         `section`.`form_id` as `section.form_id`,
         `section`.`title` as `section.title`,
         `section`.`description` as `section.description`,
         `section`.`sequence` as `section.sequence`,
         `section`.`is_active` as `section.is_active`,
         `question`.`id` as `question.id`,
+        `question`.`super_question_id` as `question.super_question_id`,
         `question`.`section_id` as `question.section_id`,
         `question`.`title` as `question.title`,
         `question`.`subtitle` as `question.subtitle`,
@@ -242,6 +256,7 @@
         `question`.`mandatory` as `question.mandatory`,
         `question`.`sequence` as `question.sequence`,
         `question_option`.`id` as `question_option.id`,
+        `question_option`.`super_option_id` as `question_option.super_option_id`,
         `question_option`.`question_id` as `question_option.question_id`,
         `question_option`.`description` as `question_option.description`,
         `question_option`.`sequence` as `question_option.sequence`,
@@ -271,12 +286,14 @@
     <select id="selectAllFormsByDept" parameterType="java.lang.String" resultMap="FormResultMap">
         SELECT form.*,
         `section`.`id` as `section.id`,
+        `section`.`super_section_id` as `section.super_section_id`,
         `section`.`form_id` as `section.form_id`,
         `section`.`title` as `section.title`,
         `section`.`description` as `section.description`,
         `section`.`sequence` as `section.sequence`,
         `section`.`is_active` as `section.is_active`,
         `question`.`id` as `question.id`,
+        `question`.`super_question_id` as `question.super_question_id`,
         `question`.`section_id` as `question.section_id`,
         `question`.`title` as `question.title`,
         `question`.`subtitle` as `question.subtitle`,
@@ -285,6 +302,7 @@
         `question`.`mandatory` as `question.mandatory`,
         `question`.`sequence` as `question.sequence`,
         `question_option`.`id` as `question_option.id`,
+        `question_option`.`super_option_id` as `question_option.super_option_id`,
         `question_option`.`question_id` as `question_option.question_id`,
         `question_option`.`description` as `question_option.description`,
         `question_option`.`sequence` as `question_option.sequence`,
@@ -312,12 +330,14 @@
     <select id="selectAllFormsByMarket" parameterType="java.lang.String" resultMap="FormResultMap">
         SELECT form.*,
         `section`.`id` as `section.id`,
+        `section`.`super_section_id` as `section.super_section_id`,
         `section`.`form_id` as `section.form_id`,
         `section`.`title` as `section.title`,
         `section`.`description` as `section.description`,
         `section`.`sequence` as `section.sequence`,
         `section`.`is_active` as `section.is_active`,
         `question`.`id` as `question.id`,
+        `question`.`super_question_id` as `question.super_question_id`,
         `question`.`section_id` as `question.section_id`,
         `question`.`title` as `question.title`,
         `question`.`subtitle` as `question.subtitle`,
@@ -326,6 +346,7 @@
         `question`.`mandatory` as `question.mandatory`,
         `question`.`sequence` as `question.sequence`,
         `question_option`.`id` as `question_option.id`,
+        `question_option`.`super_option_id` as `question_option.super_option_id`,
         `question_option`.`question_id` as `question_option.question_id`,
         `question_option`.`description` as `question_option.description`,
         `question_option`.`sequence` as `question_option.sequence`,
@@ -396,12 +417,14 @@
         <result column="language_description" property="languageDescription" jdbcType="VARCHAR"/>
         <collection property="sections" ofType="com.microastudio.iforms.modules.form.dto.SectionDto">
             <id column="section.id" property="id"/>
+            <result column="section.super_section_id" property="superSectionId" jdbcType="VARCHAR"/>
             <result column="section.form_id" property="formId"/>
             <result column="section.title" property="title"/>
             <result column="section.description" property="description"/>
             <result column="section.sequence" property="sequence"/>
             <collection property="questions" ofType="com.microastudio.iforms.modules.form.domain.Question">
                 <id column="question.id" property="id"/>
+                <result column="question.super_question_id" property="superQuestionId" jdbcType="VARCHAR"/>
                 <result column="question.section_id" property="sectionId"/>
                 <result column="question.title" property="title"/>
                 <result column="question.subtitle" property="subtitle"/>
@@ -411,6 +434,7 @@
                 <collection property="questionOptions"
                             ofType="com.microastudio.iforms.modules.form.domain.QuestionOption">
                     <id column="question_option.id" property="id"/>
+                    <result column="question_option.super_option_id" property="superOptionId" jdbcType="VARCHAR"/>
                     <result column="question_option.question_id" property="questionId"/>
                     <result column="question_option.description" property="description"/>
                     <result column="question_option.sequence" property="sequence"/>
@@ -438,12 +462,14 @@
     <select id="selectAnswersWithFormByAnswerId" resultMap="AnswerWithFormResultMap">
         SELECT form.*,
         `section`.`id` as `section.id`,
+        `section`.`super_section_id` as `section.super_section_id`,
         `section`.`form_id` as `section.form_id`,
         `section`.`title` as `section.title`,
         `section`.`description` as `section.description`,
         `section`.`sequence` as `section.sequence`,
         `section`.`is_active` as `section.is_active`,
         `question`.`id` as `question.id`,
+        `question`.`super_question_id` as `question.super_question_id`,
         `question`.`section_id` as `question.section_id`,
         `question`.`title` as `question.title`,
         `question`.`subtitle` as `question.subtitle`,
@@ -452,6 +478,7 @@
         `question`.`mandatory` as `question.mandatory`,
         `question`.`sequence` as `question.sequence`,
         `question_option`.`id` as `question_option.id`,
+        `question_option`.`super_option_id` as `question_option.super_option_id`,
         `question_option`.`question_id` as `question_option.question_id`,
         `question_option`.`description` as `question_option.description`,
         `question_option`.`sequence` as `question_option.sequence`,
@@ -484,12 +511,14 @@
     <select id="selectAnswers" resultMap="AnswerWithFormResultMap">
         SELECT form.*,
         `section`.`id` as `section.id`,
+        `section`.`super_section_id` as `section.super_section_id`,
         `section`.`form_id` as `section.form_id`,
         `section`.`title` as `section.title`,
         `section`.`description` as `section.description`,
         `section`.`sequence` as `section.sequence`,
         `section`.`is_active` as `section.is_active`,
         `question`.`id` as `question.id`,
+        `question`.`super_question_id` as `question.super_question_id`,
         `question`.`section_id` as `question.section_id`,
         `question`.`title` as `question.title`,
         `question`.`subtitle` as `question.subtitle`,
@@ -498,6 +527,7 @@
         `question`.`mandatory` as `question.mandatory`,
         `question`.`sequence` as `question.sequence`,
         `question_option`.`id` as `question_option.id`,
+        `question_option`.`super_option_id` as `question_option.super_option_id`,
         `question_option`.`question_id` as `question_option.question_id`,
         `question_option`.`description` as `question_option.description`,
         `question_option`.`sequence` as `question_option.sequence`,
@@ -641,7 +671,8 @@
             useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `question`
-        (`section_id`,
+        (`super_question_id`,
+        `section_id`,
         `title`,
         `subtitle`,
         `question_type_id`,
@@ -653,7 +684,8 @@
         `mandatory`,
         `sequence`)
         VALUES
-        (#{sectionId},
+        (#{superQuestionId},
+        #{sectionId},
         #{title},
         #{subtitle},
         #{questionTypeId},
@@ -670,7 +702,8 @@
             useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `question_option`
-        (`question_id`,
+        (`super_option_id`,
+        `question_id`,
         `description`,
         `sequence`,
         `total_value`,
@@ -678,7 +711,8 @@
         `net_promoter_to`,
         `language`)
         VALUES
-        (#{questionId},
+        (#{superOptionId},
+        #{questionId},
         #{description},
         #{sequence},
         #{totalValue},
@@ -691,12 +725,14 @@
             useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO `section`
-        (`form_id`,
+        (`super_section_id`,
+        `form_id`,
         `title`,
         `description`,
         `sequence`)
         VALUES
-        (#{formId},
+        (#{superSectionId},
+        #{formId},
         #{title},
         #{description},
         #{sequence})
@@ -739,25 +775,13 @@
         #{includeSection})
     </insert>
 
-    <!--    <insert id="insertFormQuestionMapping" parameterType="com.microastudio.modules.iforms.domain.FormQuestionMapping">-->
-    <!--        INSERT INTO `form_question`-->
-    <!--        (`form_id`,-->
-    <!--        `section_id`,-->
-    <!--        `question_id`,-->
-    <!--        `language`,-->
-    <!--        `super_form_id`)-->
-    <!--        VALUES-->
-    <!--        (#{formId},-->
-    <!--        #{sectionId},-->
-    <!--        #{questionId},-->
-    <!--        #{language},-->
-    <!--        #{superFormId})-->
-    <!--    </insert>-->
-
     <insert id="insertAnswer" parameterType="java.util.List">
         INSERT INTO `answer`
         (`answer_id`,
         `form_id`,
+        `super_form_id`,
+        `super_question_id`,
+        `super_option_id`,
         `question_id`,
         `answer_description`,
         `answer_option_id`,
@@ -774,6 +798,9 @@
         <foreach collection="list" index="index" separator="," item="item">
             (#{item.answerId},
             #{item.formId},
+            #{superFormId},
+            #{superQuestionId},
+            #{superOptionId},
             #{item.questionId},
             #{item.answerDescription},
             #{item.answerOptionId},

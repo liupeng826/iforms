@@ -12,6 +12,7 @@ public class Question implements Serializable {
     private static final long serialVersionUID = -6756265354805158478L;
 
     private Long id;
+    private String superQuestionId;
     private Long sectionId;
     private String title;
     private String subtitle;
@@ -33,6 +34,14 @@ public class Question implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getSuperQuestionId() {
+        return superQuestionId;
+    }
+
+    public void setSuperQuestionId(String superQuestionId) {
+        this.superQuestionId = superQuestionId;
     }
 
     public Long getSectionId() {

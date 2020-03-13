@@ -96,7 +96,15 @@ public class FormServiceImpl implements FormService {
 
             // insert section
             Section section = new Section();
+
+            if (StringUtils.isEmpty(sectionDto.getSuperSectionId())) {
+                uuid = StringUtils.getUuid();
+            } else {
+                uuid = sectionDto.getSuperSectionId();
+            }
+            section.setSuperSectionId(uuid);
             section.setFormId(formId);
+
             if (StringUtils.isEmpty(sectionDto.getTitle())) {
                 section.setTitle("");
             } else {
@@ -130,6 +138,12 @@ public class FormServiceImpl implements FormService {
                 q.setCreatedBy(formDto.getCreatedBy());
                 q.setModifiedBy(formDto.getModifiedBy());
 
+                if (StringUtils.isEmpty(q.getSuperQuestionId())) {
+                    uuid = StringUtils.getUuid();
+                } else {
+                    uuid = q.getSuperQuestionId();
+                }
+                q.setSuperQuestionId(uuid);
                 rows = formMapper.insertQuestion(q);
                 if (rows <= 0) {
                     return null;
@@ -155,7 +169,12 @@ public class FormServiceImpl implements FormService {
                     for (QuestionOption qo : q.getQuestionOptions()) {
                         qo.setQuestionId(questionId);
                         qo.setLanguage(formDto.getLanguage());
-
+                        if (StringUtils.isEmpty(qo.getSuperOptionId())) {
+                            uuid = StringUtils.getUuid();
+                        } else {
+                            uuid = qo.getSuperOptionId();
+                        }
+                        qo.setSuperOptionId(uuid);
                         formMapper.insertQuestionOption(qo);
                     }
                 }

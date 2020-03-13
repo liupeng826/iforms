@@ -10,6 +10,7 @@ public class SectionDto implements Serializable {
     private static final long serialVersionUID = -1944382737578744212L;
 
     private Long id;
+    private String superSectionId;
     private Long formId;
     private String title;
     private String description;
@@ -23,6 +24,14 @@ public class SectionDto implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getSuperSectionId() {
+        return superSectionId;
+    }
+
+    public void setSuperSectionId(String superSectionId) {
+        this.superSectionId = superSectionId;
     }
 
     public Long getFormId() {
