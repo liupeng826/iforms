@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class QuestionnaireStatisticsDto implements Serializable {
 
     private static final long serialVersionUID = 8590079970763807680L;
+    private String superFormId;
     private String formTitle;
     private String optionQuestionId;
     private String questionTypeId;
@@ -17,6 +18,14 @@ public class QuestionnaireStatisticsDto implements Serializable {
     private String netPromoterFrom;
     private String netPromoterTo;
     private String month;
+
+    public String getSuperFormId() {
+        return superFormId;
+    }
+
+    public void setSuperFormId(String superFormId) {
+        this.superFormId = superFormId;
+    }
 
     public String getFormTitle() {
         return formTitle;

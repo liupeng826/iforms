@@ -665,7 +665,8 @@
 
     <resultMap id="QuestionnaireStatisticsResultMap"
                type="com.microastudio.iforms.modules.form.dto.QuestionnaireStatisticsDto">
-        <result column="form_title" property="formTitle" jdbcType="VARCHAR"/>
+        <result column="super_form_id" property="superFormId" jdbcType="VARCHAR"/>
+        <result column="title" property="formTitle" jdbcType="VARCHAR"/>
         <result column="answer_month" property="month" jdbcType="VARCHAR"/>
         <result column="total_number" property="totalNumber" jdbcType="VARCHAR"/>
     </resultMap>
