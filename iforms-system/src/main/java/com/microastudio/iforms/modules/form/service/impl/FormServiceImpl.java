@@ -5,6 +5,7 @@ import com.microastudio.iforms.common.utils.StringUtils;
 import com.microastudio.iforms.modules.form.domain.*;
 import com.microastudio.iforms.modules.form.dto.AnswerDto;
 import com.microastudio.iforms.modules.form.dto.FormDto;
+import com.microastudio.iforms.modules.form.dto.QuestionnaireStatisticsDto;
 import com.microastudio.iforms.modules.form.dto.SectionDto;
 import com.microastudio.iforms.modules.form.mapper.FormMapper;
 import com.microastudio.iforms.modules.form.service.FormService;
@@ -96,9 +97,19 @@ public class FormServiceImpl implements FormService {
             // insert section
             Section section = new Section();
             section.setFormId(formId);
-            section.setTitle(sectionDto.getTitle());
-            section.setDescription(sectionDto.getDescription());
-            if (formDto.getIncludeSection() == 1) {
+            if (StringUtils.isEmpty(sectionDto.getTitle())) {
+                section.setTitle("");
+            } else {
+                section.setTitle(sectionDto.getTitle());
+            }
+
+            if (StringUtils.isEmpty(sectionDto.getDescription())) {
+                section.setDescription("");
+            } else {
+                section.setDescription(sectionDto.getDescription());
+            }
+
+            if (formDto.getIncludeSection() == 0) {
                 section.setSequence(0);
             } else {
                 section.setSequence(sectionDto.getSequence());
@@ -200,6 +211,11 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
+    public List<QuestionnaireStatisticsDto> getQuestionnaireStatistics(Integer formId, String marketId, String deptId, String month, String from, String to) {
+        return formMapper.selectQuestionnaireStatistics(formId, marketId, deptId, month, from, to);
+    }
+
+    @Override
     public FormDto getAnswersWithFormByAnswerId(String clientToken, String answerId) {
         return formMapper.selectAnswersWithFormByAnswerId(clientToken, answerId);
     }
@@ -211,7 +227,10 @@ public class FormServiceImpl implements FormService {
         Long customerId = null;
         Customer customer = answerDto.getCustomer();
         // insert customer
-        if (customer != null) {
+        if ((customer != null) && (!StringUtils.isEmpty(customer.getName())
+                || !StringUtils.isEmpty(customer.getEmail())
+                || !StringUtils.isEmpty(customer.getContactNo()))) {
+
             rows = formMapper.insertCustomer(answerDto.getCustomer());
             if (rows > 0) {
                 customerId = customer.getId();

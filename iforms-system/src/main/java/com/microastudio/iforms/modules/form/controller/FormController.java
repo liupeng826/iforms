@@ -10,10 +10,7 @@ import com.microastudio.iforms.modules.form.domain.Answer;
 import com.microastudio.iforms.modules.form.domain.Form;
 import com.microastudio.iforms.modules.form.domain.Language;
 import com.microastudio.iforms.modules.form.domain.QuestionType;
-import com.microastudio.iforms.modules.form.dto.AnswerDto;
-import com.microastudio.iforms.modules.form.dto.AnswerRequestDto;
-import com.microastudio.iforms.modules.form.dto.FormDto;
-import com.microastudio.iforms.modules.form.dto.FormRequestDto;
+import com.microastudio.iforms.modules.form.dto.*;
 import com.microastudio.iforms.modules.form.service.FormService;
 import com.microastudio.iforms.modules.form.service.MailService;
 import com.microastudio.iforms.modules.system.domain.Client;
@@ -433,6 +430,70 @@ public class FormController {
 
         } catch (Exception e) {
             logger.error("getAllAnswers异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+
+        return resultResponse;
+    }
+
+
+    @ApiOperation("统计：反馈数量")
+    @PostMapping("/AnswerOptionsStatistics")
+    public ResultResponse getQuestionnaireStatistics(@RequestBody AnswerRequestDto dto) {
+        logger.info("get Questionnaire Statistics For Market");
+        ResultResponse resultResponse = new ResultResponse();
+
+        UserDto user = userService.findByName(SecurityUtils.getUsername());
+        String userMarketId = user.getDept().getMarketId();
+
+        // FormId为空，取所有数据
+        if (dto == null
+                || (dto.getMonth() != null && (dto.getMonth() < 1 || dto.getMonth() > 12))
+                || dto.getClient() == null
+                || StringUtils.isEmpty(dto.getClient().getName())
+                || StringUtils.isEmpty(dto.getClient().getToken())) {
+            return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+        }
+
+        // validateToken
+        resultResponse = getClient(dto.getClient());
+        if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+            return resultResponse;
+        }
+
+        // super admin: get all
+        // admin: get market level
+        try {
+            if (user == null || user.getRole() > RoleEnum.ADMIN.getValue()
+                    || (user.getRole() == RoleEnum.ADMIN.getValue() && !userMarketId.equals(dto.getMarketId()))) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_SYSTEM, CommonConstants.ERRORS_CODE_SYSTEM);
+            }
+
+            String clientToken = dto.getClient().getToken();
+            clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
+            String yearMonth = "";
+            String from = "";
+            String to = "";
+            Date date = DateUtil.date();
+
+            if (dto.getMonth() != null && dto.getMonth() > 0) {
+                yearMonth = DateUtil.year(date) + "-" + String.format("%2d", dto.getMonth()).replace(" ", "0");
+            }
+            if (dto.getFrom() != null && dto.getTo() != null) {
+                from = DateUtil.format(dto.getFrom(), "yyyy-MM-dd");
+                to = DateUtil.format(dto.getTo(), "yyyy-MM-dd");
+            }
+
+            if (StringUtils.isEmpty(yearMonth) && StringUtils.isEmpty(from) && StringUtils.isEmpty(to)) {
+                to = DateUtil.format(date, "yyyy-MM-dd");
+                from = DateUtil.format(DateUtil.offsetMonth(date, -12), "yyyy-MM-dd");
+            }
+            List<QuestionnaireStatisticsDto> answers = formService.getQuestionnaireStatistics(dto.getFormId(), userMarketId, dto.getDealerId(), yearMonth, from, to);
+            resultResponse.ok(answers);
+
+        } catch (Exception e) {
+            logger.error("get Questionnaire Statistics异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
         }

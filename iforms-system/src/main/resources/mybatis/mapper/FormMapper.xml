@@ -505,7 +505,7 @@
         `question_option`.`net_promoter_from` as `question_option.net_promoter_from`,
         `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
         `question_option`.`is_active` as `question_option.is_active`,
-         T1.description as `language_description`,
+        T1.description as `language_description`,
         `answer`.`answer_id` as `answer.answer_id`,
         `answer`.`id` as `answer.id`,
         `answer`.`form_id` as `answer.form_id`,
@@ -538,6 +538,103 @@
         </if>
         And client.is_active = 1
         ORDER BY form.id, question.section_id, question.sequence, question_option.sequence, answer.id;
+    </select>
+
+    <resultMap id="QuestionnaireStatisticsResultMap"
+               type="com.microastudio.iforms.modules.form.dto.QuestionnaireStatisticsDto">
+        <result column="form_title" property="formTitle" jdbcType="VARCHAR"/>
+        <result column="option_question_id" property="optionQuestionId" jdbcType="VARCHAR"/>
+        <result column="question_type_id" property="questionTypeId" jdbcType="VARCHAR"/>
+        <result column="option_description" property="optionDescription" jdbcType="VARCHAR"/>
+        <result column="answer_value" property="answerValue" jdbcType="VARCHAR"/>
+        <result column="total_number" property="totalNumber" jdbcType="VARCHAR"/>
+        <result column="net_promoter_from" property="netPromoterFrom" jdbcType="VARCHAR"/>
+        <result column="net_promoter_to" property="netPromoterTo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--    '1','Choice': answer.answer_option_id-->
+    <!--    '2','Multiple Choice': answer.answer_option_id-->
+    <!--    '3','Text'-->
+    <!--    '4','Rating': answer.answer_value-->
+    <!--    '5','Date'-->
+    <!--    '6','Net promoter score': answer.answer_value-->
+    <select id="selectQuestionnaireStatistics" resultMap="QuestionnaireStatisticsResultMap">
+        SELECT
+        f.title as form_title,
+        qo.question_id AS option_question_id,
+        qt.id AS question_type_id,
+        qo.description AS option_description,
+        answer_value,
+        net_promoter_from,
+        net_promoter_to,
+        COUNT(a.answer_option_id) as total_number
+        FROM question_option qo
+        LEFT JOIN question q ON qo.question_id = q.id
+        LEFT JOIN section s ON q.section_id = s.id
+        LEFT JOIN form f ON f.id = s.form_id
+        LEFT JOIN question_type qt ON qt.id = q.question_type_id
+        LEFT JOIN answer a ON a.answer_option_id = qo.id
+        <if test="month != null and month != '' ">
+            AND date_format(a.created_date,'%Y-%m') = #{month}
+        </if>
+        <if test="month == '' and from != null and from != '' ">
+            AND date_format(a.created_date,'%Y-%m-%d') BETWEEN #{from} AND #{to}
+        </if>
+        WHERE
+        <if test="formId != null and formId != '' ">
+            f.id = #{formId,jdbcType=VARCHAR} AND
+        </if>
+        (qt.id = 1 OR qt.id = 2)
+        AND f.`market_id` = #{marketId}
+        AND (f.dept_id = #{deptId}
+        OR (f.`level` = 'market'
+        AND f.`dept_id` = ''))
+        GROUP BY f.title, qo.question_id, qt.id, qo.description, answer_value, net_promoter_from, net_promoter_to
+        UNION
+        SELECT
+        form_title,
+        option_question_id,
+        question_type_id,
+        option_description,
+        answer_value,
+        net_promoter_from,
+        net_promoter_to,
+        COUNT(answer_value) as total_number
+        FROM
+        (SELECT
+        f.title as form_title,
+        c.description AS option_description,
+        c.net_promoter_from AS net_promoter_from,
+        c.net_promoter_to AS net_promoter_to,
+        c.question_id AS option_question_id,
+        a.*,
+        b.question_type_id
+        FROM answer a
+        LEFT JOIN question b ON a.question_id = b.id
+        LEFT JOIN question_option c ON b.id = c.question_id
+        LEFT JOIN question_type qt ON qt.id = b.question_type_id
+        LEFT JOIN section s ON s.id = b.section_id
+        LEFT JOIN form f ON s.form_id = f.id
+        WHERE
+        <if test="formId != null and formId != '' ">
+            f.id = #{formId,jdbcType=VARCHAR} AND
+        </if>
+        <if test="month != null and month != '' ">
+            date_format(a.created_date,'%Y-%m') = #{month} AND
+        </if>
+        <if test="month == '' and from != null and from != '' ">
+            date_format(a.created_date,'%Y-%m-%d') BETWEEN #{from} AND #{to}
+            AND
+        </if>
+        (qt.id = 4 OR qt.id = 6)
+        AND f.`market_id` = #{marketId}
+        AND (f.dept_id = #{deptId}
+        OR (f.`level` = 'market'
+        AND f.`dept_id` = ''))
+        ) cte2
+        GROUP BY form_title, option_question_id, question_type_id, option_description, answer_value, net_promoter_from,
+        net_promoter_to
+        ORDER BY option_question_id;
     </select>
 
     <insert id="insertQuestion" parameterType="com.microastudio.iforms.modules.form.domain.Question"

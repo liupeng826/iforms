@@ -6,6 +6,7 @@ import com.microastudio.iforms.modules.form.domain.Language;
 import com.microastudio.iforms.modules.form.domain.QuestionType;
 import com.microastudio.iforms.modules.form.dto.AnswerDto;
 import com.microastudio.iforms.modules.form.dto.FormDto;
+import com.microastudio.iforms.modules.form.dto.QuestionnaireStatisticsDto;
 
 import java.util.List;
 
@@ -43,4 +44,6 @@ public interface FormService {
     List<Answer> getAnswersByAnswerId(String clientToken, String answerId);
 
     List<FormDto> getAnswers(String clientToken, Integer formId, String marketId, String dealerId, String month, String from, String to);
+
+    List<QuestionnaireStatisticsDto> getQuestionnaireStatistics(Integer formId, String marketId, String dealerId, String month, String from, String to);
 }
