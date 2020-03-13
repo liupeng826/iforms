@@ -230,8 +230,13 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<QuestionnaireStatisticsDto> getQuestionnaireStatistics(Integer formId, String marketId, String deptId, String month, String from, String to) {
-        return formMapper.selectQuestionnaireStatistics(formId, marketId, deptId, month, from, to);
+    public List<QuestionnaireStatisticsDto> getQuestionnaireOptionStatistics(Integer formId, String marketId, String deptId, String month, String from, String to) {
+        return formMapper.selectQuestionnaireOptionStatistics(formId, marketId, deptId, month, from, to);
+    }
+
+    @Override
+    public List<QuestionnaireStatisticsDto> getQuestionnaireStatistics(Integer formId, String marketId, String deptId, String from, String to) {
+        return formMapper.selectQuestionnaireStatistics(formId, marketId, deptId, from, to);
     }
 
     @Override
@@ -265,6 +270,7 @@ public class FormServiceImpl implements FormService {
             answer.setCustomerId(customerId);
             answer.setLanguage(answerDto.getLanguage());
             answer.setFormId(answerDto.getFormId());
+            answer.setSuperFormId(answerDto.getSuperFormId());
             answer.setReference(answerDto.getReference());
             answer.setCreatedBy(answerDto.getCreatedBy());
             answer.setModifiedBy(answerDto.getModifiedBy());

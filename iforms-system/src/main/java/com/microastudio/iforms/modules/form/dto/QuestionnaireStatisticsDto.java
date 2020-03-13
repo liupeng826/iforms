@@ -16,6 +16,7 @@ public class QuestionnaireStatisticsDto implements Serializable {
     private String totalNumber;
     private String netPromoterFrom;
     private String netPromoterTo;
+    private String month;
 
     public String getFormTitle() {
         return formTitle;
@@ -79,5 +80,13 @@ public class QuestionnaireStatisticsDto implements Serializable {
 
     public void setNetPromoterTo(String netPromoterTo) {
         this.netPromoterTo = netPromoterTo;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
     }
 }

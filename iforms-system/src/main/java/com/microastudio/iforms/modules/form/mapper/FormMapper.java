@@ -43,7 +43,9 @@ public interface FormMapper {
 
     List<FormDto> selectAnswers(String clientToken, Integer formId, String marketId, String deptId, String month, String from, String to);
 
-    List<QuestionnaireStatisticsDto> selectQuestionnaireStatistics(Integer formId, String marketId, String deptId, String month, String from, String to);
+    List<QuestionnaireStatisticsDto> selectQuestionnaireOptionStatistics(Integer formId, String marketId, String deptId, String month, String from, String to);
+
+    List<QuestionnaireStatisticsDto> selectQuestionnaireStatistics(Integer formId, String marketId, String deptId, String from, String to);
 
     int insertAnswer(List<Answer> answers);
 

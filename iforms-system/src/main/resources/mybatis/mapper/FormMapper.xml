@@ -229,7 +229,7 @@
         And form.client = client.id
         AND client.token = #{clientToken}
         AND form.`market_id` = #{marketId}
-        AND (form.dept_id = #{deptId} OR (form.`level` = 'market' AND form.`dept_id` = ''))
+        AND ((form.dept_id = #{deptId}) OR (form.`level` = 'market' AND ifnull(form.`dept_id`,'') = ''))
         AND form.is_active = 1
         AND section.is_active = 1
         AND question.is_active = 1
@@ -562,7 +562,7 @@
         And form.client = client.id
         AND client.token = #{clientToken}
         AND form.`market_id` = #{marketId}
-        AND (form.dept_id = #{deptId} OR (form.`level` = 'market' AND form.`dept_id` = ''))
+        AND ((form.dept_id = #{deptId}) OR (form.`level` = 'market' AND ifnull(form.`dept_id`,'') = ''))
         <if test="formId != null and formId != '' ">
             AND form.id = #{formId,jdbcType=VARCHAR}
         </if>
@@ -570,7 +570,7 @@
         ORDER BY form.id, question.section_id, question.sequence, question_option.sequence, answer.id;
     </select>
 
-    <resultMap id="QuestionnaireStatisticsResultMap"
+    <resultMap id="QuestionnaireOptionStatisticsResultMap"
                type="com.microastudio.iforms.modules.form.dto.QuestionnaireStatisticsDto">
         <result column="form_title" property="formTitle" jdbcType="VARCHAR"/>
         <result column="option_question_id" property="optionQuestionId" jdbcType="VARCHAR"/>
@@ -588,7 +588,7 @@
     <!--    '4','Rating': answer.answer_value-->
     <!--    '5','Date'-->
     <!--    '6','Net promoter score': answer.answer_value-->
-    <select id="selectQuestionnaireStatistics" resultMap="QuestionnaireStatisticsResultMap">
+    <select id="selectQuestionnaireOptionStatistics" resultMap="QuestionnaireOptionStatisticsResultMap">
         SELECT
         f.title as form_title,
         qo.question_id AS option_question_id,
@@ -616,9 +616,7 @@
         </if>
         (qt.id = 1 OR qt.id = 2)
         AND f.`market_id` = #{marketId}
-        AND (f.dept_id = #{deptId}
-        OR (f.`level` = 'market'
-        AND f.`dept_id` = ''))
+        AND ((f.dept_id = #{deptId}) OR (f.`level` = 'market' AND ifnull(f.`dept_id`,'') = ''))
         GROUP BY f.title, qo.question_id, qt.id, qo.description, answer_value, net_promoter_from, net_promoter_to
         UNION
         SELECT
@@ -658,13 +656,37 @@
         </if>
         (qt.id = 4 OR qt.id = 6)
         AND f.`market_id` = #{marketId}
-        AND (f.dept_id = #{deptId}
-        OR (f.`level` = 'market'
-        AND f.`dept_id` = ''))
+        AND ((f.dept_id = #{deptId}) OR (f.`level` = 'market' AND ifnull(f.`dept_id`,'') = ''))
         ) cte2
         GROUP BY form_title, option_question_id, question_type_id, option_description, answer_value, net_promoter_from,
         net_promoter_to
         ORDER BY option_question_id;
+    </select>
+
+    <resultMap id="QuestionnaireStatisticsResultMap"
+               type="com.microastudio.iforms.modules.form.dto.QuestionnaireStatisticsDto">
+        <result column="form_title" property="formTitle" jdbcType="VARCHAR"/>
+        <result column="answer_month" property="month" jdbcType="VARCHAR"/>
+        <result column="total_number" property="totalNumber" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectQuestionnaireStatistics" resultMap="QuestionnaireStatisticsResultMap">
+        SELECT T.`super_form_id`, F.`title`, T.`answer_month`, COUNT(T.`super_form_id`) AS total_number FROM
+        ( SELECT DISTINCT `answer`.`answer_id`, `answer`.`super_form_id`, date_format(`created_date`,'%Y-%m') AS
+        `answer_month`
+        FROM `iforms`.`answer`
+        WHERE date_format(`created_date`,'%Y-%m-%d') BETWEEN #{from} AND #{to}
+        ) T
+        INNER JOIN `form` F
+        ON F.`super_form_id` = T.`super_form_id`
+        AND F.`language` = 'en-us'
+        <if test="formId != null and formId != '' ">
+            AND F.id = #{formId,jdbcType=VARCHAR}
+        </if>
+        AND F.`market_id` = #{marketId}
+        AND ((F.dept_id = #{deptId}) OR (F.`level` = 'market' AND ifnull(F.`dept_id`,'') = ''))
+        GROUP BY `super_form_id`, `title`, `answer_month`
+        ORDER BY `super_form_id`, `title`, `answer_month`;
     </select>
 
     <insert id="insertQuestion" parameterType="com.microastudio.iforms.modules.form.domain.Question"
@@ -798,9 +820,9 @@
         <foreach collection="list" index="index" separator="," item="item">
             (#{item.answerId},
             #{item.formId},
-            #{superFormId},
-            #{superQuestionId},
-            #{superOptionId},
+            #{item.superFormId},
+            #{item.superQuestionId},
+            #{item.superOptionId},
             #{item.questionId},
             #{item.answerDescription},
             #{item.answerOptionId},

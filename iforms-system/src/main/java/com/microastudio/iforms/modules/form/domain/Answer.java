@@ -13,12 +13,12 @@ public class Answer implements Serializable {
     private String answerId;
     private Long id;
     private Long formId;
-    private Long superFormId;
+    private String superFormId;
     private Long questionId;
-    private Long superQuestionId;
+    private String superQuestionId;
     private String answerDescription;
     private Long answerOptionId;
-    private Long superOptionId;
+    private String superOptionId;
     private String answerValue;
     private String totalValue;
     private String reference;
@@ -54,27 +54,27 @@ public class Answer implements Serializable {
         this.formId = formId;
     }
 
-    public Long getSuperFormId() {
+    public String getSuperFormId() {
         return superFormId;
     }
 
-    public void setSuperFormId(Long superFormId) {
+    public void setSuperFormId(String superFormId) {
         this.superFormId = superFormId;
     }
 
-    public Long getSuperQuestionId() {
+    public String getSuperQuestionId() {
         return superQuestionId;
     }
 
-    public void setSuperQuestionId(Long superQuestionId) {
+    public void setSuperQuestionId(String superQuestionId) {
         this.superQuestionId = superQuestionId;
     }
 
-    public Long getSuperOptionId() {
+    public String getSuperOptionId() {
         return superOptionId;
     }
 
-    public void setSuperOptionId(Long superOptionId) {
+    public void setSuperOptionId(String superOptionId) {
         this.superOptionId = superOptionId;
     }
 

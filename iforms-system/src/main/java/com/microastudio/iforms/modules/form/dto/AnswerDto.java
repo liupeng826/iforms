@@ -17,6 +17,7 @@ public class AnswerDto implements Serializable {
 
     private Client client;
     private Long formId;
+    private String superFormId;
     private List<Answer> answers;
     private Customer customer;
     private String language;
@@ -26,6 +27,14 @@ public class AnswerDto implements Serializable {
     private String modifiedBy;
     private Timestamp modifiedDate;
     private boolean needSendEmail;
+
+    public String getSuperFormId() {
+        return superFormId;
+    }
+
+    public void setSuperFormId(String superFormId) {
+        this.superFormId = superFormId;
+    }
 
     public Client getClient() {
         return client;

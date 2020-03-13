@@ -45,5 +45,7 @@ public interface FormService {
 
     List<FormDto> getAnswers(String clientToken, Integer formId, String marketId, String dealerId, String month, String from, String to);
 
-    List<QuestionnaireStatisticsDto> getQuestionnaireStatistics(Integer formId, String marketId, String dealerId, String month, String from, String to);
+    List<QuestionnaireStatisticsDto> getQuestionnaireOptionStatistics(Integer formId, String marketId, String dealerId, String month, String from, String to);
+
+    List<QuestionnaireStatisticsDto> getQuestionnaireStatistics(Integer formId, String marketId, String dealerId, String from, String to);
 }
