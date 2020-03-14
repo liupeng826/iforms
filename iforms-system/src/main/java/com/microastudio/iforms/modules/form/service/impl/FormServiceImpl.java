@@ -151,21 +151,9 @@ public class FormServiceImpl implements FormService {
 
                 Long questionId = q.getId();
 
-//                // insert FormQuestionMapping
-//                FormQuestionMapping fm = new FormQuestionMapping();
-//                fm.setFormId(formId);
-//                fm.setSectionId(sectionId);
-//                fm.setQuestionId(questionId);
-//                fm.setLanguage(q.getLanguage());
-//                fm.setSuperFormId(superFormId);
-//
-//                rows = formMapper.insertFormQuestionMapping(fm);
-//                if (rows <= 0) {
-//                    return null;
-//                }
-
                 // insert QuestionOption
-                if (q.getQuestionOptions() != null) {
+                // 3 text; 5 date
+                if (q.getQuestionTypeId() != 3 && q.getQuestionTypeId() != 5) {
                     for (QuestionOption qo : q.getQuestionOptions()) {
                         qo.setQuestionId(questionId);
                         qo.setLanguage(formDto.getLanguage());
