@@ -18,8 +18,8 @@ public class DeptQueryCriteria{
     private String name;
 
     @Query
-    private Boolean enabled;
+    private byte isActive;
 
     @Query
-    private Long pid;
+    private String marketId;
 }

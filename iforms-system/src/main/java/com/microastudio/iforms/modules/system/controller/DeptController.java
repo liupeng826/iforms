@@ -60,7 +60,7 @@ public class DeptController {
     //    @Log("查询部门")
     @ApiOperation("查询部门")
     @GetMapping
-    @PreAuthorize("hasRole('SuperAdmin')")
+    @PreAuthorize("hasRole('SuperAdmin') or hasRole('Admin')")
     public ResultResponse<Object> getDepts(DeptQueryCriteria criteria) {
         List<DeptDto> deptDtos = deptService.queryAll(criteria);
         return ResultResponse.success(deptDtos);
