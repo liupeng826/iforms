@@ -184,7 +184,9 @@
         <if test="clientToken != null and clientToken != '' ">
             AND client.token = #{clientToken}
         </if>
-        AND form.super_form_id = #{superFormId,jdbcType=VARCHAR}
+        <if test="superFormId != null and superFormId != '' ">
+            AND form.super_form_id = #{superFormId,jdbcType=VARCHAR}
+        </if>
         AND form.is_active = 1
         AND section.is_active = 1
         AND question.is_active = 1

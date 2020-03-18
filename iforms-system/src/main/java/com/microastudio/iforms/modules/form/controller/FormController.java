@@ -208,18 +208,16 @@ public class FormController {
         return resultResponse;
     }
 
-    @PostMapping("/getForms")
-    public ResultResponse getAllFormsByClient(@RequestBody FormRequestDto dto) {
-        logger.info("getForms");
+    @PostMapping("/getFormsByClient")
+    public ResultResponse getFormsByClient(@RequestBody FormRequestDto dto) {
+        logger.info("getFormsByClient");
         ResultResponse resultResponse = new ResultResponse();
 
-        // SuperFormId为空,必须要验证client token,取所有数据
-        // SuperFormId不为空,不验证client token,只取一个form的数据
         try {
-            if (dto == null || (StringUtils.isEmpty(dto.getSuperFormId())
-                    && (dto.getClient() == null
+            if (dto == null
+                    || dto.getClient() == null
                     || StringUtils.isEmpty(dto.getClient().getName())
-                    || StringUtils.isEmpty(dto.getClient().getToken())))) {
+                    || StringUtils.isEmpty(dto.getClient().getToken())) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
             }
 
@@ -234,7 +232,7 @@ public class FormController {
                 }
             }
 
-            logger.info("getForms 入参：" + JSONObject.toJSONString(dto));
+            logger.info("getFormsByClient 入参：" + JSONObject.toJSONString(dto));
             // get form
             String clientToken = dto.getClient().getToken();
             clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
@@ -243,7 +241,7 @@ public class FormController {
 
             resultResponse.ok(forms);
         } catch (Exception e) {
-            logger.error("getForms 异常：" + e.getMessage(), e);
+            logger.error("getFormsByClient 异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
         }
