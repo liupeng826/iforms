@@ -33,6 +33,7 @@
         <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP"/>
         <result column="modified_by" property="modifiedBy" jdbcType="VARCHAR"/>
         <result column="language_description" property="languageDescription" jdbcType="VARCHAR"/>
+        <result column="deadline" property="deadline" jdbcType="TIMESTAMP"/>
         <collection property="sections" ofType="com.microastudio.iforms.modules.form.dto.SectionDto">
             <id column="section.id" property="id"/>
             <result column="section.super_section_id" property="superSectionId" jdbcType="VARCHAR"/>
@@ -40,6 +41,7 @@
             <result column="section.title" property="title"/>
             <result column="section.description" property="description"/>
             <result column="section.sequence" property="sequence"/>
+            <result column="section.is_active" property="isActive"/>
             <collection property="questions" ofType="com.microastudio.iforms.modules.form.domain.Question">
                 <id column="question.id" property="id"/>
                 <result column="question.super_question_id" property="superQuestionId" jdbcType="VARCHAR"/>
@@ -49,6 +51,7 @@
                 <result column="question.question_type_id" property="questionTypeId"/>
                 <result column="question.mandatory" property="mandatory"/>
                 <result column="question.sequence" property="sequence"/>
+                <result column="question.is_active" property="isActive"/>
                 <collection property="questionOptions"
                             ofType="com.microastudio.iforms.modules.form.domain.QuestionOption">
                     <id column="question_option.id" property="id"/>
@@ -416,6 +419,7 @@
         <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP"/>
         <result column="modified_by" property="modifiedBy" jdbcType="VARCHAR"/>
         <result column="language_description" property="languageDescription" jdbcType="VARCHAR"/>
+        <result column="deadline" property="deadline" jdbcType="TIMESTAMP"/>
         <collection property="sections" ofType="com.microastudio.iforms.modules.form.dto.SectionDto">
             <id column="section.id" property="id"/>
             <result column="section.super_section_id" property="superSectionId" jdbcType="VARCHAR"/>
@@ -423,6 +427,7 @@
             <result column="section.title" property="title"/>
             <result column="section.description" property="description"/>
             <result column="section.sequence" property="sequence"/>
+            <result column="section.is_active" property="isActive"/>
             <collection property="questions" ofType="com.microastudio.iforms.modules.form.domain.Question">
                 <id column="question.id" property="id"/>
                 <result column="question.super_question_id" property="superQuestionId" jdbcType="VARCHAR"/>
@@ -432,6 +437,7 @@
                 <result column="question.question_type_id" property="questionTypeId"/>
                 <result column="question.mandatory" property="mandatory"/>
                 <result column="question.sequence" property="sequence"/>
+                <result column="question.is_active" property="isActive"/>
                 <collection property="questionOptions"
                             ofType="com.microastudio.iforms.modules.form.domain.QuestionOption">
                     <id column="question_option.id" property="id"/>
@@ -780,7 +786,8 @@
         `modified_by`,
         `modified_date`,
         `language`,
-        `include_section`)
+        `include_section`,
+        `deadline`)
         VALUES
         (#{superFormId},
         #{title},
@@ -796,7 +803,8 @@
         #{modifiedBy},
         now(),
         #{language},
-        #{includeSection})
+        #{includeSection},
+        #{deadline})
     </insert>
 
     <insert id="insertAnswer" parameterType="java.util.List">
@@ -857,18 +865,33 @@
             useGeneratedKeys="true"
             keyProperty="id">
         UPDATE `question`
-        SET
-        `title` = #{title},
-        `subtitle` = #{subtitle},
-        `section_id` = #{sectionId},
-        `question_type_id` = #{questionTypeId},
-        `is_active` = #{isActive},
-        `created_by` = #{createdBy},
-        `created_date` = now(),
-        `modified_by` = #{modifiedBy},
-        `modified_date` = now(),
-        `mandatory` = #{mandatory},
-        `sequence` = #{sequence}
+        <set>
+            <if test="title != null and title != '' ">
+                `title` = #{title},
+            </if>
+            <if test="subtitle != null and subtitle != '' ">
+                `subtitle` = #{subtitle},
+            </if>
+            <if test="sectionId != null and sectionId != '' ">
+                `section_id` = #{sectionId},
+            </if>
+            <if test="questionTypeId != null and questionTypeId != '' ">
+                `question_type_id` = #{questionTypeId},
+            </if>
+            <if test="isActive != null and isActive != '' ">
+                `is_active` = #{isActive},
+            </if>
+            <if test="modifiedBy != null and modifiedBy != '' ">
+                `modified_by` = #{modifiedBy},
+            </if>
+            <if test="mandatory != null and mandatory != '' ">
+                `mandatory` = #{mandatory},
+            </if>
+            <if test="sequence != null and sequence != '' ">
+                `sequence` = #{sequence},
+            </if>
+            `modified_date` = now()
+        </set>
         WHERE `id` = #{id};
     </update>
 
@@ -876,13 +899,26 @@
             useGeneratedKeys="true"
             keyProperty="id">
         UPDATE `question_option`
-        SET
-        `description` = #{description},
-        `sequence` = #{sequence},
-        `total_value` = #{totalValue},
-        `net_promoter_from` = #{netPromoterFrom},
-        `net_promoter_to` = #{netPromoterTo},
-        `is_active` = #{isActive}
+        <set>
+            <if test="description != null and description != '' ">
+                `description` = #{description},
+            </if>
+            <if test="sequence != null and sequence != '' ">
+                `sequence` = #{sequence},
+            </if>
+            <if test="totalValue != null and totalValue != '' ">
+                `total_value` = #{totalValue},
+            </if>
+            <if test="netPromoterFrom != null and netPromoterFrom != '' ">
+                `net_promoter_from` = #{netPromoterFrom},
+            </if>
+            <if test="netPromoterTo != null and netPromoterTo != '' ">
+                `net_promoter_to` = #{netPromoterTo},
+            </if>
+            <if test="isActive != null and isActive != '' ">
+                `is_active` = #{isActive}
+            </if>
+        </set>
         WHERE `id` = #{id};
     </update>
 
@@ -890,11 +926,20 @@
             useGeneratedKeys="true"
             keyProperty="id">
         UPDATE `section`
-        SET
-        `title` = #{title},
-        `description` = #{description},
-        `sequence` = #{sequence},
-        `is_active` = #{isActive}
+        <set>
+            <if test="title != null and title != '' ">
+                `title` = #{title},
+            </if>
+            <if test="description != null and description != '' ">
+                `description` = #{description},
+            </if>
+            <if test="sequence != null and sequence != '' ">
+                `sequence` = #{sequence},
+            </if>
+            <if test="isActive != null and isActive != '' ">
+                `is_active` = #{isActive}
+            </if>
+        </set>
         WHERE `id` = #{id}>;
     </update>
 
@@ -902,21 +947,36 @@
             useGeneratedKeys="true"
             keyProperty="id">
         UPDATE `form`
-        SET
-        `title` = #{title},
-        `description` = #{description},
-        `level` = #{level},
-        `market_id` = #{marketId},
-        `dept_id` = #{depId},
-        `is_active` = #{isActive},
-        `client` = #{client},
-        `send_email` = #{sendEmail},
-        `type` = #{type},
-        `include_section` = #{includeSection},
-        `created_by` = #{createdBy},
-        `created_date` = now(),
-        `modified_by` = #{modifiedBy},
-        `modified_date` = now()
+        <set>
+            <if test="title != null and title != '' ">
+                `title` = #{title},
+            </if>
+            <if test="description != null and description != '' ">
+                `description` = #{description},
+            </if>
+            <if test="level != null and level != '' ">
+                `level` = #{level},
+            </if>
+            <if test="isActive != null and isActive != '' ">
+                `is_active` = #{isActive},
+            </if>
+            <if test="sendEmail != null and sendEmail != '' ">
+                `send_email` = #{sendEmail},
+            </if>
+            <if test="type != null and type != '' ">
+                `type` = #{type},
+            </if>
+            <if test="deadline != null and deadline != '' ">
+                `deadline` = #{deadline},
+            </if>
+            <if test="includeSection != null and includeSection != '' ">
+                `include_section` = #{includeSection},
+            </if>
+            <if test="modifiedBy != null and modifiedBy != '' ">
+                `modified_by` = #{modifiedBy},
+            </if>
+            `modified_date` = now()
+        </set>
         WHERE `id` = #{id};
     </update>
 
@@ -926,7 +986,6 @@
         UPDATE `form`
         SET
         `is_active` = #{isActive},
-        `created_date` = now(),
         `modified_date` = now()
         WHERE `id` = #{id};
     </update>

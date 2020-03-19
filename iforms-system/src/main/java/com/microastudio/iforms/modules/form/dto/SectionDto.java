@@ -5,6 +5,9 @@ import com.microastudio.iforms.modules.form.domain.Question;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author peng
+ */
 public class SectionDto implements Serializable {
 
     private static final long serialVersionUID = -1944382737578744212L;

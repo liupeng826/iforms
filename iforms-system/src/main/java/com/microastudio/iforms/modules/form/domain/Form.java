@@ -25,6 +25,7 @@ public class Form implements Serializable {
     private Timestamp createdDate;
     private String modifiedBy;
     private Timestamp modifiedDate;
+    private Timestamp deadline;
     private String language;
     private byte includeSection;
 
@@ -154,6 +155,14 @@ public class Form implements Serializable {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public Timestamp getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Timestamp deadline) {
+        this.deadline = deadline;
     }
 
     public byte getIncludeSection() {

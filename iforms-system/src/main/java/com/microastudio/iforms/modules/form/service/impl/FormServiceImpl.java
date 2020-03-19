@@ -1,5 +1,6 @@
 package com.microastudio.iforms.modules.form.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.utils.StringUtils;
 import com.microastudio.iforms.modules.form.domain.*;
@@ -82,6 +83,9 @@ public class FormServiceImpl implements FormService {
         form.setModifiedBy(formDto.getModifiedBy());
         form.setLanguage(formDto.getLanguage());
         form.setIncludeSection(formDto.getIncludeSection());
+        if (formDto.getDeadline() != null && formDto.getDeadline().compareTo(DateUtil.date().toTimestamp()) > 0) {
+            form.setDeadline(formDto.getDeadline());
+        }
         if ((byte) 1 == formDto.getIsActive()) {
             form.setIsActive((byte) 1);
         } else {
@@ -193,15 +197,13 @@ public class FormServiceImpl implements FormService {
         form.setTitle(formDto.getTitle());
         form.setDescription(formDto.getDescription());
         form.setLevel(formDto.getLevel());
-        form.setMarketId(formDto.getMarketId());
-        form.setDeptId(formDto.getDeptId());
-        form.setClient(formDto.getClient().getId().toString());
         form.setSendEmail(formDto.getSendEmail());
-        form.setType(formDto.getType());
-        form.setCreatedBy(formDto.getCreatedBy());
         form.setModifiedBy(formDto.getModifiedBy());
         form.setLanguage(formDto.getLanguage());
         form.setIncludeSection(formDto.getIncludeSection());
+        if (formDto.getDeadline() != null && formDto.getDeadline().compareTo(DateUtil.date().toTimestamp()) > 0) {
+            form.setDeadline(formDto.getDeadline());
+        }
         if ((byte) 1 == formDto.getIsActive()) {
             form.setIsActive((byte) 1);
         } else {
@@ -222,7 +224,6 @@ public class FormServiceImpl implements FormService {
             for (Question q : sectionDto.getQuestions()) {
                 q.setSectionId(sectionDto.getId());
                 q.setLanguage(formDto.getLanguage());
-                q.setCreatedBy(formDto.getCreatedBy());
                 q.setModifiedBy(formDto.getModifiedBy());
 
                 if (StringUtils.isEmpty(q.getSuperQuestionId())) {
