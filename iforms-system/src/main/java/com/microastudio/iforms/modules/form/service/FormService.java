@@ -21,7 +21,11 @@ public interface FormService {
 
     List<Language> getLanguage();
 
-    Form generateForm(FormDto formDto);
+    Form addForm(FormDto formDto);
+
+    Form updateForm(FormDto formDto);
+
+    Form updateFormStatus(FormDto formDto);
 
     String getClient(String name, String token);
 

@@ -365,7 +365,6 @@
         AND question.section_id = section.id
         And form.client = client.id
         AND client.token = #{clientToken}
-        AND form.level = 'market'
         AND form.market_id = #{marketId,jdbcType=VARCHAR}
         AND form.is_active = 1
         AND section.is_active = 1
@@ -853,4 +852,82 @@
         #{email},
         #{contactNo})
     </insert>
+
+    <update id="updateQuestion" parameterType="com.microastudio.iforms.modules.form.domain.Question"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        UPDATE `question`
+        SET
+        `title` = #{title},
+        `subtitle` = #{subtitle},
+        `section_id` = #{sectionId},
+        `question_type_id` = #{questionTypeId},
+        `is_active` = #{isActive},
+        `created_by` = #{createdBy},
+        `created_date` = now(),
+        `modified_by` = #{modifiedBy},
+        `modified_date` = now(),
+        `mandatory` = #{mandatory},
+        `sequence` = #{sequence}
+        WHERE `id` = #{id};
+    </update>
+
+    <update id="updateQuestionOption" parameterType="com.microastudio.iforms.modules.form.domain.QuestionOption"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        UPDATE `question_option`
+        SET
+        `description` = #{description},
+        `sequence` = #{sequence},
+        `total_value` = #{totalValue},
+        `net_promoter_from` = #{netPromoterFrom},
+        `net_promoter_to` = #{netPromoterTo},
+        `is_active` = #{isActive}
+        WHERE `id` = #{id};
+    </update>
+
+    <update id="updateSection" parameterType="com.microastudio.iforms.modules.form.domain.Section"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        UPDATE `section`
+        SET
+        `title` = #{title},
+        `description` = #{description},
+        `sequence` = #{sequence},
+        `is_active` = #{isActive}
+        WHERE `id` = #{id}>;
+    </update>
+
+    <update id="updateForm" parameterType="com.microastudio.iforms.modules.form.domain.Form"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        UPDATE `form`
+        SET
+        `title` = #{title},
+        `description` = #{description},
+        `level` = #{level},
+        `market_id` = #{marketId},
+        `dept_id` = #{depId},
+        `is_active` = #{isActive},
+        `client` = #{client},
+        `send_email` = #{sendEmail},
+        `type` = #{type},
+        `include_section` = #{includeSection},
+        `created_by` = #{createdBy},
+        `created_date` = now(),
+        `modified_by` = #{modifiedBy},
+        `modified_date` = now()
+        WHERE `id` = #{id};
+    </update>
+
+    <update id="updateFormStatus" parameterType="com.microastudio.iforms.modules.form.domain.Form"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        UPDATE `form`
+        SET
+        `is_active` = #{isActive},
+        `created_date` = now(),
+        `modified_date` = now()
+        WHERE `id` = #{id};
+    </update>
 </mapper>

@@ -16,6 +16,7 @@ public class Section implements Serializable {
     private String description;
     private Integer sequence;
     private String language;
+    private byte isActive;
 
     public Long getId() {
         return id;
@@ -63,6 +64,14 @@ public class Section implements Serializable {
 
     public void setSequence(Integer sequence) {
         this.sequence = sequence;
+    }
+
+    public byte getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(byte isActive) {
+        this.isActive = isActive;
     }
 
     public String getLanguage() {

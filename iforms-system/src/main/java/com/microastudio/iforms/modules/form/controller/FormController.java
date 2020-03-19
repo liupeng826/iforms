@@ -34,7 +34,10 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author peng
@@ -59,6 +62,8 @@ public class FormController {
     @Autowired
     private FreeMarkerConfigurer freeMarkerConfigurer;
 
+    //-----------------------问卷--------------------------------------
+
     @ApiOperation("免授权：获取单个问卷")
     @GetMapping
     public ResultResponse getForm(@RequestParam String superFormId) {
@@ -76,45 +81,6 @@ public class FormController {
             resultResponse.ok(forms);
         } catch (Exception e) {
             logger.error("getAllForms异常：" + e.getMessage(), e);
-            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
-            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
-        }
-        return resultResponse;
-    }
-
-    @PostMapping
-    public ResultResponse addForm(@RequestBody FormDto formParam) {
-        logger.info("generateForm");
-        ResultResponse resultResponse = new ResultResponse();
-        try {
-            if (formParam == null || formParam.getSections() == null
-                    || formParam.getSections().get(0).getQuestions() == null
-                    || formParam.getClient() == null) {
-                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
-            }
-            logger.info("generateForm入参：" + JSONObject.toJSONString(formParam));
-
-            // validateToken
-            resultResponse = getClient(formParam.getClient());
-            if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
-                return resultResponse;
-            }
-
-            formParam.getClient().setId(Long.valueOf((String) resultResponse.getData()));
-            // generate form
-            Form form = formService.generateForm(formParam);
-
-            if (form == null) {
-                logger.error("generateForm异常：Form is null");
-                resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
-                resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
-                return resultResponse;
-            }
-
-            resultResponse.ok(form);
-        } catch (
-                Exception e) {
-            logger.error("generateForm异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
         }
@@ -165,6 +131,7 @@ public class FormController {
         return resultResponse;
     }
 
+    @ApiOperation("获取问卷")
     @PostMapping("/getFormsByLevel")
     public ResultResponse getFormsByLevel(@RequestBody FormRequestDto dto) {
         logger.info("getFormsByLevel");
@@ -191,13 +158,22 @@ public class FormController {
             logger.info("getFormsByLevel 入参：" + JSONObject.toJSONString(dto));
             // get form
             String clientToken = dto.getClient().getToken();
-            String deptId = user.getDept().getId();
-            String marketId = user.getDept().getMarketId();
-            List<FormDto> forms = formService.getFormsByDeptAndMarket(clientToken, deptId, marketId);
 
-            if (forms == null || forms.size() <= 0) {
-                forms = formService.getFormsByMarketId(clientToken, marketId);
+            String deptId;
+            if (!StringUtils.isEmpty(dto.getDeptId())) {
+                deptId = dto.getDeptId();
+            } else {
+                deptId = user.getDept().getId();
             }
+
+            String marketId;
+            if (!StringUtils.isEmpty(dto.getMarketId())) {
+                marketId = dto.getMarketId();
+            } else {
+                marketId = user.getDept().getMarketId();
+            }
+
+            List<FormDto> forms = formService.getFormsByDeptAndMarket(clientToken, deptId, marketId);
 
             resultResponse.ok(forms);
         } catch (Exception e) {
@@ -248,6 +224,7 @@ public class FormController {
         return resultResponse;
     }
 
+    @ApiOperation("超级管理员获取所有问卷")
     @PostMapping("/getAllForms")
     @PreAuthorize("hasRole('SuperAdmin')")
     public ResultResponse getAllForms() {
@@ -265,6 +242,129 @@ public class FormController {
         }
         return resultResponse;
     }
+
+    @ApiOperation("创建问卷")
+    @PostMapping
+    public ResultResponse addForm(@RequestBody FormDto formParam) {
+        logger.info("addForm");
+        ResultResponse resultResponse = new ResultResponse();
+        try {
+            if (formParam == null || formParam.getSections() == null
+                    || formParam.getSections().get(0).getQuestions() == null
+                    || formParam.getClient() == null) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+            }
+            logger.info("addForm入参：" + JSONObject.toJSONString(formParam));
+
+            // validateToken
+            resultResponse = getClient(formParam.getClient());
+            if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+                return resultResponse;
+            }
+
+            formParam.getClient().setId(Long.valueOf((String) resultResponse.getData()));
+            // generate form
+            Form form = formService.addForm(formParam);
+
+            if (form == null) {
+                logger.error("addForm异常：Form is null");
+                resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+                resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+                return resultResponse;
+            }
+
+            resultResponse.ok(form);
+        } catch (
+                Exception e) {
+            logger.error("addForm异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+        return resultResponse;
+    }
+
+    @ApiOperation("变更问卷")
+    @PutMapping
+    public ResultResponse updateForm(@RequestBody FormDto dto) {
+        logger.info("updateForm");
+        ResultResponse resultResponse = new ResultResponse();
+        try {
+            if (dto == null || dto.getId() == null
+                    || StringUtils.isEmpty(dto.getSuperFormId())
+                    || dto.getSections() == null
+                    || dto.getSections().get(0).getQuestions() == null
+                    || dto.getClient() == null) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+            }
+            logger.info("updateForm 入参：" + JSONObject.toJSONString(dto));
+
+            // validateToken
+            resultResponse = getClient(dto.getClient());
+            if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+                return resultResponse;
+            }
+
+            dto.getClient().setId(Long.valueOf((String) resultResponse.getData()));
+            // generate form
+            Form form = formService.updateForm(dto);
+
+            if (form == null) {
+                logger.error("updateForm 异常：Form is null");
+                resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+                resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+                return resultResponse;
+            }
+
+            resultResponse.ok("");
+        } catch (
+                Exception e) {
+            logger.error("updateForm 异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+        return resultResponse;
+    }
+
+    @ApiOperation("发布问卷")
+    @PutMapping("/formStatus")
+    public ResultResponse updateFormStatus(@RequestBody FormDto dto) {
+        logger.info("updateFormStatus");
+        ResultResponse resultResponse = new ResultResponse();
+        try {
+            if (dto == null || dto.getId() == null
+                    || StringUtils.isEmpty(dto.getSuperFormId())
+                    || dto.getClient() == null) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+            }
+            logger.info("updateFormStatus 入参：" + JSONObject.toJSONString(dto));
+
+            // validateToken
+            resultResponse = getClient(dto.getClient());
+            if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+                return resultResponse;
+            }
+
+            // generate form
+            Form form = formService.updateFormStatus(dto);
+
+            if (form == null) {
+                logger.error("updateFormStatus 异常：Form is null");
+                resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+                resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+                return resultResponse;
+            }
+
+            resultResponse.ok("");
+        } catch (
+                Exception e) {
+            logger.error("updateFormStatus 异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+        return resultResponse;
+    }
+
+    //-----------------------反馈--------------------------------------
 
     @PostMapping("/answer")
     public ResultResponse addAnswer(@RequestBody AnswerDto answerDto) {
@@ -440,6 +540,8 @@ public class FormController {
         return resultResponse;
     }
 
+    //-----------------------统计--------------------------------------
+
     @ApiOperation("统计：按选项统计反馈数量")
     @PostMapping("/AnswerOptionsStatistics")
     public ResultResponse getQuestionnaireOptionStatistics(@RequestBody AnswerRequestDto dto) {
@@ -566,6 +668,8 @@ public class FormController {
 
         return resultResponse;
     }
+
+    //-----------------------其他--------------------------------------
 
     @GetMapping("/questionType")
     public ResultResponse getQuestionType() {

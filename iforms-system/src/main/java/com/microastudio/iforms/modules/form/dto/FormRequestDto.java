@@ -13,13 +13,15 @@ public class FormRequestDto implements Serializable {
 
     private Client client;
     /**
-     *  form super id
+     * form super id
      */
     private String superFormId;
     /**
      * answer id
      */
     private String answerId;
+    private String deptId;
+    private String marketId;
 
     public Client getClient() {
         return client;
@@ -43,5 +45,21 @@ public class FormRequestDto implements Serializable {
 
     public void setAnswerId(String answerId) {
         this.answerId = answerId;
+    }
+
+    public String getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(String deptId) {
+        this.deptId = deptId;
+    }
+
+    public String getMarketId() {
+        return marketId;
+    }
+
+    public void setMarketId(String marketId) {
+        this.marketId = marketId;
     }
 }

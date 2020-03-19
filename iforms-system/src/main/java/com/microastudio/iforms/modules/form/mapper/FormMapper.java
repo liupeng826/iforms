@@ -23,6 +23,16 @@ public interface FormMapper {
 
     int insertForm(Form form);
 
+    int updateQuestion(Question question);
+
+    int updateQuestionOption(QuestionOption questionOption);
+
+    int updateSection(Section section);
+
+    int updateForm(Form form);
+
+    int updateFormStatus(Form form);
+
     String selectClient(String name, String token);
 
     List<FormDto> selectAllFormsByKey(String clientToken, String superFormId);

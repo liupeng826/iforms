@@ -57,7 +57,7 @@ public class FormServiceImpl implements FormService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Form generateForm(FormDto formDto) {
+    public Form addForm(FormDto formDto) {
 
         int rows = 0;
         String uuid;
@@ -82,6 +82,11 @@ public class FormServiceImpl implements FormService {
         form.setModifiedBy(formDto.getModifiedBy());
         form.setLanguage(formDto.getLanguage());
         form.setIncludeSection(formDto.getIncludeSection());
+        if ((byte) 1 == formDto.getIsActive()) {
+            form.setIsActive((byte) 1);
+        } else {
+            form.setIsActive((byte) 0);
+        }
 
         // insert form
         rows = formMapper.insertForm(form);
@@ -163,10 +168,138 @@ public class FormServiceImpl implements FormService {
                             uuid = qo.getSuperOptionId();
                         }
                         qo.setSuperOptionId(uuid);
-                        formMapper.insertQuestionOption(qo);
+                        rows = formMapper.insertQuestionOption(qo);
+                        if (rows <= 0) {
+                            return null;
+                        }
                     }
                 }
             }
+        }
+
+        return form;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Form updateForm(FormDto formDto) {
+
+        int rows = 0;
+        String uuid;
+
+        Form form = new Form();
+        form.setId(formDto.getId());
+        form.setSuperFormId(formDto.getSuperFormId());
+        form.setTitle(formDto.getTitle());
+        form.setDescription(formDto.getDescription());
+        form.setLevel(formDto.getLevel());
+        form.setMarketId(formDto.getMarketId());
+        form.setDeptId(formDto.getDeptId());
+        form.setClient(formDto.getClient().getId().toString());
+        form.setSendEmail(formDto.getSendEmail());
+        form.setType(formDto.getType());
+        form.setCreatedBy(formDto.getCreatedBy());
+        form.setModifiedBy(formDto.getModifiedBy());
+        form.setLanguage(formDto.getLanguage());
+        form.setIncludeSection(formDto.getIncludeSection());
+        if ((byte) 1 == formDto.getIsActive()) {
+            form.setIsActive((byte) 1);
+        } else {
+            form.setIsActive((byte) 0);
+        }
+
+        // update form
+        rows = formMapper.updateForm(form);
+        if (rows <= 0) {
+            return null;
+        }
+
+        // TO-DO: section update, current no update
+
+
+        for (SectionDto sectionDto : formDto.getSections()) {
+            // update Question
+            for (Question q : sectionDto.getQuestions()) {
+                q.setSectionId(sectionDto.getId());
+                q.setLanguage(formDto.getLanguage());
+                q.setCreatedBy(formDto.getCreatedBy());
+                q.setModifiedBy(formDto.getModifiedBy());
+
+                if (StringUtils.isEmpty(q.getSuperQuestionId())) {
+                    uuid = StringUtils.getUuid();
+                } else {
+                    uuid = q.getSuperQuestionId();
+                }
+                q.setSuperQuestionId(uuid);
+
+                if (q.getId() == null) {
+                    rows = formMapper.insertQuestion(q);
+                } else {
+                    if ((byte) 1 == q.getIsActive()) {
+                        q.setIsActive((byte) 1);
+                    } else {
+                        q.setIsActive((byte) 0);
+                    }
+                    rows = formMapper.updateQuestion(q);
+                }
+                if (rows <= 0) {
+                    return null;
+                }
+
+                Long questionId = q.getId();
+
+                // insert QuestionOption
+                // 3 text; 5 date
+                if (q.getQuestionTypeId() != 3 && q.getQuestionTypeId() != 5) {
+                    for (QuestionOption qo : q.getQuestionOptions()) {
+                        qo.setQuestionId(questionId);
+                        qo.setLanguage(formDto.getLanguage());
+                        if (StringUtils.isEmpty(qo.getSuperOptionId())) {
+                            uuid = StringUtils.getUuid();
+                        } else {
+                            uuid = qo.getSuperOptionId();
+                        }
+                        qo.setSuperOptionId(uuid);
+
+                        if (qo.getId() == null) {
+                            rows = formMapper.insertQuestionOption(qo);
+                        } else {
+                            if ((byte) 1 == qo.getIsActive()) {
+                                qo.setIsActive((byte) 1);
+                            } else {
+                                qo.setIsActive((byte) 0);
+                            }
+                            rows = formMapper.updateQuestionOption(qo);
+                        }
+                        if (rows <= 0) {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
+
+        return form;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Form updateFormStatus(FormDto formDto) {
+
+        int rows = 0;
+        Form form = new Form();
+        form.setId(formDto.getId());
+        form.setSuperFormId(formDto.getSuperFormId());
+        if ((byte) 1 == formDto.getIsActive()) {
+            form.setIsActive((byte) 1);
+        } else {
+            form.setIsActive((byte) 0);
+        }
+
+        // update form
+        rows = formMapper.updateFormStatus(form);
+        if (rows <= 0) {
+            return null;
         }
 
         return form;
