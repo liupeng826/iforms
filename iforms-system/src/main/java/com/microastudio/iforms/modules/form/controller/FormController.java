@@ -546,7 +546,7 @@ public class FormController {
         ResultResponse resultResponse = new ResultResponse();
 
         UserDto user = userService.findByName(SecurityUtils.getUsername());
-        String userMarketId = user.getDept().getMarketId();
+        String marketId = user.getDept().getMarketId();
 
         // FormId为空，取所有数据
         if (dto == null
@@ -564,10 +564,13 @@ public class FormController {
 
         try {
             if (user == null || user.getRole() > RoleEnum.ADMIN.getValue()
-                    || (user.getRole() == RoleEnum.ADMIN.getValue() && !userMarketId.equals(dto.getMarketId()))) {
+                    || (user.getRole() == RoleEnum.ADMIN.getValue() && !marketId.equals(dto.getMarketId()))) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_SYSTEM, CommonConstants.ERRORS_CODE_SYSTEM);
             }
 
+            if (!StringUtils.isEmpty(dto.getMarketId())) {
+                marketId = dto.getMarketId();
+            }
 //            String clientToken = dto.getClient().getToken();
 //            clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
 
@@ -591,7 +594,7 @@ public class FormController {
                 }
             }
 
-            List<QuestionnaireStatisticsDto> answers = formService.getQuestionnaireOptionStatistics(dto.getFormId(), userMarketId, dto.getDealerId(), yearMonth, from, to);
+            List<QuestionnaireStatisticsDto> answers = formService.getQuestionnaireOptionStatistics(dto.getFormId(), marketId, dto.getDealerId(), yearMonth, from, to);
             resultResponse.ok(answers);
 
         } catch (Exception e) {
@@ -610,7 +613,7 @@ public class FormController {
         ResultResponse resultResponse = new ResultResponse();
 
         UserDto user = userService.findByName(SecurityUtils.getUsername());
-        String userMarketId = user.getDept().getMarketId();
+        String marketId = user.getDept().getMarketId();
 
         // FormId为空，取所有数据
         if (dto == null
@@ -628,10 +631,13 @@ public class FormController {
 
         try {
             if (user == null || user.getRole() > RoleEnum.ADMIN.getValue()
-                    || (user.getRole() == RoleEnum.ADMIN.getValue() && !userMarketId.equals(dto.getMarketId()))) {
+                    || (user.getRole() == RoleEnum.ADMIN.getValue() && !marketId.equals(dto.getMarketId()))) {
                 return new ResultResponse(CommonConstants.ERRORS_CODE_SYSTEM, CommonConstants.ERRORS_CODE_SYSTEM);
             }
 
+            if (!StringUtils.isEmpty(dto.getMarketId())) {
+                marketId = dto.getMarketId();
+            }
 //            String clientToken = dto.getClient().getToken();
 //            clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
 
@@ -650,7 +656,7 @@ public class FormController {
                 from = DateUtil.format(dto.getFrom(), "yyyy-MM-dd");
             }
 
-            List<QuestionnaireStatisticsDto> answers = formService.getQuestionnaireStatistics(dto.getFormId(), userMarketId, dto.getDealerId(), from, to);
+            List<QuestionnaireStatisticsDto> answers = formService.getQuestionnaireStatistics(dto.getFormId(), marketId, dto.getDealerId(), from, to);
             resultResponse.ok(answers);
 
         } catch (Exception e) {
