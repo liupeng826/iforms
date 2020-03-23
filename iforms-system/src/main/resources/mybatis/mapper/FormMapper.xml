@@ -688,11 +688,12 @@
         INNER JOIN form f on f.id = s.form_id
         LEFT JOIN (select * from answer a where
         <if test="month != null and month != '' ">
-            date_format(a.created_date,'%Y-%m') = #{month} AND
+            date_format(a.created_date,'%Y-%m') = #{month}
         </if>
         <if test="month == '' and from != null and from != '' ">
-            date_format(a.created_date,'%Y-%m-%d') BETWEEN #{from} AND #{to} AND
-        </if>) aa ON aa.question_id = q.id
+            date_format(a.created_date,'%Y-%m-%d') BETWEEN #{from} AND #{to}
+        </if>
+        ) aa ON aa.question_id = q.id
         WHERE
         <if test="formId != null and formId != '' ">
             f.id = #{formId,jdbcType=VARCHAR} AND
