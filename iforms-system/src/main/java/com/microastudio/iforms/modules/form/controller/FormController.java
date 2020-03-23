@@ -483,7 +483,6 @@ public class FormController {
 
         // FormId为空，取所有数据
         if (dto == null
-                || (dto.getMonth() != null && (dto.getMonth() < 1 || dto.getMonth() > 12))
                 || dto.getClient() == null
                 || StringUtils.isEmpty(dto.getClient().getName())
                 || StringUtils.isEmpty(dto.getClient().getToken())) {
@@ -510,11 +509,9 @@ public class FormController {
             String to = "";
             Date date = DateUtil.date();
 
-            if (dto.getMonth() != null && dto.getMonth() > 0) {
-                yearMonth = DateUtil.year(date) + "-" + String.format("%2d", dto.getMonth()).replace(" ", "0");
-            }
-
-            if (StringUtils.isEmpty(yearMonth)) {
+            if (!StringUtils.isEmpty(dto.getMonth())) {
+                yearMonth = dto.getMonth();
+            } else {
                 if (StringUtils.isEmpty(to)) {
                     to = DateUtil.format(date, "yyyy-MM-dd");
                 } else {
@@ -553,7 +550,6 @@ public class FormController {
 
         // FormId为空，取所有数据
         if (dto == null
-                || (dto.getMonth() != null && (dto.getMonth() < 1 || dto.getMonth() > 12))
                 || dto.getClient() == null
                 || StringUtils.isEmpty(dto.getClient().getName())
                 || StringUtils.isEmpty(dto.getClient().getToken())) {
@@ -580,11 +576,9 @@ public class FormController {
             String to = "";
             Date date = DateUtil.date();
 
-            if (dto.getMonth() != null && dto.getMonth() > 0) {
-                yearMonth = DateUtil.year(date) + "-" + String.format("%2d", dto.getMonth()).replace(" ", "0");
-            }
-
-            if (StringUtils.isEmpty(yearMonth)) {
+            if (!StringUtils.isEmpty(dto.getMonth())) {
+                yearMonth = dto.getMonth();
+            } else {
                 if (StringUtils.isEmpty(to)) {
                     to = DateUtil.format(date, "yyyy-MM-dd");
                 } else {
@@ -620,7 +614,6 @@ public class FormController {
 
         // FormId为空，取所有数据
         if (dto == null
-                || (dto.getMonth() != null && (dto.getMonth() < 1 || dto.getMonth() > 12))
                 || dto.getClient() == null
                 || StringUtils.isEmpty(dto.getClient().getName())
                 || StringUtils.isEmpty(dto.getClient().getToken())) {

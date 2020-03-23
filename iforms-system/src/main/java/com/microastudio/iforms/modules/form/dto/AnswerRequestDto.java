@@ -16,7 +16,7 @@ public class AnswerRequestDto implements Serializable {
     private Integer formId;
     private String marketId;
     private String dealerId;
-    private Integer month;
+    private String month;
     private Timestamp from;
     private Timestamp to;
 
@@ -52,11 +52,11 @@ public class AnswerRequestDto implements Serializable {
         this.dealerId = dealerId;
     }
 
-    public Integer getMonth() {
+    public String getMonth() {
         return month;
     }
 
-    public void setMonth(Integer month) {
+    public void setMonth(String month) {
         this.month = month;
     }
 
