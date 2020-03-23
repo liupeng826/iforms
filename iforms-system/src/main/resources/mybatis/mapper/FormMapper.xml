@@ -596,6 +596,8 @@
     <!--    '5','Date'-->
     <!--    '6','Net promoter score': answer.answer_value-->
     <select id="selectQuestionnaireOptionStatistics" resultMap="QuestionnaireOptionStatisticsResultMap">
+        SELECT * FROM
+        (
         SELECT
         f.title as form_title,
         qo.question_id AS option_question_id,
@@ -625,6 +627,8 @@
         AND f.`market_id` = #{marketId}
         AND ((f.dept_id = #{deptId}) OR (f.`level` = 'market' AND ifnull(f.`dept_id`,'') = ''))
         GROUP BY f.title, qo.question_id, qt.id, qo.description, answer_value, net_promoter_from, net_promoter_to
+        ORDER BY option_question_id, qo.sequence
+        ) t1
         UNION
         SELECT
         form_title,
@@ -664,10 +668,39 @@
         (qt.id = 4 OR qt.id = 6)
         AND f.`market_id` = #{marketId}
         AND ((f.dept_id = #{deptId}) OR (f.`level` = 'market' AND ifnull(f.`dept_id`,'') = ''))
+        ORDER BY option_question_id
         ) cte2
         GROUP BY form_title, option_question_id, question_type_id, option_description, answer_value, net_promoter_from,
         net_promoter_to
-        ORDER BY option_question_id;
+        UNION
+        SELECT f.title as form_title,
+        qo.question_id AS option_question_id,
+        qt.id AS question_type_id,
+        qo.description AS option_description,
+        aa.answer_value,
+        qo.net_promoter_from,
+        qo.net_promoter_to,
+        0 as total_number
+        FROM question q
+        INNER JOIN question_type qt on qt.id = q.question_type_id
+        INNER JOIN question_option qo on q.id = qo.question_id
+        INNER JOIN section s on q.section_Id = s.id
+        INNER JOIN form f on f.id = s.form_id
+        LEFT JOIN (select * from answer a where
+        <if test="month != null and month != '' ">
+            date_format(a.created_date,'%Y-%m') = #{month} AND
+        </if>
+        <if test="month == '' and from != null and from != '' ">
+            date_format(a.created_date,'%Y-%m-%d') BETWEEN #{from} AND #{to} AND
+        </if>) aa ON aa.question_id = q.id
+        WHERE
+        <if test="formId != null and formId != '' ">
+            f.id = #{formId,jdbcType=VARCHAR} AND
+        </if>
+        (qt.id = 4 OR qt.id = 6) AND
+        f.`market_id` = #{marketId} AND
+        ((f.dept_id = #{deptId}) OR (f.`level` = 'market' AND IFNULL(f.`dept_id`,'') = '')) AND
+        aa.id IS NULL
     </select>
 
     <resultMap id="QuestionnaireStatisticsResultMap"
