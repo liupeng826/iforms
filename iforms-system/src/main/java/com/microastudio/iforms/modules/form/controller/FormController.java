@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
@@ -61,7 +62,8 @@ public class FormController {
     private DeptService deptService;
     @Autowired
     private FreeMarkerConfigurer freeMarkerConfigurer;
-
+    @Value("${fromMail}")
+    private String from;
     //-----------------------问卷--------------------------------------
 
     @ApiOperation("免授权：获取单个问卷")
@@ -744,6 +746,13 @@ public class FormController {
             User user = userService.createUserAndDept(userDto);
 
             if (user != null) {
+                //send email
+                logger.info("开始发送邮件");
+                mailService.sendSimpleMail(from, "GTA CS Dealer register",
+                        " Dealer:" + user.getUserName()
+                                + "\n Created Date:" + user.getCreatedDate()
+                                + "\n Created By:" + user.getCreatedBy());
+
                 resultResponse.ok("");
             } else {
                 resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
