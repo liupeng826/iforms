@@ -37,7 +37,7 @@ public class MailServiceImpl implements MailService {
      * @param content
      */
     @Override
-    public void sendSimpleMail(String to, String subject, String content) {
+    public boolean sendSimpleMail(String to, String subject, String content) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
         message.setTo(to);
@@ -46,8 +46,10 @@ public class MailServiceImpl implements MailService {
         try {
             mailSender.send(message);
             logger.info("简单邮件已经发送。");
+            return true;
         } catch (Exception e) {
             logger.error("发送简单邮件时发生异常！", e);
+            return false;
         }
     }
 

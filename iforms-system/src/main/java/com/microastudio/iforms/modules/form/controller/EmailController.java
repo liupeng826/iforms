@@ -39,11 +39,11 @@ public class EmailController {
         logger.info("开始发送邮件");
         ResultResponse resultResponse = new ResultResponse();
 
-        try {
-            mailService.sendSimpleMail("liupeng826@hotmail.com", "主题：Customer Survey Report", "Customer Survey Report");
-            logger.info("简单邮件已经发送。");
-        } catch (Exception e) {
-            logger.error("发送简单邮件时发生异常！", e);
+        boolean success = mailService.sendSimpleMail("peng.liu@volvo.com", "主题：Customer Survey Report", "Customer Survey Report");
+
+        if (success) {
+            resultResponse.ok("");
+        } else {
             resultResponse.setCode(CommonConstants.ERRORS_CODE_MAIL);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_MAIL);
         }

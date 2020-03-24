@@ -8,7 +8,7 @@ public interface MailService {
      * @param subject
      * @param content
      */
-    public void sendSimpleMail(String to, String subject, String content);
+    public boolean sendSimpleMail(String to, String subject, String content);
 
     /**
      * 发送 html 代码的邮件

@@ -31,9 +31,12 @@ public class Dept implements Serializable {
     @NotBlank
     private String name;
 
-    @JoinColumn(name = "market_id")
+    @JoinColumn(name = "market_id", insertable = false, updatable = false)
     @OneToOne
     private Market market;
+
+    @Column(name = "market_id")
+    private String marketId;
 
     private String contactNo;
     private String email;
