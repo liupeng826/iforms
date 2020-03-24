@@ -170,7 +170,7 @@ public class FormController {
             if (!StringUtils.isEmpty(dto.getMarketId())) {
                 marketId = dto.getMarketId();
             } else {
-                marketId = user.getDept().getMarketId();
+                marketId = user.getDept().getMarket().getId();
             }
 
             List<FormDto> forms = formService.getFormsByDeptAndMarket(clientToken, deptId, marketId);
@@ -479,7 +479,7 @@ public class FormController {
         ResultResponse resultResponse = new ResultResponse();
 
         UserDto user = userService.findByName(SecurityUtils.getUsername());
-        String userMarketId = user.getDept().getMarketId();
+        String userMarketId = user.getDept().getMarket().getId();
 
         // FormId为空，取所有数据
         if (dto == null
@@ -546,7 +546,7 @@ public class FormController {
         ResultResponse resultResponse = new ResultResponse();
 
         UserDto user = userService.findByName(SecurityUtils.getUsername());
-        String marketId = user.getDept().getMarketId();
+        String marketId = user.getDept().getMarket().getId();
 
         // FormId为空，取所有数据
         if (dto == null
@@ -613,7 +613,7 @@ public class FormController {
         ResultResponse resultResponse = new ResultResponse();
 
         UserDto user = userService.findByName(SecurityUtils.getUsername());
-        String marketId = user.getDept().getMarketId();
+        String marketId = user.getDept().getMarket().getId();
 
         // FormId为空，取所有数据
         if (dto == null
@@ -700,6 +700,7 @@ public class FormController {
         return resultResponse;
     }
 
+    @ApiOperation("免授权：用户和部门注册")
     @PostMapping("/registerDealer")
     public ResultResponse registerDealer(@RequestBody UserDto userDto) {
         logger.info("registerDealer");
@@ -718,10 +719,12 @@ public class FormController {
             logger.info("registerDealer：DEPT");
             Timestamp time = new Timestamp(System.currentTimeMillis());
             userDto.getClient().setId(Long.valueOf((String) resultResponse.getData()));
-            String marketId = userDto.getDept().getMarketId();
-            userDto.getDept().setMarketId(StringUtils.isEmpty(marketId) ? "1" : marketId);
+            String marketId = userDto.getDept().getMarket().getId();
+            userDto.getDept().getMarket().setId(StringUtils.isEmpty(marketId) ? "1" : marketId);
             userDto.getDept().setCreatedBy(userDto.getUserName());
             userDto.getDept().setCreatedDate(time);
+            userDto.getDept().setModifiedBy(userDto.getUserName());
+            userDto.getDept().setModifiedDate(time);
 
             UserDto newUserDto = userService.findByUserName(userDto.getUserName());
             if (newUserDto != null) {
@@ -733,9 +736,11 @@ public class FormController {
             logger.info("registerDealer：USER");
             userDto.setIsActive(Byte.valueOf("0"));
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            userDto.setCreatedBy(userDto.getUserName());
             userDto.setRole(RoleEnum.USER.getValue());
+            userDto.setCreatedBy(userDto.getUserName());
             userDto.setCreatedDate(time);
+            userDto.setModifiedBy(userDto.getUserName());
+            userDto.setModifiedDate(time);
             User user = userService.createUserAndDept(userDto);
 
             if (user != null) {

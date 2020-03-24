@@ -131,7 +131,7 @@ public class DeptServiceImpl implements DeptService {
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(Dept resources) {
-        if (resources.getId().equals(resources.getMarketId())) {
+        if (resources.getId().equals(resources.getMarket().getId())) {
             throw new BadRequestException("上级不能为自己");
         }
         Dept dept = deptRepository.findById(resources.getId()).orElseGet(Dept::new);
