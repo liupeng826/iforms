@@ -723,6 +723,7 @@ public class FormController {
             userDto.getClient().setId(Long.valueOf((String) resultResponse.getData()));
             String marketId = userDto.getDept().getMarket().getId();
             userDto.getDept().getMarket().setId(StringUtils.isEmpty(marketId) ? "1" : marketId);
+            userDto.getDept().setMarketId(StringUtils.isEmpty(marketId) ? "1" : marketId);
             userDto.getDept().setCreatedBy(userDto.getUserName());
             userDto.getDept().setCreatedDate(time);
             userDto.getDept().setModifiedBy(userDto.getUserName());
