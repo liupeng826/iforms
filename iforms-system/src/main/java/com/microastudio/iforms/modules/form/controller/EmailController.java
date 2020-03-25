@@ -2,6 +2,8 @@ package com.microastudio.iforms.modules.form.controller;
 
 import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.bean.ResultResponse;
+import com.microastudio.iforms.modules.form.domain.Email;
+import com.microastudio.iforms.modules.form.service.FormService;
 import com.microastudio.iforms.modules.form.service.MailService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -32,6 +34,8 @@ public class EmailController {
     @Autowired
     private MailService mailService;
     @Autowired
+    private FormService formService;
+    @Autowired
     private FreeMarkerConfigurer freeMarkerConfigurer;
 
     @PostMapping("/pdfReportEmail")
@@ -57,20 +61,27 @@ public class EmailController {
         ResultResponse resultResponse = new ResultResponse();
 
         try {
+            String userFeedbackUrl = "http://52.187.127.13:9191/#/view/9183eea730514d34842024ceff37929b";
+            Email mail = formService.getMailByTypeAndLanguage("feedback", "en-us");
+
             //send email
             Map<String, Object> model = new HashMap<>();
-            model.put("body", "body");
+            model.put("userFeedbackLink", userFeedbackUrl);
+            model.put("body", mail.getBody());
+            Template template = freeMarkerConfigurer.getConfiguration().getTemplate("surveyEmailTemplate.html");
 
-            Template template = freeMarkerConfigurer.getConfiguration().getTemplate("pdfEmailTemplate.html");
             String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-            mailService.sendHtmlMail("liupeng826@hotmail.com", "Thank you for your feedback", html);
 
+            logger.info("开始发送邮件");
+//                mailService.sendHtmlMail(answerDto.getCustomer().getEmail(), mail.getSubject(), html);
+            mailService.sendHtmlMail("peng.liu@volvo.com", mail.getSubject(), html);
             resultResponse.ok("");
             logger.info("成功发送邮件");
         } catch (IOException | TemplateException e) {
             logger.error("发送邮件异常：" + e.getMessage(), e);
             resultResponse.setCode(CommonConstants.ERRORS_CODE_MAIL);
             resultResponse.setMessage(CommonConstants.ERRORS_MSG_MAIL);
+            return resultResponse;
         }
 
         return resultResponse;

@@ -352,13 +352,18 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<QuestionnaireStatisticsDto> getQuestionnaireOptionStatistics(Integer formId, String marketId, String deptId, String month, String from, String to) {
-        return formMapper.selectQuestionnaireOptionStatistics(formId, marketId, deptId, month, from, to);
+    public List<QuestionnaireStatisticsDto> getQuestionnaireOptionStatistics(String superFormId, String marketId, String deptId, String month, String from, String to) {
+        return formMapper.selectQuestionnaireOptionStatistics(superFormId, marketId, deptId, month, from, to);
     }
 
     @Override
     public List<QuestionnaireStatisticsDto> getQuestionnaireStatistics(Integer formId, String marketId, String deptId, String from, String to) {
         return formMapper.selectQuestionnaireStatistics(formId, marketId, deptId, from, to);
+    }
+
+    @Override
+    public Email getMailByTypeAndLanguage(String type, String language) {
+        return formMapper.selectMailByTypeAndLanguage(type, language);
     }
 
     @Override

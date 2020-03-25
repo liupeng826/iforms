@@ -1,9 +1,6 @@
 package com.microastudio.iforms.modules.form.service;
 
-import com.microastudio.iforms.modules.form.domain.Answer;
-import com.microastudio.iforms.modules.form.domain.Form;
-import com.microastudio.iforms.modules.form.domain.Language;
-import com.microastudio.iforms.modules.form.domain.QuestionType;
+import com.microastudio.iforms.modules.form.domain.*;
 import com.microastudio.iforms.modules.form.dto.AnswerDto;
 import com.microastudio.iforms.modules.form.dto.FormDto;
 import com.microastudio.iforms.modules.form.dto.QuestionnaireStatisticsDto;
@@ -49,7 +46,9 @@ public interface FormService {
 
     List<FormDto> getAnswers(String clientToken, Integer formId, String marketId, String dealerId, String month, String from, String to);
 
-    List<QuestionnaireStatisticsDto> getQuestionnaireOptionStatistics(Integer formId, String marketId, String dealerId, String month, String from, String to);
+    List<QuestionnaireStatisticsDto> getQuestionnaireOptionStatistics(String superFormId, String marketId, String dealerId, String month, String from, String to);
 
     List<QuestionnaireStatisticsDto> getQuestionnaireStatistics(Integer formId, String marketId, String dealerId, String from, String to);
+
+    Email getMailByTypeAndLanguage(String type, String language);
 }

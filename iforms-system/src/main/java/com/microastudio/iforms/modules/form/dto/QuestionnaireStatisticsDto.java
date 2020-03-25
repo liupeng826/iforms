@@ -10,6 +10,7 @@ public class QuestionnaireStatisticsDto implements Serializable {
     private static final long serialVersionUID = 8590079970763807680L;
     private String superFormId;
     private String formTitle;
+    private String questionTitle;
     private String optionQuestionId;
     private String questionTypeId;
     private String optionDescription;
@@ -33,6 +34,14 @@ public class QuestionnaireStatisticsDto implements Serializable {
 
     public void setFormTitle(String formTitle) {
         this.formTitle = formTitle;
+    }
+
+    public String getQuestionTitle() {
+        return questionTitle;
+    }
+
+    public void setQuestionTitle(String questionTitle) {
+        this.questionTitle = questionTitle;
     }
 
     public String getOptionQuestionId() {

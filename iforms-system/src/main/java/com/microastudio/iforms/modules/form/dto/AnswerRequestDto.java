@@ -14,6 +14,7 @@ public class AnswerRequestDto implements Serializable {
 
     private Client client;
     private Integer formId;
+    private String superFormId;
     private String marketId;
     private String dealerId;
     private String month;
@@ -34,6 +35,14 @@ public class AnswerRequestDto implements Serializable {
 
     public void setFormId(Integer formId) {
         this.formId = formId;
+    }
+
+    public String getSuperFormId() {
+        return superFormId;
+    }
+
+    public void setSuperFormId(String superFormId) {
+        this.superFormId = superFormId;
     }
 
     public String getMarketId() {

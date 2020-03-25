@@ -6,10 +6,7 @@ import com.microastudio.iforms.common.bean.CommonConstants;
 import com.microastudio.iforms.common.bean.ResultResponse;
 import com.microastudio.iforms.common.utils.RoleEnum;
 import com.microastudio.iforms.common.utils.SecurityUtils;
-import com.microastudio.iforms.modules.form.domain.Answer;
-import com.microastudio.iforms.modules.form.domain.Form;
-import com.microastudio.iforms.modules.form.domain.Language;
-import com.microastudio.iforms.modules.form.domain.QuestionType;
+import com.microastudio.iforms.modules.form.domain.*;
 import com.microastudio.iforms.modules.form.dto.*;
 import com.microastudio.iforms.modules.form.service.FormService;
 import com.microastudio.iforms.modules.form.service.MailService;
@@ -407,14 +404,19 @@ public class FormController {
         if (answerDto != null && answerDto.getNeedSendEmail() && answerDto.getCustomer() != null
                 && !StringUtils.isEmpty(answerDto.getCustomer().getEmail())) {
             try {
+                String userFeedbackUrl = "http://52.187.127.13:9191/#/view/9183eea730514d34842024ceff37929b";
+                Email mail = formService.getMailByTypeAndLanguage("feedback", answerDto.getLanguage());
+
                 //send email
                 logger.info("开始发送邮件");
                 Map<String, Object> model = new HashMap<>();
-                model.put("username", "username");
-                model.put("templateType", "Freemarker");
+                model.put("body", String.format(mail.getBody(), userFeedbackUrl, userFeedbackUrl));
                 Template template = freeMarkerConfigurer.getConfiguration().getTemplate("surveyEmailTemplate.html");
+
                 String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-                mailService.sendHtmlMail("peng.liu@volvo.com", "主题：这是模板邮件", html);
+
+//                mailService.sendHtmlMail(answerDto.getCustomer().getEmail(), mail.getSubject(), html);
+                mailService.sendHtmlMail("peng.liu@volvo.com", mail.getSubject(), html);
                 resultResponse.ok("");
                 logger.info("成功发送邮件");
             } catch (IOException | TemplateException e) {
@@ -596,7 +598,7 @@ public class FormController {
                 }
             }
 
-            List<QuestionnaireStatisticsDto> answers = formService.getQuestionnaireOptionStatistics(dto.getFormId(), marketId, dto.getDealerId(), yearMonth, from, to);
+            List<QuestionnaireStatisticsDto> answers = formService.getQuestionnaireOptionStatistics(dto.getSuperFormId(), marketId, dto.getDealerId(), yearMonth, from, to);
             resultResponse.ok(answers);
 
         } catch (Exception e) {
@@ -751,8 +753,7 @@ public class FormController {
                 logger.info("开始发送邮件");
                 mailService.sendSimpleMail(from, "GTA CS Dealer register",
                         " Dealer:" + user.getUserName()
-                                + "\n Created Date:" + user.getCreatedDate()
-                                + "\n Created By:" + user.getCreatedBy());
+                                + "\n Created Date:" + user.getCreatedDate());
 
                 resultResponse.ok("");
             } else {
