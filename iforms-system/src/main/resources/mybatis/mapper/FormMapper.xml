@@ -645,7 +645,7 @@
             AND date_format(a.created_date,'%Y-%m-%d') BETWEEN #{from} AND #{to}
         </if>
         WHERE
-        <if test="superFormId != null and formId != '' ">
+        <if test="superFormId != null and superFormId != '' ">
             f.super_form_id = #{superFormId,jdbcType=VARCHAR} AND
         </if>
         (qt.id = 1 OR qt.id = 2) AND
@@ -698,7 +698,7 @@
         LEFT JOIN section s ON s.id = q.section_id
         LEFT JOIN form f ON s.form_id = f.id
         WHERE
-        <if test="superFormId != null and formId != '' ">
+        <if test="superFormId != null and superFormId != '' ">
             f.super_form_id = #{superFormId,jdbcType=VARCHAR} AND
         </if>
         <if test="month != null and month != '' ">
@@ -742,7 +742,7 @@
         </if>
         ) aa on aa.question_id = q.id
         WHERE
-        <if test="superFormId != null and formId != '' ">
+        <if test="superFormId != null and superFormId != '' ">
             f.super_form_id = #{superFormId,jdbcType=VARCHAR} AND
         </if>
         (qt.id = 4 OR qt.id = 6) AND
