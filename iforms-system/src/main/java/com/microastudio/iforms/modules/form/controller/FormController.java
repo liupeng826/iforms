@@ -369,6 +369,8 @@ public class FormController {
     public ResultResponse addAnswer(@RequestBody AnswerDto answerDto) {
         logger.info("answer");
         ResultResponse resultResponse = new ResultResponse();
+        String answerId = "";
+
         try {
             if (answerDto == null || answerDto.getClient() == null
                     || answerDto.getAnswers() == null) {
@@ -383,7 +385,7 @@ public class FormController {
             }
 
             // add answer
-            String answerId = formService.addAnswer(answerDto);
+            answerId = formService.addAnswer(answerDto);
 
             if (StringUtils.isEmpty(answerId)) {
                 logger.error("answer插入异常");
@@ -401,22 +403,22 @@ public class FormController {
             return resultResponse;
         }
 
-        if (answerDto != null && answerDto.getNeedSendEmail() && answerDto.getCustomer() != null
+        if (!StringUtils.isEmpty(answerId) && answerDto != null
+                && answerDto.getNeedSendEmail() && answerDto.getCustomer() != null
                 && !StringUtils.isEmpty(answerDto.getCustomer().getEmail())) {
             try {
-                String userFeedbackUrl = "http://52.187.127.13:9191/#/view/9183eea730514d34842024ceff37929b";
+                String userFeedbackUrl = "https://www.gtacustomersurvey.com/feedback/" + answerId;
                 Email mail = formService.getMailByTypeAndLanguage("feedback", answerDto.getLanguage());
 
                 //send email
-                logger.info("开始发送邮件");
                 Map<String, Object> model = new HashMap<>();
                 model.put("body", String.format(mail.getBody(), userFeedbackUrl, userFeedbackUrl));
                 Template template = freeMarkerConfigurer.getConfiguration().getTemplate("surveyEmailTemplate.html");
 
                 String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
 
-//                mailService.sendHtmlMail(answerDto.getCustomer().getEmail(), mail.getSubject(), html);
-                mailService.sendHtmlMail("peng.liu@volvo.com", mail.getSubject(), html);
+                logger.info("开始发送邮件");
+                mailService.sendHtmlMail(answerDto.getCustomer().getEmail(), mail.getSubject(), html);
                 resultResponse.ok("");
                 logger.info("成功发送邮件");
             } catch (IOException | TemplateException e) {

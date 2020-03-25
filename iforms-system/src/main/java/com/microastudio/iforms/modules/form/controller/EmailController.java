@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,8 @@ public class EmailController {
     private FormService formService;
     @Autowired
     private FreeMarkerConfigurer freeMarkerConfigurer;
+    @Value("${fromMail}")
+    private String from;
 
     @PostMapping("/pdfReportEmail")
     public ResultResponse sendReportEmail() {
@@ -61,20 +64,18 @@ public class EmailController {
         ResultResponse resultResponse = new ResultResponse();
 
         try {
-            String userFeedbackUrl = "http://52.187.127.13:9191/#/view/9183eea730514d34842024ceff37929b";
+            String userFeedbackUrl = "www.baidu.com";
             Email mail = formService.getMailByTypeAndLanguage("feedback", "en-us");
 
             //send email
             Map<String, Object> model = new HashMap<>();
-            model.put("userFeedbackLink", userFeedbackUrl);
-            model.put("body", mail.getBody());
+            model.put("body", String.format(mail.getBody(), userFeedbackUrl, userFeedbackUrl));
             Template template = freeMarkerConfigurer.getConfiguration().getTemplate("surveyEmailTemplate.html");
 
             String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
 
             logger.info("开始发送邮件");
-//                mailService.sendHtmlMail(answerDto.getCustomer().getEmail(), mail.getSubject(), html);
-            mailService.sendHtmlMail("peng.liu@volvo.com", mail.getSubject(), html);
+            mailService.sendHtmlMail(from, mail.getSubject(), html);
             resultResponse.ok("");
             logger.info("成功发送邮件");
         } catch (IOException | TemplateException e) {
