@@ -610,7 +610,7 @@
     <!--    '6','Net promoter score': answer.answer_value-->
     <select id="selectQuestionnaireOptionStatistics" resultMap="QuestionnaireOptionStatisticsResultMap">
         SELECT
-        t1.form_title,
+        t1.form_title as form_title,
         t1.option_question_id,
         q.title AS question_title,
         t1.question_type_id,
@@ -624,13 +624,11 @@
         SELECT
         f.title as form_title,
         q.super_question_id AS option_question_id,
-        q.title AS question_title,
         qt.id AS question_type_id,
-        qo.description AS option_description,
         NULL AS answer_value,
         NULL AS net_promoter_from,
         NULL AS net_promoter_to,
-        a.super_option_id,
+        qo.super_option_id,
         COUNT(a.super_option_id) as total_number
         FROM question_option qo
         LEFT JOIN question q ON qo.question_id = q.id
@@ -651,18 +649,19 @@
         (qt.id = 1 OR qt.id = 2) AND
         f.market_id = #{marketId}
         AND ((f.dept_id = #{deptId}) OR (f.`level` = 'market' AND ifnull(f.`dept_id`,'') = ''))
-        GROUP BY qo.super_option_id, q.super_question_id, f.title, qt.id, answer_value, net_promoter_from,
-        net_promoter_to
+        GROUP BY qo.super_option_id, q.super_question_id, qt.id, qo.super_option_id
         ORDER BY option_question_id, qo.sequence
-        ) t1 LEFT JOIN question_option qo ON qo.super_option_id = t1.super_option_id and qo.language = 'en-us'
-        LEFT JOIN question q ON t1.option_question_id = q.super_question_id and q.language = 'en-us'
+        ) t1 LEFT JOIN question_option qo ON qo.super_option_id = t1.super_option_id AND qo.language = 'en-us'
+        LEFT JOIN question q ON t1.option_question_id = q.super_question_id AND q.language = 'en-us'
+        <!--  1st Part End      -->
         UNION
+        <!--    2ed Part Begin   -->
         SELECT
         t3.form_title,
-        t3.qo_super_option_id AS option_question_id,
+        t3.super_question_id AS option_question_id,
         q.title AS question_title,
         t3.question_type_id,
-        qo.description AS option_description,
+        NULL AS option_description,
         t3.answer_value,
         qo.net_promoter_from,
         qo.net_promoter_to,
@@ -673,6 +672,7 @@
         option_question_id,
         qo_super_option_id,
         question_title,
+        t2.q_super_question_id AS super_question_id,
         t2.question_type_id,
         option_description,
         answer_value,
@@ -689,6 +689,7 @@
         qo.question_id AS option_question_id,
         qo.super_option_id AS qo_super_option_id,
         a.*,
+        q.super_question_id AS q_super_question_id,
         q.question_type_id,
         q.title AS question_title
         FROM answer a
@@ -714,11 +715,12 @@
         ORDER BY option_question_id
         ) t2
         GROUP BY qo_super_option_id, form_title, option_question_id, question_type_id, option_description, answer_value,
-        net_promoter_from, net_promoter_to
+        net_promoter_from, net_promoter_to, t2.question_title
         ) t3
         LEFT JOIN question_option qo ON qo.super_option_id = t3.qo_super_option_id and qo.language = 'en-us'
-        LEFT JOIN question q ON t3.qo_super_option_id = q.super_question_id and q.language = 'en-us'
+        LEFT JOIN question q ON t3.super_question_id = q.super_question_id and q.language = 'en-us'
         UNION
+        <!--    3rd Part  Begin  -->
         SELECT f.title as form_title,
         qo.super_option_id AS option_question_id,
         q.title AS question_title,
@@ -749,8 +751,8 @@
         f.market_id = #{marketId} AND
         ((f.dept_id = #{deptId}) OR (f.`level` = 'market' AND ifnull(f.`dept_id`,'') = '')) AND
         aa.id IS NULL
-        GROUP BY qo.super_option_id,form_title, option_question_id, question_type_id, option_description, answer_value,
-        net_promoter_from,net_promoter_to
+        GROUP BY qo.super_option_id, form_title, option_question_id, question_type_id, option_description, answer_value,
+        net_promoter_from,net_promoter_to, qo.description, q.title
     </select>
 
     <resultMap id="QuestionnaireStatisticsResultMap"
