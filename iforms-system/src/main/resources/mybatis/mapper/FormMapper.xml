@@ -889,7 +889,7 @@
         now(),
         #{language},
         #{includeSection},
-        #{deadline})
+        ifnull(#{deadline},'2038-01-19 03:14:07'))
     </insert>
 
     <insert id="insertAnswer" parameterType="java.util.List">
