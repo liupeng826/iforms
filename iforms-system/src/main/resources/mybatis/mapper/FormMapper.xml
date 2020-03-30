@@ -889,7 +889,7 @@
         now(),
         #{language},
         #{includeSection},
-        ifnull(#{deadline},'2038-01-19 03:14:07'))
+        ifnull(#{deadline},'2038-01-01 00:00:00'))
     </insert>
 
     <insert id="insertAnswer" parameterType="java.util.List">
@@ -1051,7 +1051,7 @@
             <if test="type != null and type != '' ">
                 `type` = #{type},
             </if>
-            <if test="deadline != null and deadline != '' ">
+            <if test="deadline != null ">
                 `deadline` = #{deadline},
             </if>
             <if test="includeSection != null and includeSection != '' ">
