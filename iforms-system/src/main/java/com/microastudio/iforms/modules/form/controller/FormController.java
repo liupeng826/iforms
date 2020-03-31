@@ -65,7 +65,7 @@ public class FormController {
 
     @ApiOperation("免授权：获取单个问卷")
     @GetMapping
-    public ResultResponse getForm(@RequestParam String superFormId) {
+    public ResultResponse getForm(@RequestParam String superFormId, boolean includeInActiveForm) {
         logger.info("getForm");
         ResultResponse resultResponse = new ResultResponse();
         try {
@@ -74,8 +74,16 @@ public class FormController {
             }
 
             logger.info("getAllForm入参：" + superFormId);
+
+            String inc;
+            if (includeInActiveForm) {
+                inc = "1";
+            } else {
+                inc = "";
+            }
+
             // get form
-            List<FormDto> forms = formService.getForms("", superFormId);
+            List<FormDto> forms = formService.getForms("", superFormId, inc);
 
             resultResponse.ok(forms);
         } catch (Exception e) {
@@ -119,7 +127,15 @@ public class FormController {
             clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
 
             String userId = user.getId().toString();
-            List<FormDto> forms = formService.getFormsByUserId(clientToken, userId);
+
+            String inc;
+            if (dto.isIncludeInActiveForm()) {
+                inc = "1";
+            } else {
+                inc = "";
+            }
+
+            List<FormDto> forms = formService.getFormsByUserId(clientToken, userId, inc);
 
             resultResponse.ok(forms);
         } catch (Exception e) {
@@ -172,7 +188,13 @@ public class FormController {
                 marketId = user.getDept().getMarket().getId();
             }
 
-            List<FormDto> forms = formService.getFormsByDeptAndMarket(clientToken, deptId, marketId);
+            String inc;
+            if (dto.isIncludeInActiveForm()) {
+                inc = "1";
+            } else {
+                inc = "";
+            }
+            List<FormDto> forms = formService.getFormsByDeptAndMarket(clientToken, deptId, marketId, inc);
 
             resultResponse.ok(forms);
         } catch (Exception e) {
@@ -212,7 +234,13 @@ public class FormController {
             String clientToken = dto.getClient().getToken();
             clientToken = StringUtils.isEmpty(clientToken) ? "" : clientToken;
 
-            List<FormDto> forms = formService.getForms(clientToken, dto.getSuperFormId());
+            String inc;
+            if (dto.isIncludeInActiveForm()) {
+                inc = "1";
+            } else {
+                inc = "";
+            }
+            List<FormDto> forms = formService.getForms(clientToken, dto.getSuperFormId(), inc);
 
             resultResponse.ok(forms);
         } catch (Exception e) {
@@ -231,7 +259,8 @@ public class FormController {
         ResultResponse resultResponse = new ResultResponse();
         try {
             logger.info("getAllForms：");
-            List<FormDto> forms = formService.getForms("", "");
+
+            List<FormDto> forms = formService.getForms("", "", "1");
 
             resultResponse.ok(forms);
         } catch (Exception e) {

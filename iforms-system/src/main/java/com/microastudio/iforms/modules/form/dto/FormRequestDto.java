@@ -22,6 +22,7 @@ public class FormRequestDto implements Serializable {
     private String answerId;
     private String deptId;
     private String marketId;
+    private boolean includeInActiveForm;
 
     public Client getClient() {
         return client;
@@ -61,5 +62,13 @@ public class FormRequestDto implements Serializable {
 
     public void setMarketId(String marketId) {
         this.marketId = marketId;
+    }
+
+    public boolean isIncludeInActiveForm() {
+        return includeInActiveForm;
+    }
+
+    public void setIncludeInActiveForm(boolean includeInActiveForm) {
+        this.includeInActiveForm = includeInActiveForm;
     }
 }

@@ -312,33 +312,33 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
-    public List<FormDto> getForms(String clientToken, String superFormId) {
-        return formMapper.selectAllFormsByKey(clientToken, superFormId);
+    public List<FormDto> getForms(String clientToken, String superFormId, String inc) {
+        return formMapper.selectAllFormsByKey(clientToken, superFormId, inc);
     }
 
     @Override
-    public FormDto getForm(String clientToken, String id) {
-        return formMapper.selectFormById(clientToken, id);
+    public FormDto getForm(String clientToken, String id, String inc) {
+        return formMapper.selectFormById(clientToken, id, inc);
     }
 
     @Override
-    public List<FormDto> getFormsByUserId(String clientToken, String userId) {
-        return formMapper.selectAllFormsByUserId(clientToken, userId);
+    public List<FormDto> getFormsByUserId(String clientToken, String userId, String inc) {
+        return formMapper.selectAllFormsByUserId(clientToken, userId, inc);
     }
 
     @Override
-    public List<FormDto> getFormsByDeptAndMarket(String clientToken, String deptId, String marketId) {
-        return formMapper.selectAllFormsByDeptAndMarket(clientToken, deptId, marketId);
+    public List<FormDto> getFormsByDeptAndMarket(String clientToken, String deptId, String marketId, String inc) {
+        return formMapper.selectAllFormsByDeptAndMarket(clientToken, deptId, marketId, inc);
     }
 
     @Override
-    public List<FormDto> getFormsByDeptId(String clientToken, String deptId) {
-        return formMapper.selectAllFormsByDept(clientToken, deptId);
+    public List<FormDto> getFormsByDeptId(String clientToken, String deptId, String inc) {
+        return formMapper.selectAllFormsByDept(clientToken, deptId, inc);
     }
 
     @Override
-    public List<FormDto> getFormsByMarketId(String clientToken, String parentId) {
-        return formMapper.selectAllFormsByMarket(clientToken, parentId);
+    public List<FormDto> getFormsByMarketId(String clientToken, String parentId, String inc) {
+        return formMapper.selectAllFormsByMarket(clientToken, parentId, inc);
     }
 
     @Override

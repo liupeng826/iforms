@@ -28,17 +28,17 @@ public interface FormService {
 
     String addAnswer(AnswerDto answers);
 
-    List<FormDto> getForms(String clientToken, String superFormId);
+    List<FormDto> getForms(String clientToken, String superFormId, String inc);
 
-    FormDto getForm(String clientToken, String id);
+    FormDto getForm(String clientToken, String id, String inc);
 
-    List<FormDto> getFormsByUserId(String clientToken, String userId);
+    List<FormDto> getFormsByUserId(String clientToken, String userId, String inc);
 
-    List<FormDto> getFormsByDeptAndMarket(String clientToken, String deptId, String marketId);
+    List<FormDto> getFormsByDeptAndMarket(String clientToken, String deptId, String marketId, String inc);
 
-    List<FormDto> getFormsByDeptId(String clientToken, String deptId);
+    List<FormDto> getFormsByDeptId(String clientToken, String deptId, String inc);
 
-    List<FormDto> getFormsByMarketId(String clientToken, String parentId);
+    List<FormDto> getFormsByMarketId(String clientToken, String parentId, String inc);
 
     FormDto getAnswersWithFormByAnswerId(String clientToken, String answerId);
 

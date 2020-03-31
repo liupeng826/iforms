@@ -35,17 +35,17 @@ public interface FormMapper {
 
     String selectClient(String name, String token);
 
-    List<FormDto> selectAllFormsByKey(String clientToken, String superFormId);
+    List<FormDto> selectAllFormsByKey(String clientToken, String superFormId, String inc);
 
-    FormDto selectFormById(String clientToken, String id);
+    FormDto selectFormById(String clientToken, String id, String inc);
 
-    List<FormDto> selectAllFormsByUserId(String clientToken, String userId);
+    List<FormDto> selectAllFormsByUserId(String clientToken, String userId, String inc);
 
-    List<FormDto> selectAllFormsByDeptAndMarket(String clientToken, String deptId, String marketId);
+    List<FormDto> selectAllFormsByDeptAndMarket(String clientToken, String deptId, String marketId, String inc);
 
-    List<FormDto> selectAllFormsByDept(String clientToken, String deptId);
+    List<FormDto> selectAllFormsByDept(String clientToken, String deptId, String inc);
 
-    List<FormDto> selectAllFormsByMarket(String clientToken, String marketId);
+    List<FormDto> selectAllFormsByMarket(String clientToken, String marketId, String inc);
 
     FormDto selectAnswersWithFormByAnswerId(String clientToken, String answerId);
 

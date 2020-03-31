@@ -154,7 +154,9 @@
             AND client.token = #{clientToken}
         </if>
         AND form.id = #{id,jdbcType=VARCHAR}
-        AND form.is_active = 1
+        <if test="inc == null or inc == '' ">
+            AND form.is_active = 1
+        </if>
         AND section.is_active = 1
         AND question.is_active = 1
         And client.is_active = 1
@@ -202,7 +204,9 @@
         <if test="superFormId != null and superFormId != '' ">
             AND form.super_form_id = #{superFormId,jdbcType=VARCHAR}
         </if>
-        AND form.is_active = 1
+        <if test="inc == null or inc == '' ">
+            AND form.is_active = 1
+        </if>
         AND section.is_active = 1
         AND question.is_active = 1
         And client.is_active = 1
@@ -247,7 +251,9 @@
         AND client.token = #{clientToken}
         AND form.`market_id` = #{marketId}
         AND ((form.dept_id = #{deptId}) OR (form.`level` = 'market' AND ifnull(form.`dept_id`,'') = ''))
-        AND form.is_active = 1
+        <if test="inc == null or inc == '' ">
+            AND form.is_active = 1
+        </if>
         AND section.is_active = 1
         AND question.is_active = 1
         And client.is_active = 1
@@ -293,7 +299,9 @@
             AND client.token = #{clientToken}
         </if>
         AND form.created_by = #{userId,jdbcType=VARCHAR}
-        AND form.is_active = 1
+        <if test="inc == null or inc == '' ">
+            AND form.is_active = 1
+        </if>
         AND section.is_active = 1
         AND question.is_active = 1
         And client.is_active = 1
@@ -337,7 +345,9 @@
         And form.client = client.id
         AND client.token = #{clientToken}
         AND form.dept_id = #{deptId,jdbcType=VARCHAR}
-        AND form.is_active = 1
+        <if test="inc == null or inc == '' ">
+            AND form.is_active = 1
+        </if>
         AND section.is_active = 1
         AND question.is_active = 1
         And client.is_active = 1
@@ -381,7 +391,9 @@
         And form.client = client.id
         AND client.token = #{clientToken}
         AND form.market_id = #{marketId,jdbcType=VARCHAR}
-        AND form.is_active = 1
+        <if test="inc == null or inc == '' ">
+            AND form.is_active = 1
+        </if>
         AND section.is_active = 1
         AND question.is_active = 1
         And client.is_active = 1
