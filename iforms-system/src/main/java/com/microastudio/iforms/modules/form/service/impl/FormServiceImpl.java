@@ -47,11 +47,11 @@ public class FormServiceImpl implements FormService {
     @Override
     public List<Language> getLanguage() {
         // 先查缓存，缓存没有在查库
-        List<Language> languages = (List<Language>) redisTemplate.opsForValue().get(CommonConstants.QUESTION_TYPE_KEY);
+        List<Language> languages = (List<Language>) redisTemplate.opsForValue().get(CommonConstants.LANGUAGE_KEY);
         if (languages == null) {
             languages = formMapper.selectLanguage();
             // 信息记录到缓存
-            redisTemplate.opsForValue().set(CommonConstants.QUESTION_TYPE_KEY, languages, 30, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(CommonConstants.LANGUAGE_KEY, languages, 30, TimeUnit.MINUTES);
         }
         return languages;
     }
