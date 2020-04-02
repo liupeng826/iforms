@@ -975,16 +975,16 @@
             <if test="questionTypeId != null and questionTypeId != '' ">
                 `question_type_id` = #{questionTypeId},
             </if>
-            <if test="isActive != null and isActive != '' ">
+            <if test="isActive != null ">
                 `is_active` = #{isActive},
             </if>
             <if test="modifiedBy != null and modifiedBy != '' ">
                 `modified_by` = #{modifiedBy},
             </if>
-            <if test="mandatory != null and mandatory != '' ">
+            <if test="mandatory != null ">
                 `mandatory` = #{mandatory},
             </if>
-            <if test="sequence != null and sequence != '' ">
+            <if test="sequence != null ">
                 `sequence` = #{sequence},
             </if>
             `modified_date` = now()
@@ -1012,7 +1012,7 @@
             <if test="netPromoterTo != null and netPromoterTo != '' ">
                 `net_promoter_to` = #{netPromoterTo},
             </if>
-            <if test="isActive != null and isActive != '' ">
+            <if test="isActive != null ">
                 `is_active` = #{isActive}
             </if>
         </set>
@@ -1033,7 +1033,7 @@
             <if test="sequence != null and sequence != '' ">
                 `sequence` = #{sequence},
             </if>
-            <if test="isActive != null and isActive != '' ">
+            <if test="isActive != null ">
                 `is_active` = #{isActive}
             </if>
         </set>
@@ -1054,10 +1054,10 @@
             <if test="level != null and level != '' ">
                 `level` = #{level},
             </if>
-            <if test="isActive != null and isActive != '' ">
+            <if test="isActive != null ">
                 `is_active` = #{isActive},
             </if>
-            <if test="sendEmail != null and sendEmail != '' ">
+            <if test="sendEmail != null ">
                 `send_email` = #{sendEmail},
             </if>
             <if test="type != null and type != '' ">
@@ -1066,7 +1066,7 @@
             <if test="deadline != null ">
                 `deadline` = #{deadline},
             </if>
-            <if test="includeSection != null and includeSection != '' ">
+            <if test="includeSection != null ">
                 `include_section` = #{includeSection},
             </if>
             <if test="modifiedBy != null and modifiedBy != '' ">
