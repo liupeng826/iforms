@@ -31,7 +31,7 @@ public interface FormMapper {
 
     int updateForm(Form form);
 
-    int updateFormStatus(Form form);
+    int updateFormStatus(String superFormId);
 
     String selectClient(String name, String token);
 

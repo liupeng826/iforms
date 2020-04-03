@@ -19,6 +19,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -354,28 +355,28 @@ public class FormController {
     }
 
     @ApiOperation("发布问卷")
-    @PutMapping("/formStatus")
-    public ResultResponse updateFormStatus(@RequestBody FormDto dto) {
+    @PutMapping("/formStatus/{superFormId}")
+    public ResultResponse updateFormStatus(@ApiParam(value = "superFormId", required = true) @PathVariable(value = "superFormId") String superFormId) {
         logger.info("updateFormStatus");
         ResultResponse resultResponse = new ResultResponse();
         try {
-            if (dto == null || dto.getId() == null
-                    || StringUtils.isEmpty(dto.getSuperFormId())
-                    || dto.getClient() == null) {
-                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
-            }
-            logger.info("updateFormStatus 入参：" + JSONObject.toJSONString(dto));
-
-            // validateToken
-            resultResponse = getClient(dto.getClient());
-            if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
-                return resultResponse;
-            }
-
+//            if (dto == null || dto.getId() == null
+//                    || StringUtils.isEmpty(dto.getSuperFormId())
+//                    || dto.getClient() == null) {
+//                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+//            }
+//            logger.info("updateFormStatus 入参：" + JSONObject.toJSONString(dto));
+//
+//            // validateToken
+//            resultResponse = getClient(dto.getClient());
+//            if (!CommonConstants.SUCCESS_CODE.equals(resultResponse.getCode())) {
+//                return resultResponse;
+//            }
+            int rows = 0;
             // generate form
-            Form form = formService.updateFormStatus(dto);
+            rows = formService.updateFormStatus(superFormId);
 
-            if (form == null) {
+            if (rows <= 0) {
                 logger.error("updateFormStatus 异常：Form is null");
                 resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
                 resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);

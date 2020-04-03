@@ -22,7 +22,7 @@ public interface FormService {
 
     Form updateForm(FormDto formDto);
 
-    Form updateFormStatus(FormDto formDto);
+    int updateFormStatus(String superFormId);
 
     String getClient(String name, String token);
 

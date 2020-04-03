@@ -1077,13 +1077,13 @@
         WHERE `id` = #{id};
     </update>
 
-    <update id="updateFormStatus" parameterType="com.microastudio.iforms.modules.form.domain.Form"
+    <update id="updateFormStatus" parameterType="java.lang.String"
             useGeneratedKeys="true"
-            keyProperty="id">
+            keyProperty="superFormId">
         UPDATE `form`
         SET
-        `is_active` = #{isActive},
+        `is_active` = abs(`is_active`-1),
         `modified_date` = now()
-        WHERE `id` = #{id};
+        WHERE `super_form_id` = #{superFormId};
     </update>
 </mapper>

@@ -285,25 +285,9 @@ public class FormServiceImpl implements FormService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Form updateFormStatus(FormDto formDto) {
-
-        int rows = 0;
-        Form form = new Form();
-        form.setId(formDto.getId());
-        form.setSuperFormId(formDto.getSuperFormId());
-        if ((byte) 1 == formDto.getIsActive()) {
-            form.setIsActive((byte) 1);
-        } else {
-            form.setIsActive((byte) 0);
-        }
-
+    public int updateFormStatus(String superFormId) {
         // update form
-        rows = formMapper.updateFormStatus(form);
-        if (rows <= 0) {
-            return null;
-        }
-
-        return form;
+        return formMapper.updateFormStatus(superFormId);
     }
 
     @Override
