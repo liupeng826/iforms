@@ -883,6 +883,7 @@
         `modified_by`,
         `modified_date`,
         `language`,
+        `is_active`,
         `include_section`,
         `deadline`)
         VALUES
@@ -900,6 +901,7 @@
         #{modifiedBy},
         now(),
         #{language},
+        #{isActive},
         #{includeSection},
         ifnull(#{deadline},'2038-01-01 00:00:00'))
     </insert>
