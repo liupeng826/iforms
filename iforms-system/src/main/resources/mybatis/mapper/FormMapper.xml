@@ -241,22 +241,17 @@
         `question_option`.`net_promoter_to` as `question_option.net_promoter_to`,
         `question_option`.`is_active` as `question_option.is_active`,
         T1.description as `language_description`
-        FROM form LEFT JOIN `language` T1 ON `form`.`language` = T1.`code`,
-        `section`, client, question
-        LEFT JOIN question_option
-        ON (question.id = question_option.question_id AND question_option.is_active = 1)
-        WHERE `section`.form_id = form.id
-        AND question.section_id = `section`.id
-        And form.client = client.id
-        AND client.token = #{clientToken}
-        AND form.`market_id` = #{marketId}
+        FROM form
+        INNER JOIN client ON client.is_active = 1 AND form.client = client.id AND client.token = #{clientToken}
+        INNER JOIN `section` ON `section`.is_active = 1 AND `section`.form_id = form.id
+        INNER JOIN question ON question.is_active = 1 AND question.section_id = `section`.id
+        LEFT JOIN question_option ON question_option.is_active = 1 AND question.id = question_option.question_id
+        LEFT JOIN `language` T1 ON `form`.`language` = T1.`code`
+        WHERE form.`market_id` = #{marketId}
         AND ((form.dept_id = #{deptId}) OR (form.`level` = 'market' AND ifnull(form.`dept_id`,'') = ''))
         <if test="inc == null or inc == '' ">
             AND form.is_active = 1
         </if>
-        AND section.is_active = 1
-        AND question.is_active = 1
-        And client.is_active = 1
         ORDER BY form.id, question.section_id, question.sequence, question_option.sequence
     </select>
 
