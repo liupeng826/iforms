@@ -141,11 +141,11 @@ public class UserController {
 
         UserDto user = userService.findByName(SecurityUtils.getUsername());
         if (!passwordEncoder.matches(oldPass, user.getPassword())) {
-            throw new BadRequestException("修改失败，旧密码错误");
+            throw new BadRequestException("Failed to modify, old password is wrong.\n修改失败，旧密码错误");
         }
 
         if (passwordEncoder.matches(newPass, user.getPassword())) {
-            throw new BadRequestException("新密码不能与旧密码相同");
+            throw new BadRequestException("The new password cannot be the same as the old password.\n新密码不能与旧密码相同");
         }
 
         userService.updatePass(user.getUserName(), passwordEncoder.encode(newPass));
