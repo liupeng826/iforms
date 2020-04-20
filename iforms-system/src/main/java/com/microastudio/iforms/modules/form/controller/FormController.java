@@ -155,6 +155,10 @@ public class FormController {
         ResultResponse resultResponse = new ResultResponse();
         UserDto user = userService.findByName(SecurityUtils.getUsername());
 
+        if (user != null && user.getRole() == RoleEnum.SUPER_ADMIN.getValue()) {
+            return getAllForms();
+        }
+
         try {
             if (dto == null
                     || dto.getClient() == null
