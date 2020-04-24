@@ -708,6 +708,27 @@ public class FormController {
         return resultResponse;
     }
 
+    @ApiOperation("免授权：获取反馈数据")
+    @GetMapping("/getAnswerData")
+    public ResultResponse getAnswerData(@RequestParam String marketId) {
+        logger.info("getAnswerData");
+        ResultResponse resultResponse = new ResultResponse();
+        try {
+            if (StringUtils.isEmpty(marketId)) {
+                return new ResultResponse(CommonConstants.ERRORS_CODE_EMPTY, CommonConstants.ERRORS_MSG_EMPTY);
+            }
+
+            List answers = formService.getAnswerData(marketId);
+
+            resultResponse.ok(answers);
+        } catch (Exception e) {
+            logger.error("getAnswerData 异常：" + e.getMessage(), e);
+            resultResponse.setCode(CommonConstants.ERRORS_CODE_SYSTEM);
+            resultResponse.setMessage(CommonConstants.ERRORS_MSG_SYSTEM);
+        }
+        return resultResponse;
+    }
+
     //-----------------------其他--------------------------------------
 
     @GetMapping("/questionType")

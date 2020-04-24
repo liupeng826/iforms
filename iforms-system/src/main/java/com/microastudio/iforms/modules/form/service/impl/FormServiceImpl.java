@@ -356,6 +356,27 @@ public class FormServiceImpl implements FormService {
     }
 
     @Override
+    public List getAnswerDataByFormId(String formId) {
+        return formMapper.getAnswerDataByFormId(formId);
+    }
+
+    @Override
+    public List getAnswerData(String marketId) {
+        String clientToken = "";
+        String inc = "1";
+        List answers = new ArrayList();
+        List<FormDto> forms = formMapper.selectAllFormsByMarket(clientToken, marketId, inc);
+
+        for (FormDto form : forms) {
+            if ("en-us".equals(form.getLanguage())) {
+                answers.addAll(getAnswerDataByFormId(form.getSuperFormId()));
+            }
+        }
+
+        return answers;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public String addAnswer(AnswerDto answerDto) {
         int rows;

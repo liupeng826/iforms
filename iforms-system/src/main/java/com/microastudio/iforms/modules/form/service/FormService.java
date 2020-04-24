@@ -51,4 +51,8 @@ public interface FormService {
     List<QuestionnaireStatisticsDto> getQuestionnaireStatistics(Integer formId, String marketId, String dealerId, String from, String to);
 
     Email getMailByTypeAndLanguage(String type, String language);
+
+    List getAnswerDataByFormId(String formId);
+
+    List getAnswerData(String marketId);
 }

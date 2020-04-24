@@ -62,4 +62,6 @@ public interface FormMapper {
     int insertCustomer(Customer customer);
 
     Email selectMailByTypeAndLanguage(String type, String language);
+
+    List getAnswerDataByFormId(String formId);
 }
